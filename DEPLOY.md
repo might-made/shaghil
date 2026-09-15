@@ -1,4 +1,4 @@
-# SHAGHIL V0.3 — Vercel Deploy-Ready
+# SHAGHIL V0.5 — Founder Preview
 
 ## Environment variables
 Set these in Vercel Project Settings → Environment Variables:
@@ -8,14 +8,17 @@ Set these in Vercel Project Settings → Environment Variables:
 
 Never expose the API key in browser code.
 
-## Deploy
-1. Import this project into Vercel.
-2. Add the two environment variables.
-3. Deploy.
-4. Open `/api/health` and verify:
+## Branch preview only
+All V0.5 development and commits belong on `shaghil-v0.5`. Do not modify or merge into `main`, change production configuration, or promote a deployment before founder approval.
+
+1. Use the automatic Vercel preview for `shaghil-v0.5`, if configured.
+2. Verify the required environment variables are available to that preview.
+3. Open the preview `/api/health` and verify:
    - `ok: true`
    - `api_key_configured: true`
-5. Open the portal, select Demo, and test all six engines.
+4. Save Business Brain, confirm Home opens, then test all six engines with optional fields blank. Reload and confirm Business Brain persists on the same browser and origin.
+5. Check result copying, all four refinements, second version, new task and history. Confirm WhatsApp blocks an empty customer message.
+6. Review live AI output quality before any production approval.
 
 ## QA businesses
 Test these before connecting Salla:
@@ -46,3 +49,14 @@ Before paid users:
 - Refinement actions
 - Last 10 outputs stored locally
 - Improved loading/error/copy UX
+
+## V0.5
+- One persistent local Business Brain supplies all six engines.
+- Content: period only; Copy: channel and optional instruction; Offer: optional constraint.
+- WhatsApp: customer message only; Campaign: duration and optional occasion; Reel: duration and optional topic.
+- Server accepts only named task fields and treats Business Brain as authoritative.
+- New history entries preserve task inputs. Older entries remain readable and refinable; a second version asks for fresh task details because V0.4 did not store them.
+- Local storage is scoped to the browser and origin; preview URLs do not share production data.
+
+## Automated QA
+Run `npm install` and `npm run qa` with Node 20 or newer. QA retains the existing structural checks and exercises the real server handler with a mocked OpenAI response, plus the inline browser application in a minimal DOM harness. It covers context forwarding, optional defaults, validation, refinements, history, copy, persistence, and request races. No live AI call or real API key is needed for QA. Live model quality and Vercel environment configuration require a separate preview review.

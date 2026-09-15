@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>شغّل — V0.4</title>
+<title>شغّل — V0.5</title>
 <style>
 :root{--bg:#0e1012;--p:#181b1f;--p2:#20242a;--t:#f6f4ef;--m:#aab0b6;--l:#2d333a;--a:#e7f95b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:Inter,system-ui,-apple-system,"Segoe UI",Tahoma,Arial}
@@ -14,60 +14,67 @@ h1{font-size:44px;line-height:1.05;margin:8px 0 12px}h2{margin:0 0 12px}p{color:
 </style>
 </head>
 <body><div class="wrap">
-<div class="top"><div class="brand"><div class="logo">ش</div><div><b>شغّل</b><small>Built by MIGHT MADE · V0.4</small></div></div><div><button class="btn" onclick="home()">الرئيسية</button> <button class="btn" onclick="brainScreen()">Business Brain</button></div></div>
+<div class="top"><div class="brand"><div class="logo">ش</div><div><b>شغّل</b><small>Built by MIGHT MADE · V0.5</small></div></div><div><button class="btn" onclick="home()">الرئيسية</button> <button class="btn" onclick="brainScreen()">Business Brain</button></div></div>
 
-<section id="welcome" class="card"><div class="status">FUNCTIONAL MVP</div><h1>مشروعك.<br>لكن أسرع.</h1><p>هذه النسخة تتصل بمحرك AI عبر backend آمن. جهّز مشروعك مرة واحدة ثم استخدم الستة Engines.</p><div class="actions"><button class="btn primary" onclick="setup()">ابدأ</button><button class="btn" onclick="demo()">Demo</button></div></section>
+<section id="welcome" class="card"><div class="status">FUNCTIONAL MVP</div><h1>مشروعك.<br>لكن أسرع.</h1><p>جهّز بيانات مشروعك مرة واحدة في Business Brain، وشغّل ست أدوات تساعدك تنجز.</p><div class="actions"><button class="btn primary" onclick="setup()">ابدأ</button><button class="btn" onclick="demo()">Demo</button></div></section>
 
 <section id="setup" class="card hidden"><h2>جهّز Business Brain</h2><div class="form">
 <div><label>اسم المشروع</label><input id="name"></div><div><label>القطاع</label><input id="category" placeholder="قهوة، عطور، خدمات..."></div>
 <div class="full"><label>وش تبيع؟</label><textarea id="product"></textarea></div><div><label>مين عميلك؟</label><input id="customer"></div><div><label>المدينة/السوق</label><input id="location" value="السعودية"></div>
 <div><label>متوسط السعر</label><input id="price" placeholder="مثال 100–250 SAR"></div><div><label>النبرة</label><select id="tone"><option>سعودي طبيعي</option><option>احترافي</option><option>فاخر</option><option>ودود</option></select></div>
 <div class="full"><label>الهدف الحالي</label><select id="objective"><option>زيادة المبيعات</option><option>زيادة الطلبات</option><option>زيادة الوعي</option><option>رجوع العملاء</option><option>إطلاق منتج</option></select></div></div>
-<div class="actions"><button class="btn primary" onclick="saveBrain()">اعتماد</button></div></section>
+<div class="actions"><button class="btn primary" onclick="saveBrain()">حفظ والبدء</button></div></section>
 
 <section id="brain" class="card hidden"><h2>Business Brain</h2><div class="brain" id="brainGrid"></div><div class="actions"><button class="btn" onclick="setup(true)">تعديل</button><button class="btn primary" onclick="home()">ابدأ شغّل</button></div></section>
 
 <section id="home" class="hidden"><div class="card"><div class="status">SHAGHIL HOME</div><h1 id="hello">وش تبغى تنجز اليوم؟</h1><p>كل Engine يستخدم Business Brain تلقائيًا.</p></div><div class="grid">
 <div class="card engine" onclick="openEngine('content')"><b>🗓️ سوّ محتوى</b><span>خطة محتوى مرتبطة بهدف مشروعك.</span></div>
 <div class="card engine" onclick="openEngine('copy')"><b>✍️ اكتب لي</b><span>Caption، إعلان، WhatsApp ووصف منتج.</span></div>
-<div class="card engine" onclick="openEngine('offer')"><b>🎯 ابنِ عرض</b><span>Value + Bundle + Urgency.</span></div>
+<div class="card engine" onclick="openEngine('offer')"><b>🎯 ابنِ عرض</b><span>عرض مقنع مبني على قيمة منتجك.</span></div>
 <div class="card engine" onclick="openEngine('whatsapp')"><b>💬 رد على عميل</b><span>بيع، اعتراض، متابعة أو شكوى.</span></div>
 <div class="card engine" onclick="openEngine('campaign')"><b>🚀 سوّ حملة</b><span>Big Idea + محتوى + WhatsApp.</span></div>
 <div class="card engine" onclick="openEngine('reel')"><b>🎬 اكتب Reel</b><span>Hook + Scenes + VO + CTA.</span></div>
 </div></section>
 
-<section id="engine" class="card hidden"><h2 id="engineTitle"></h2><div id="engineForm"></div><div class="actions"><button id="runBtn" class="btn primary" onclick="run()">شغّل</button><button class="btn" onclick="home()">إلغاء</button></div></section>
-<section id="output" class="card hidden"><div class="resultTop"><h2>النتيجة</h2><button class="btn" onclick="historyScreen()">السجل</button></div><div class="refine"><button class="btn" onclick="refine('shorter')">أقصر</button><button class="btn" onclick="refine('stronger')">CTA أقوى</button><button class="btn" onclick="refine('saudi')">سعودي أكثر</button><button class="btn" onclick="refine('premium')">Premium</button></div><div class="out" id="out"></div><div class="actions"><button class="btn primary" onclick="copyOut()">نسخ النتيجة</button><button class="btn" onclick="run()">نسخة ثانية</button><button class="btn" onclick="home()">مهمة جديدة</button></div></section><section id="history" class="card hidden"><div class="resultTop"><h2>آخر النتائج</h2><button class="btn" onclick="home()">إغلاق</button></div><div id="historyList"></div></section>
+<section id="engine" class="card hidden"><h2 id="engineTitle"></h2><p>بيانات مشروعك مأخوذة تلقائيًا من Business Brain</p><div id="engineForm"></div><div class="actions"><button id="runBtn" class="btn primary" onclick="run()">شغّل</button><button class="btn" onclick="home()">إلغاء</button></div></section>
+<section id="output" class="card hidden"><div class="resultTop"><h2>النتيجة</h2><button class="btn" onclick="historyScreen()">السجل</button></div><div class="refine"><button class="btn" onclick="refine('shorter')">أقصر</button><button class="btn" onclick="refine('stronger')">CTA أقوى</button><button class="btn" onclick="refine('saudi')">سعودي أكثر</button><button class="btn" onclick="refine('premium')">Premium</button></div><div class="out" id="out"></div><div class="actions"><button class="btn primary" onclick="copyOut()">نسخ النتيجة</button><button class="btn" onclick="run(true)">نسخة ثانية</button><button class="btn" onclick="home()">مهمة جديدة</button></div></section><section id="history" class="card hidden"><div class="resultTop"><h2>آخر النتائج</h2><button class="btn" onclick="home()">إغلاق</button></div><div id="historyList"></div></section>
 </div>
 <script>
-const ids=['welcome','setup','brain','home','engine','output','history']; let current=null; let lastInputs=null; let lastText='';
+const ids=['welcome','setup','brain','home','engine','output','history']; let current=null; let lastInputs=null; let lastText=''; let busy=false; let requestId=0;
 const $=x=>document.getElementById(x); const show=x=>ids.forEach(i=>$(i).classList.toggle('hidden',i!==x));
-const getBrain=()=>JSON.parse(localStorage.getItem('brain')||'null');
-function setup(edit=false){let b=getBrain();if(edit&&b){['name','category','product','customer','location','price','tone','objective'].forEach(k=>$(k).value=b[k]||'')}show('setup')}
-function saveBrain(){let b={};['name','category','product','customer','location','price','tone','objective'].forEach(k=>b[k]=$(k).value);localStorage.setItem('brain',JSON.stringify(b));brainScreen()}
-function brainScreen(){let b=getBrain();if(!b)return setup();$('brainGrid').innerHTML=Object.entries(b).map(([k,v])=>`<div><small>${k}</small><b>${v||'—'}</b></div>`).join('');show('brain')}
-function home(){let b=getBrain();if(!b)return show('welcome');$('hello').textContent=`${b.name||'مشروعك'} — وش تبغى تنجز اليوم؟`;show('home')}
+function readLocal(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
+const getBrain=()=>{const b=readLocal('brain',null);return b&&typeof b==='object'&&!Array.isArray(b)?b:null};
+function getHistory(){const h=readLocal('shaghilHistory',[]);return Array.isArray(h)?h.filter(x=>x&&typeof x.text==='string'&&Object.hasOwn(titles,x.engine)):[]}
+function cancelPending(){requestId++;busy=false;}
+function setup(){cancelPending();let b=getBrain();if(b){['name','category','product','customer','location','price','tone','objective'].forEach(k=>$(k).value=b[k]||'')}show('setup')}
+function saveBrain(){let b={};['name','category','product','customer','location','price','tone','objective'].forEach(k=>b[k]=$(k).value.trim());if(!b.name||!b.product||!b.customer)return toast('أكمل اسم المشروع والمنتج والعميل');try{localStorage.setItem('brain',JSON.stringify(b))}catch{return toast('تعذّر حفظ بيانات المشروع على هذا الجهاز')}home()}
+function brainScreen(){cancelPending();let b=getBrain();if(!b)return setup();$('brainGrid').innerHTML=Object.entries(b).map(([k,v])=>`<div><small>${esc(k)}</small><b>${esc(v)||'—'}</b></div>`).join('');show('brain')}
+function home(){cancelPending();let b=getBrain();if(!b)return show('welcome');$('hello').textContent=`${b.name||'مشروعك'} — وش تبغى تنجز اليوم؟`;show('home')}
 function demo(){localStorage.setItem('brain',JSON.stringify({name:'Brew 27',category:'قهوة مختصة',product:'قهوة مختصة وحلويات مع توصيل داخل جدة',customer:'موظفون وطلاب 20–35',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'رجوع العملاء'}));home()}
 const titles={content:'سوّ محتوى',copy:'اكتب لي',offer:'ابنِ عرض',whatsapp:'رد على عميل',campaign:'سوّ حملة',reel:'اكتب Reel'};
-function openEngine(e){current=e;$('engineTitle').textContent=titles[e];let h='';
-if(e==='content')h=`<div class="form"><div><label>الفترة</label><select id="a"><option>7 أيام</option><option>14 يوم</option><option>30 يوم</option></select></div><div><label>الهدف</label><input id="b" placeholder="مبيعات، وعي..."></div><div class="full"><label>وش نروّج له؟</label><input id="c"></div></div>`;
-if(e==='copy')h=`<div class="form"><div><label>القناة</label><select id="a"><option>Instagram</option><option>TikTok</option><option>WhatsApp</option><option>SMS</option><option>Website</option></select></div><div><label>الهدف</label><input id="b" placeholder="بيع، شرح..."></div><div class="full"><label>وش تبغى تقول؟</label><textarea id="c"></textarea></div></div>`;
-if(e==='offer')h=`<div class="form"><div class="full"><label>المنتج</label><input id="a"></div><div><label>السعر</label><input id="b"></div><div><label>الهدف</label><input id="c" placeholder="رفع التحويل..."></div></div>`;
-if(e==='whatsapp')h=`<div class="form"><div class="full"><label>رسالة العميل</label><textarea id="a"></textarea></div><div><label>الموقف</label><input id="b" placeholder="اعتراض سعر..."></div><div><label>الهدف</label><input id="c" placeholder="إغلاق البيع..."></div></div>`;
-if(e==='campaign')h=`<div class="form"><div><label>المناسبة</label><input id="a" placeholder="اليوم الوطني..."></div><div><label>المدة</label><input id="b" value="7 أيام"></div><div class="full"><label>المنتج</label><input id="c"></div></div>`;
-if(e==='reel')h=`<div class="form"><div><label>المدة</label><select id="a"><option>15 ثانية</option><option>30 ثانية</option><option>45 ثانية</option></select></div><div><label>الهدف</label><input id="b" placeholder="بيع، وعي..."></div><div class="full"><label>الموضوع</label><input id="c"></div></div>`;
-$('engineForm').innerHTML=h;show('engine')}
+const fields={content:['period'],copy:['channel','instruction'],offer:['constraint'],whatsapp:['message'],campaign:['occasion','duration'],reel:['duration','topic']};
+function openEngine(e){cancelPending();if(!getBrain())return setup();if(!Object.hasOwn(titles,e))return;current=e;lastInputs=null;lastText='';$('engineTitle').textContent=titles[e];let h='';
+if(e==='content')h=`<div><label for="period">الفترة</label><select id="period"><option>7 أيام</option><option>14 يوم</option><option>30 يوم</option></select></div>`;
+if(e==='copy')h=`<div><label for="channel">القناة</label><select id="channel"><option>Instagram</option><option>TikTok</option><option>WhatsApp</option><option>SMS</option><option>Website</option></select></div><div class="full"><label for="instruction">توجيه للمهمة (اختياري)</label><textarea id="instruction" placeholder="اتركه فارغًا ونختار النص الأنسب لهدف مشروعك"></textarea></div>`;
+if(e==='offer')h=`<div class="full"><label for="constraint">قيد أو مناسبة (اختياري)</label><textarea id="constraint" placeholder="اتركه فارغًا ونبني عرضًا مناسبًا من بيانات مشروعك"></textarea></div>`;
+if(e==='whatsapp')h=`<div class="full"><label for="message">رسالة العميل</label><textarea id="message" required placeholder="الصق رسالة العميل هنا"></textarea></div>`;
+if(e==='campaign')h=`<div><label for="occasion">المناسبة (اختياري)</label><input id="occasion" placeholder="اتركها فارغة لحملة تخدم هدف مشروعك"></div><div><label for="duration">المدة</label><input id="duration" value="7 أيام" required></div>`;
+if(e==='reel')h=`<div><label for="duration">المدة</label><select id="duration"><option>15 ثانية</option><option>30 ثانية</option><option>45 ثانية</option></select></div><div><label for="topic">موضوع محدد (اختياري)</label><input id="topic" placeholder="اتركه فارغًا ونختار الموضوع الأنسب"></div>`;
+$('engineForm').innerHTML='<div class="form">'+h+'</div>';show('engine')}
 function esc(x){return String(x||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
 function md(x){let z=esc(x);z=z.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>').replace(/^---$/gm,'<hr>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');let lines=z.split('\n'),out='',ul=false;for(let line of lines){if(/^[-•] /.test(line)){if(!ul){out+='<ul>';ul=true}out+='<li>'+line.replace(/^[-•] /,'')+'</li>'}else{if(ul){out+='</ul>';ul=false}if(line.trim()&&!/^<(h|hr)/.test(line))out+='<p>'+line+'</p>';else out+=line}}if(ul)out+='</ul>';return out}
-function saveHistory(text){let h=JSON.parse(localStorage.getItem('shaghilHistory')||'[]');h.unshift({engine:current,title:titles[current],text,ts:Date.now()});localStorage.setItem('shaghilHistory',JSON.stringify(h.slice(0,10)))}
+function saveHistory(text){let h=getHistory();h.unshift({engine:current,title:titles[current],text,inputs:lastInputs,ts:Date.now()});try{localStorage.setItem('shaghilHistory',JSON.stringify(h.slice(0,10)))}catch{toast('النتيجة جاهزة، لكن تعذّر حفظها في السجل')}}
 function renderResult(text,save=true){lastText=text;$('out').innerHTML=md(text);if(save)saveHistory(text);show('output')}
 function loading(){show('output');$('out').innerHTML='<div class="skeleton"></div><div class="skeleton" style="width:82%"></div><div class="skeleton" style="width:68%"></div><div class="skeleton"></div>'}
-async function generate(payload){loading();try{let r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let j=await r.json();if(!r.ok)throw new Error(j.detail||j.error);renderResult(j.text)}catch(e){$('out').innerHTML='<h3>ما قدرنا نكمل المهمة</h3><p>'+esc(e.message)+'</p><p>جرّب مرة ثانية، وإذا استمرت المشكلة راجع إعدادات الاتصال.</p>'}}
-async function run(){let b=getBrain();if(!b)return;lastInputs={a:$('a')?.value,b:$('b')?.value,c:$('c')?.value};return generate({brain:b,engine:current,inputs:lastInputs})}
-async function refine(type){if(!lastText)return;return generate({brain:getBrain(),engine:current,inputs:lastInputs||{},refinement:type,previous:lastText})}
-function copyOut(){navigator.clipboard.writeText(lastText||$('out').textContent);toast('تم النسخ')}
+async function generate(payload){if(busy)return;busy=true;const id=++requestId;lastText='';loading();try{let r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let j=await r.json();if(id!==requestId)return;if(!r.ok)throw new Error(j.error||'تعذّر الاتصال');if(typeof j.text!=='string'||!j.text.trim())throw new Error('لم تصل نتيجة، جرّب مرة ثانية');renderResult(j.text)}catch(e){if(id!==requestId)return;$('out').innerHTML='<h3>ما قدرنا نكمل المهمة</h3><p>'+esc(e.message)+'</p><p>جرّب نسخة ثانية، وإذا استمرت المشكلة راجع إعدادات الاتصال.</p>'}finally{if(id===requestId)busy=false}}
+async function run(again=false){if(busy)return;let b=getBrain();if(!b||!['name','product','customer'].every(k=>typeof b[k]==='string'&&b[k].trim())){toast('أكمل بيانات مشروعك في Business Brain');return setup()}if(!Object.hasOwn(fields,current))return home();if(!again){lastInputs=Object.fromEntries(fields[current].map(k=>[k,$(k)?.value.trim()||'']))}else if(!lastInputs){toast('حدّد تفاصيل المهمة لإنشاء نسخة جديدة');return openEngine(current)}
+if(current==='whatsapp'&&!lastInputs.message){toast('أدخل رسالة العميل أولًا');$('message')?.focus();return}
+if(current==='campaign'&&!lastInputs.duration){toast('أدخل مدة الحملة');$('duration')?.focus();return}
+return generate({brain:b,engine:current,inputs:lastInputs})}
+async function refine(type){if(busy||!lastText)return;return generate({brain:getBrain(),engine:current,inputs:lastInputs||{},refinement:type,previous:lastText})}
+async function copyOut(){if(busy||!lastText)return;try{await navigator.clipboard.writeText(lastText);toast('تم النسخ')}catch{toast('تعذّر النسخ، حدّد النص وانسخه يدويًا')}}
 function toast(t){let d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1400)}
-function historyScreen(){let h=JSON.parse(localStorage.getItem('shaghilHistory')||'[]');$('historyList').innerHTML=h.length?h.map((x,i)=>`<div class="historyItem" onclick="openHistory(${i})"><b>${esc(x.title||x.engine)}</b><small>${new Date(x.ts).toLocaleString('ar-SA')}</small><p>${esc(x.text.slice(0,120))}...</p></div>`).join(''):'<p>ما فيه نتائج محفوظة حتى الآن.</p>';show('history')}
-function openHistory(i){let h=JSON.parse(localStorage.getItem('shaghilHistory')||'[]');if(!h[i])return;current=h[i].engine;renderResult(h[i].text,false)}
+function historyScreen(){cancelPending();let h=getHistory();$('historyList').innerHTML=h.length?h.map((x,i)=>`<div class="historyItem" onclick="openHistory(${i})"><b>${esc(x.title||x.engine)}</b><small>${new Date(x.ts).toLocaleString('ar-SA')}</small><p>${esc(x.text.slice(0,120))}...</p></div>`).join(''):'<p>ما فيه نتائج محفوظة حتى الآن.</p>';show('history')}
+function openHistory(i){let h=getHistory();if(!h[i])return;cancelPending();current=h[i].engine;lastInputs=h[i].inputs||null;renderResult(h[i].text,false)}
 if(getBrain())home();else show('welcome');
 </script></body></html>

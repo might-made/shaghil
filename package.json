@@ -1,6 +1,6 @@
 {
-  "name": "shaghil-v0.3-vercel",
-  "version": "0.3.0",
+  "name": "shaghil",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "engines": {

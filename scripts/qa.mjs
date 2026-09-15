@@ -32,4 +32,6 @@ for (const [name, ok] of checks) {
 }
 
 if (failed) process.exit(1);
-console.log("\nSHAGHIL V0.3 structural QA PASS");
+console.log("\nSHAGHIL V0.5 structural QA PASS");
+
+await import("./qa-v05.mjs");
