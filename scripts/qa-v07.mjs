@@ -18,4 +18,32 @@ vm.runInContext("current='content';renderResult("+JSON.stringify(plan)+")",ctx);
 assert.equal(win.document.querySelectorAll('#contentCards article').length,3);
 await win.document.querySelectorAll('#contentCards button')[2].onclick();assert.ok(win.document.getElementById('visualSource').textContent.startsWith('## اليوم الثالث'));
 assert.equal(win.document.getElementById('productFidelity').value,'exact');assert.ok(![...Array(win.localStorage.length)].some((_,i)=>win.localStorage.getItem(win.localStorage.key(i)).includes('original pixels')));
-dom.window.close();console.log('PASS V0.7 M1: multiple product Blobs, default exact fidelity, Content cards and direct Day 3 handoff');
+console.log('PASS V0.7 M1: multiple product Blobs, default exact fidelity, Content cards and direct Day 3 handoff');
+
+// The controller must retain the original Blob but omit it from an Exact request.
+win.blobPayload=async b=>({type:'image/png',base64:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg=='});
+const requests=[],compositions=[];
+win.composeVisual=async(bg,brand,settings,product)=>{compositions.push({bg,brand,settings,product});return new Blob(['rendered'],{type:'image/png'})};win.responseBlob=()=>new Blob(['scene'],{type:'image/jpeg'});
+win.fetch=async(url,opts)=>{requests.push(JSON.parse(opts.body));return {ok:true,json:async()=>({base64:'mock',mime:'image/jpeg',direction:1,model:'mock'})}};
+win.document.getElementById('visualProduct').value='product-0';win.Visual.selectProduct();await win.Visual.generate();
+assert.equal(requests.length,1);assert.equal(requests[0].product.fidelity,'exact');assert.equal(requests[0].product.image,undefined);assert.equal(requests[0].brand.references.length,0);
+assert.equal(await compositions[0].product.image.text(),'original pixels');assert.equal(await compositions[0].bg.text(),'scene');
+win.Visual.editOverlay();win.document.getElementById('editProductSize').value='large';win.document.getElementById('editProductPosition').value='left';win.document.getElementById('editProductVertical').value='bottom';win.document.getElementById('editLogoVisible').value='off';await win.Visual.applyOverlay();assert.equal(requests.length,1);assert.equal(compositions.at(-1).settings.productSize,'large');assert.equal(compositions.at(-1).settings.productPosition,'left');assert.equal(compositions.at(-1).settings.logoVisible,false);
+await win.Visual.choose();win.document.getElementById('visualProduct').value='product-0';win.Visual.selectProduct();win.document.getElementById('visualFidelity').value='creative';await win.Visual.generate();assert.ok(requests.at(-1).product.image);
+const {normalizeVisual,makePrompt}=await import('../api/visual.mjs');
+const exact=normalizeVisual(requests[0]);assert.equal(exact.images.length,0);assert.ok(makePrompt(exact,0).includes('ONLY an empty scene/background'));const creative=normalizeVisual(requests.at(-1));assert.equal(creative.images.length,1+requests.at(-1).brand.references.length);
+assert.throws(()=>normalizeVisual({...requests[0],product:{...requests[0].product,fidelity:'invented'}}));
+// Exercise the real compositor and prove the original asset is the drawn source.
+const saved={document:globalThis.document,Image:globalThis.Image,create:URL.createObjectURL,revoke:URL.revokeObjectURL};const blobs=new Map(),draws=[];let serial=0;
+URL.createObjectURL=b=>{const id='blob:qa-'+(++serial);blobs.set(id,b);return id};URL.revokeObjectURL=()=>{};
+globalThis.Image=class{set src(url){this.blob=blobs.get(url);this.width=400;this.height=200;queueMicrotask(()=>this.onload())}};
+const paint={drawImage(...args){draws.push(args)},fillRect(){},measureText(t){return {width:t.length*18}},fillText(){}};
+globalThis.document={createElement:()=>({getContext:()=>paint,toBlob:fn=>fn(new Blob(['canvas']))})};
+try{const {composeVisual}=await import('../lib/visual-canvas.mjs');const background=new Blob(['scene']),logo=new Blob(['logo']);
+ for(const format of ['1:1','4:5','9:16'])for(const size of ['small','medium','large'])for(const position of ['left','center','right']){
+  draws.length=0;await composeVisual(background,{logo},{format,textMode:'none',productSize:size,productPosition:position},{image:asset,fidelity:'exact'});assert.equal(draws.length,3);assert.equal(draws[1][0].blob,asset);assert.equal(draws[2][0].blob,logo);assert.equal(draws[1][3]/draws[1][4],2);assert.ok(draws[1][1]>=0&&draws[1][1]+draws[1][3]<=1080);
+ }
+ draws.length=0;await composeVisual(background,{logo},{format:'1:1',textMode:'none',logoVisible:false},{image:asset,fidelity:'creative'});assert.equal(draws.length,1);
+}finally{globalThis.document=saved.document;globalThis.Image=saved.Image;URL.createObjectURL=saved.create;URL.revokeObjectURL=saved.revoke}
+console.log('PASS V0.7 M2: original product pixels and logo composed locally; separate scene; size/position without requests; creative reference forwarding; exact excludes raster inputs');
+dom.window.close();
