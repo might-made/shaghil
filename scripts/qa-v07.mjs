@@ -46,4 +46,18 @@ try{const {composeVisual}=await import('../lib/visual-canvas.mjs');const backgro
  draws.length=0;await composeVisual(background,{logo},{format:'1:1',textMode:'none',logoVisible:false},{image:asset,fidelity:'creative'});assert.equal(draws.length,1);
 }finally{globalThis.document=saved.document;globalThis.Image=saved.Image;URL.createObjectURL=saved.create;URL.revokeObjectURL=saved.revoke}
 console.log('PASS V0.7 M2: original product pixels and logo composed locally; separate scene; size/position without requests; creative reference forwarding; exact excludes raster inputs');
+
+
+// Every explicit paid action has one request; all editor controls reuse pixels.
+await win.Visual.choose();win.document.getElementById('visualProduct').value='product-0';win.Visual.selectProduct();await win.Visual.generate();
+const editCount=requests.length;win.Visual.editOverlay();
+for(const [id,value]of Object.entries({editHeadline:'رحلتك مرتبة',editCTA:'اكتشف نجوب',editTextMode:'full',editLogoPosition:'bottom-left',editTextPosition:'top',editProductSize:'small',editProductPosition:'right',editFormat:'4:5'}))win.document.getElementById(id).value=value;
+await win.Visual.applyOverlay();assert.equal(requests.length,editCount);assert.equal(compositions.at(-1).settings.logoPosition,'bottom-left');assert.equal(compositions.at(-1).settings.textPosition,'top');
+for(const action of ['background','selected','recompose','different']){
+ win.document.getElementById('variationMode').value='Editorial';win.document.getElementById('recomposeFormat').value='9:16';const before=requests.length;await win.Visual.variant(action);assert.equal(requests.length,before+1);assert.equal(requests.at(-1).product.name,'منتج 0');assert.equal(requests.at(-1).settings.headline,'رحلتك مرتبة');assert.ok(requests.at(-1).task.selected);assert.equal(compositions.at(-1).product.image.size,asset.size);
+}
+for(const mode of ['Product Hero','Lifestyle','Performance Ad','Minimal Premium','Editorial']){win.document.getElementById('variationMode').value=mode;const before=requests.length;await win.Visual.variant('selected');assert.equal(requests.length,before+1);assert.equal(normalizeVisual(requests.at(-1)).settings.mode,mode)}
+let release;const immediateFetch=win.fetch;win.fetch=async(...args)=>{await new Promise(r=>release=r);return immediateFetch(...args)};const pending=win.Visual.variant('background');for(let i=0;i<10&&!release;i++)await new Promise(r=>setTimeout(r,0));const before=requests.length;await win.Visual.variant('recompose');release();await pending;assert.equal(requests.length,before+1);win.fetch=immediateFetch;
+await win.Visual.history();assert.ok(win.document.querySelectorAll('#visualHistoryList button').length);
+console.log('PASS V0.7 M3: free copy/CTA/logo/product/text/format edits; one request per background/variation/recompose; retained context and duplicate protection');
 dom.window.close();
