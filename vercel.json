@@ -1,7 +1,13 @@
 {
   "functions": {
-    "api/*.mjs": {
+    "api/generate.mjs": {
       "maxDuration": 30
+    },
+    "api/health.mjs": {
+      "maxDuration": 30
+    },
+    "api/visual.mjs": {
+      "maxDuration": 180
     }
   },
   "headers": [

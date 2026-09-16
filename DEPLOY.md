@@ -1,4 +1,4 @@
-# SHAGHIL V0.5 — Founder Preview
+# SHAGHIL V0.6 — Founder Preview
 
 ## Environment variables
 Set these in Vercel Project Settings → Environment Variables:
@@ -9,9 +9,9 @@ Set these in Vercel Project Settings → Environment Variables:
 Never expose the API key in browser code.
 
 ## Branch preview only
-All V0.5 development and commits belong on `shaghil-v0.5`. Do not modify or merge into `main`, change production configuration, or promote a deployment before founder approval.
+V0.5 is locked at `35c118a`. All V0.6 development and commits belong on `shaghil-v0.6`, created from that checkpoint. Do not modify `shaghil-v0.5`. Do not modify or merge into `main`, change production configuration, or promote a deployment before founder approval.
 
-1. Use the automatic Vercel preview for `shaghil-v0.5`, if configured.
+1. Use the automatic Vercel preview for `shaghil-v0.6`, if configured.
 2. Verify the required environment variables are available to that preview.
 3. Open the preview `/api/health` and verify:
    - `ok: true`
@@ -60,3 +60,6 @@ Before paid users:
 
 ## Automated QA
 Run `npm install` and `npm run qa` with Node 20 or newer. QA retains the existing structural checks and exercises the real server handler with a mocked OpenAI response, plus the inline browser application in a minimal DOM harness. It covers context forwarding, optional defaults, validation, refinements, history, copy, persistence, and request races. No live AI call or real API key is needed for QA. Live model quality and Vercel environment configuration require a separate preview review.
+
+## V0.6 Visual Studio
+See [V0.6 architecture, QA and Founder review guide](V0.6.md). `OPENAI_IMAGE_MODEL` is optional and defaults to `gpt-image-2.5-flare`; all image credentials stay server-side. Live image generation must be checked in Founder QA. No production deployment is authorized.

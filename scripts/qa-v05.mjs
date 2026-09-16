@@ -40,7 +40,7 @@ try {
   const method=response();await handler({method:'GET'},method);assert.equal(method.code,405);
   OpenAI.Responses.prototype.create=async()=>({output_text:''});
   const empty=response();await handler({method:'POST',body:{brain,engine:'offer'}},empty);assert.equal(empty.code,500);assert.ok(!empty.body.detail);
-  const h=response();health({},h);assert.equal(h.body.version,'0.5.0');
+  const h=response();health({},h);assert.equal(h.body.version,JSON.parse(fs.readFileSync('package.json','utf8')).version);
 } finally {OpenAI.Responses.prototype.create=originalCreate;if(originalKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=originalKey}
 console.log('PASS: six server engines, authoritative context, optional defaults, validation, refinements, empty output and health');
 
