@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>شغّل — V0.6</title>
+<title>شغّل — V0.7</title>
 <style>
 :root{--bg:#0e1012;--p:#181b1f;--p2:#20242a;--t:#f6f4ef;--m:#aab0b6;--l:#2d333a;--a:#e7f95b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:Inter,system-ui,-apple-system,"Segoe UI",Tahoma,Arial}
@@ -14,11 +14,11 @@ h1{font-size:44px;line-height:1.05;margin:8px 0 12px}h2{margin:0 0 12px}p{color:
 
 .btn:disabled{opacity:.45;cursor:wait}.brandSection{border-top:1px solid var(--l);margin-top:24px;padding-top:22px}.assetThumb{width:90px;height:90px;object-fit:contain;background:#fff;border-radius:12px}.assetRow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.visualPreview{display:block;max-width:100%;max-height:70vh;margin:18px auto;border-radius:16px}.visualNotice{padding:12px;border:1px solid var(--l);border-radius:12px}.sourceExcerpt{white-space:pre-wrap;max-height:180px;overflow:auto;background:#101315;padding:14px;border-radius:12px}.studioControls{margin-top:20px}input[type=color]{height:48px;padding:5px}.visualHistoryList{margin-top:20px}.resultTop{flex-wrap:wrap}.status[role=status]{line-height:1.7}button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--a);outline-offset:3px}
 @media(max-width:700px){.top{gap:8px;flex-wrap:wrap}.top .btn{font-size:12px;padding:9px}.card{padding:16px}.visualPreview{max-height:60vh}.assetThumb{width:70px;height:70px}}
-.actions.hidden{display:none}
+.actions.hidden,.grid.hidden{display:none}.ideaCard{min-width:0}.ideaCard p{overflow-wrap:anywhere}.ideaCard details{white-space:pre-wrap;max-height:300px;overflow:auto}
 </style>
 </head>
 <body><div class="wrap">
-<div class="top"><div class="brand"><div class="logo">ش</div><div><b>شغّل</b><small>Built by MIGHT MADE · V0.6</small></div></div><div><button class="btn" onclick="home()">الرئيسية</button> <button class="btn" onclick="brainScreen()">Business Brain</button></div></div>
+<div class="top"><div class="brand"><div class="logo">ش</div><div><b>شغّل</b><small>Built by MIGHT MADE · V0.7</small></div></div><div><button class="btn" onclick="home()">الرئيسية</button> <button class="btn" onclick="brainScreen()">Business Brain</button></div></div>
 
 <section id="welcome" class="card"><div class="status">FUNCTIONAL MVP</div><h1>مشروعك.<br>لكن أسرع.</h1><p>جهّز بيانات مشروعك مرة واحدة في Business Brain، وشغّل ست أدوات تساعدك تنجز.</p><div class="actions"><button class="btn primary" onclick="setup()">ابدأ</button><button class="btn" onclick="demo()">Demo</button></div></section>
 
@@ -34,6 +34,9 @@ h1{font-size:44px;line-height:1.05;margin:8px 0 12px}h2{margin:0 0 12px}p{color:
 <div><label for="brandPrimary">اللون الأساسي</label><input id="brandPrimary" type="color" value="#e7f95b"></div><div><label for="brandSecondary">اللون الثانوي</label><input id="brandSecondary" type="color" value="#181b1f"></div>
 <div><label for="brandAccent">لون إضافي (اختياري)</label><input id="brandAccent" placeholder="#FFFFFF" maxlength="7" dir="ltr"></div><div class="full"><label for="brandStyle">الأسلوب البصري</label><textarea id="brandStyle" maxlength="1600" placeholder="تصوير سعودي عصري، إضاءة طبيعية، تكوين بسيط والمنتج هو البطل"></textarea></div>
 </div><p id="brandStatus" role="status" class="status"></p></div>
+<div class="brandSection"><h2>مكتبة المنتجات</h2><p>صور منتجاتك الأصلية مستقلة عن الشعار والمراجع. تحفظ على هذا المتصفح والرابط فقط؛ لا ترفع إلى تخزين سحابي. حتى 12 منتجًا. استخدم PNG بخلفية شفافة لتركيب أنظف؛ خلفية الصورة الأصلية تبقى كما هي.</p><button class="btn" onclick="Products.reset()">+ إضافة منتج</button><div class="form">
+<div><label for="productName">اسم المنتج</label><input id="productName" maxlength="120"></div><div><label for="productImage">صورة المنتج الأصلية</label><input id="productImage" type="file" accept="image/png,image/jpeg,image/webp" onchange="Products.upload(this.files[0])"></div>
+<div><label for="productDescription">وصف قصير (اختياري)</label><textarea id="productDescription" maxlength="600"></textarea></div><div><label for="productFidelity">الحفاظ على المنتج</label><select id="productFidelity"><option value="exact">المنتج الأصلي</option><option value="creative">معالجة إبداعية</option></select></div></div><button id="productSave" class="btn" onclick="Products.save()">حفظ المنتج</button><p id="productStatus" role="status"></p><div id="productList" class="grid"></div></div>
 <div class="actions"><button id="saveProjectBtn" class="btn primary" onclick="Visual.saveProject()">حفظ والبدء</button></div></section>
 
 <section id="brain" class="card hidden"><h2>Business Brain</h2><div class="brain" id="brainGrid"></div><p id="brandSummary"></p><div class="actions"><button class="btn" onclick="setup(true)">تعديل</button><button class="btn primary" onclick="home()">ابدأ شغّل</button></div></section>
@@ -48,7 +51,7 @@ h1{font-size:44px;line-height:1.05;margin:8px 0 12px}h2{margin:0 0 12px}p{color:
 </div></section>
 
 <section id="engine" class="card hidden"><h2 id="engineTitle"></h2><p>بيانات مشروعك مأخوذة تلقائيًا من Business Brain</p><div id="engineForm"></div><div class="actions"><button id="runBtn" class="btn primary" onclick="run()">شغّل</button><button class="btn" onclick="home()">إلغاء</button></div></section>
-<section id="output" class="card hidden"><div class="resultTop"><h2>النتيجة</h2><button class="btn" onclick="historyScreen()">السجل</button></div><div class="refine"><button class="btn" onclick="refine('shorter')">أقصر</button><button class="btn" onclick="refine('stronger')">CTA أقوى</button><button class="btn" onclick="refine('saudi')">سعودي أكثر</button><button class="btn" onclick="refine('premium')">Premium</button></div><div class="out" id="out"></div><div id="visualEntry" class="actions hidden"><button class="btn primary" onclick="Visual.choose()">اصنع التصميم</button><span class="status">اختر فكرة من النتيجة، أو ظلّل نص الفكرة أولًا</span></div><div class="actions"><button class="btn primary" onclick="copyOut()">نسخ النتيجة</button><button class="btn" onclick="run(true)">نسخة ثانية</button><button class="btn" onclick="home()">مهمة جديدة</button></div></section><section id="history" class="card hidden"><div class="resultTop"><h2>آخر النتائج</h2><button class="btn" onclick="home()">إغلاق</button></div><div id="historyList"></div><h3>التصاميم المحفوظة</h3><div id="visualHistoryList" class="visualHistoryList"></div></section>
+<section id="output" class="card hidden"><div class="resultTop"><h2>النتيجة</h2><button class="btn" onclick="historyScreen()">السجل</button></div><div class="refine"><button class="btn" onclick="refine('shorter')">أقصر</button><button class="btn" onclick="refine('stronger')">CTA أقوى</button><button class="btn" onclick="refine('saudi')">سعودي أكثر</button><button class="btn" onclick="refine('premium')">Premium</button></div><div id="contentCards" class="grid hidden"></div><div class="out" id="out"></div><div id="visualEntry" class="actions hidden"><button class="btn primary" onclick="Visual.choose()">اصنع التصميم</button><span class="status">اختر فكرة من النتيجة، أو ظلّل نص الفكرة أولًا</span></div><div class="actions"><button class="btn primary" onclick="copyOut()">نسخ النتيجة</button><button class="btn" onclick="run(true)">نسخة ثانية</button><button class="btn" onclick="home()">مهمة جديدة</button></div></section><section id="history" class="card hidden"><div class="resultTop"><h2>آخر النتائج</h2><button class="btn" onclick="home()">إغلاق</button></div><div id="historyList"></div><h3>التصاميم المحفوظة</h3><div id="visualHistoryList" class="visualHistoryList"></div></section>
 
 <section id="visualStudio" class="card hidden"><div class="resultTop"><h2>Visual Studio</h2><button class="btn" onclick="Visual.back()">رجوع للمحتوى</button></div>
 <p>بيانات مشروعك وهويتك مأخوذة تلقائيًا من Business Brain وBrand Brain.</p><p id="studioBrand" class="status"></p>
