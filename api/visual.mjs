@@ -56,7 +56,8 @@ Creative direction: ${DIRECTIONS[direction]} This direction must be visibly dist
 Visual mode: ${task.settings.mode}. Target format: ${task.settings.format}. ${task.hasLogo?'Reserve the top right corner for the actual logo.':''}
 BUSINESS BRAIN: ${JSON.stringify(task.brain)}
 BRAND BRAIN: ${JSON.stringify(task.brand)}
-SELECTED TASK: ${JSON.stringify(task.task)}
+PRIMARY CREATIVE IDEA (visualize this selected item, not the overall plan title): ${JSON.stringify(task.task.selected)}
+SECONDARY SOURCE CONTEXT (background only; do not combine other days/items into the selected idea): ${JSON.stringify({engine:task.task.engine,context:task.task.context})}
 APPROVED TEXT FOR CONTEXT ONLY (DO NOT RENDER): ${JSON.stringify({headline:task.settings.headline,cta:task.settings.cta,textMode:task.settings.textMode})}`;
 }
 export default async function handler(req,res) {

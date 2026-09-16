@@ -35,7 +35,7 @@ try{
 console.log('PASS: 45 format/mode/text combinations; source engines, references, logo exclusion, server validation, one image, no retries, error handling');
 
 globalThis.indexedDB=indexedDB;
-const brand={...base.brand,logo:new Blob([Buffer.from(png,'base64')],{type:'image/png'}),references:[new Blob(['reference'],{type:'image/jpeg'})]};
+const brand={...base.brand,logo:new Blob([Buffer.from(png,'base64')],{type:'image/png'}),references:[new Blob([Buffer.from(png,'base64')],{type:'image/png'})]};
 await storage.saveBrand(brand);const restored=await storage.loadBrand();assert.equal(restored.style,brand.style);assert.equal(restored.primary,brand.primary);assert.equal(restored.logo.size,brand.logo.size);assert.equal(restored.references.length,1);
 for(let i=0;i<12;i++)await storage.saveVisual({id:String(i),ts:i,background:brand.logo,rendered:brand.logo,task:base.task,settings:base.settings});
 const records=await storage.listVisuals();assert.equal(records.length,10);assert.equal(records[0].id,'11');assert.equal(await storage.loadVisual('0'),undefined);assert.equal((await storage.loadVisual('11')).settings.format,'1:1');
@@ -52,20 +52,38 @@ win.blobPayload=async b=>({type:b.type,base64:png});win.responseBlob=()=>brand.l
 win.requests=[];let release;let delayed=false;
 win.fetch=async(url,opts)=>{win.requests.push({url,body:JSON.parse(opts.body)});if(delayed)await new Promise(r=>release=r);return {ok:true,json:async()=>({base64:'/9j/2Q==',mime:'image/jpeg',direction:3,model:'mock-image'})}};
 vm.runInContext(html.match(/<script>([\s\S]*?)<\/script>/)[1],ctx);
-let controller=fs.readFileSync('lib/visual-studio.mjs','utf8').replace(/^import .*;\n/gm,'').replace('export function splitIdeas','function splitIdeas');vm.runInContext("(function(){"+controller+"})()",ctx);
+let controller=fs.readFileSync('lib/visual-studio.mjs','utf8').replace(/^import .*;\n/gm,'').replace('export function splitIdeas','function splitIdeas');const splitIdeas=vm.runInContext("(function(){"+controller+";return splitIdeas})()",ctx);
+const dayNames=['الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع'];
+const planTitle='# خطة محتوى نجوب لمدة 7 أيام';
+const dayBlocks=dayNames.map((day,i)=>`## اليوم ${day}: فكرة ${i+1}\n### الهوك\nلحظة قهوة ${i+1}\n### الفكرة\nتصوير المنتج بإضاءة طبيعية ${i+1}\nCTA: اكتشف قهوتك`);
+const plan=planTitle+'\nمقدمة الخطة\n\n'+dayBlocks.join('\n\n');
+for(const blocks of [dayBlocks,dayBlocks.map((s,i)=>s.replace(`## اليوم ${dayNames[i]}`,`**اليوم ${i+1}**`)),dayBlocks.map((s,i)=>s.replace(`## اليوم ${dayNames[i]}`,`### Day ${i+1}`)),dayBlocks.map((s,i)=>s.replace(`## اليوم ${dayNames[i]}`,`- **اليوم ${'١٢٣٤٥٦٧'[i]}**`)),dayBlocks.map((s,i)=>s.replace(`## اليوم ${dayNames[i]}`,`${i+1}. فكرة`))]){
+ const context=planTitle+'\n\n'+blocks.join('\n\n');const items=splitIdeas(context);assert.equal(items.length,7);assert.equal(items[2],blocks[2]);assert.ok(items.every(item=>context.includes(item)&&!item.includes(planTitle)));
+}
+const table='| اليوم | الفكرة | CTA |\n| --- | --- | --- |\n| اليوم 1 | قهوة الصباح | اكتشفها |\n| اليوم 2 | قهوة المساء | جرّبها |\n| اليوم 3 | قهوة المكتب | تواصل |';
+assert.equal(splitIdeas(table)[2],'| اليوم 3 | قهوة المكتب | تواصل |');
+assert.equal(splitIdeas('# خطة\n## فكرة القهوة\n### الهوك\nصباحك أجمل\n## فكرة الحلوى\n### الهوك\nلحظة حلوة').length,2);
+console.log('PASS: full day extraction with plan titles, Arabic ordinal/numeric days, English days, nested headings, bullets, numbered ideas and table rows');
 const run=code=>vm.runInContext(code,ctx);
 win.localStorage.setItem('brain',JSON.stringify(brain));await run('Visual.setupBrand()');assert.equal(win.document.getElementById('brandPrimary').value,brand.primary);
 // Real save via the integrated setup preserves both sets of fields.
 for(const [k,v]of Object.entries(brain))win.document.getElementById(k).value=v;
 win.document.getElementById('brandStyle').value='أسلوب محفوظ جديد';await run('Visual.saveProject()');assert.equal((await storage.loadBrand()).style,'أسلوب محفوظ جديد');assert.deepEqual(JSON.parse(win.localStorage.getItem('brain')),brain);
-run("current='content';lastInputs={period:'7 أيام'};renderResult("+JSON.stringify('## اليوم الأول\nقهوة الصباح\nCTA: تواصل معنا\n\n## اليوم الثاني\nقهوة المساء')+")");
+run("current='content';lastInputs={period:'7 أيام'};renderResult("+JSON.stringify(plan)+")");
 assert.equal(win.document.getElementById('visualEntry').classList.contains('hidden'),false);
 await run('Visual.choose()');assert.equal(win.document.getElementById('visualTextMode').value,'none');assert.ok(win.document.getElementById('visualIdea').options.length>=2);
+assert.equal(win.document.getElementById('visualIdea').options.length,7);
+win.document.getElementById('visualIdea').value='2';await run('Visual.selectIdea()');assert.equal(win.document.getElementById('visualSource').textContent,dayBlocks[2]);
 win.document.getElementById('visualFormat').value='4:5';await run('Visual.generate()');assert.equal(win.requests.length,1);assert.deepEqual(win.requests[0].body.brain,brain);assert.equal(win.requests[0].body.brand.style,'أسلوب محفوظ جديد');assert.ok(win.requests[0].body.task.context.includes(win.requests[0].body.task.selected));assert.equal(win.requests[0].body.settings.format,'4:5');
 const original=win.requests[0].body;await run("Visual.variant('different')");const variant=win.requests.at(-1).body;assert.deepEqual(variant.brain,original.brain);assert.deepEqual(variant.brand,original.brand);assert.deepEqual(variant.task,original.task);assert.deepEqual(variant.settings,original.settings);assert.equal(variant.previousDirection,3);
+assert.equal(original.task.selected,dayBlocks[2]);assert.equal(original.task.context,plan);
+const selectedPrompt=makePrompt(normalizeVisual(original),0);assert.ok(selectedPrompt.includes('PRIMARY CREATIVE IDEA (visualize this selected item, not the overall plan title): '+JSON.stringify(dayBlocks[2])));
+assert.ok(selectedPrompt.includes('SECONDARY SOURCE CONTEXT'));assert.ok(selectedPrompt.includes(planTitle));
 const count=win.requests.length;await run('Visual.noText()');run('Visual.editOverlay()');win.document.getElementById('editFormat').value='9:16';win.document.getElementById('editTextMode').value='simple';win.document.getElementById('editHeadline').value='قهوة الصباح';await run('Visual.applyOverlay()');assert.equal(win.requests.length,count);assert.equal(win.composeCalls.at(-1).settings.format,'9:16');
 await run('Visual.history()');assert.ok(win.document.getElementById('visualHistoryList').children.length>0);run('Visual.back()');assert.ok(!win.document.getElementById('output').classList.contains('hidden'));
-for(const engine of ['copy','whatsapp','reel']){run(`current='${engine}';Visual.resultEntry()`);assert.ok(win.document.getElementById('visualEntry').classList.contains('hidden'))}
+assert.equal(run('lastText'),plan);
+for(const engine of ['campaign','offer']){run(`current='${engine}';renderResult('## الفكرة الرئيسية\\nقهوة لجمعات الأصدقاء\\nCTA: اكتشف المنتج')`);await run('Visual.choose()');await run('Visual.generate()');const request=win.requests.at(-1).body;assert.equal(request.task.engine,engine);assert.ok(request.task.selected.includes('قهوة لجمعات الأصدقاء'));assert.deepEqual(request.brain,brain);assert.equal(request.brand.style,'أسلوب محفوظ جديد')}
+for(const engine of ['copy','whatsapp','reel']){run(`current='${engine}';Visual.resultEntry()`);assert.ok(win.document.getElementById('visualEntry').classList.contains('hidden'));assert.equal(win.getComputedStyle(win.document.getElementById('visualEntry')).display,'none')}
 run("current='offer'");await run('Visual.choose()');delayed=true;const inFlight=run('Visual.generate()');for(let i=0;i<10&&!release;i++)await new Promise(r=>setTimeout(r,0));const before=win.requests.length;await run('Visual.generate()');assert.equal(win.requests.length,before);run('home()');release();await inFlight;assert.ok(!win.document.getElementById('home').classList.contains('hidden'));delayed=false;
 for(let i=0;i<win.localStorage.length;i++){const value=win.localStorage.getItem(win.localStorage.key(i));assert.ok(!value.includes(png));assert.ok(!value.includes('data:image'))}
 for(const file of ['index.html','lib/visual-studio.mjs','lib/visual-storage.mjs','lib/visual-canvas.mjs'])assert.ok(!fs.readFileSync(file,'utf8').includes('OPENAI_API_KEY'));
