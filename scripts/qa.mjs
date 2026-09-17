@@ -39,3 +39,6 @@ await import("./qa-v05.mjs");
 await import("./qa-v06.mjs");
 
 await import('./qa-v07.mjs');
+
+const {execFileSync}=await import('node:child_process');
+execFileSync(process.execPath,['scripts/qa-v07-migration.mjs'],{stdio:'inherit'});

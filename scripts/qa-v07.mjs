@@ -60,4 +60,18 @@ for(const mode of ['Product Hero','Lifestyle','Performance Ad','Minimal Premium'
 let release;const immediateFetch=win.fetch;win.fetch=async(...args)=>{await new Promise(r=>release=r);return immediateFetch(...args)};const pending=win.Visual.variant('background');for(let i=0;i<10&&!release;i++)await new Promise(r=>setTimeout(r,0));const before=requests.length;await win.Visual.variant('recompose');release();await pending;assert.equal(requests.length,before+1);win.fetch=immediateFetch;
 await win.Visual.history();assert.ok(win.document.querySelectorAll('#visualHistoryList button').length);
 console.log('PASS V0.7 M3: free copy/CTA/logo/product/text/format edits; one request per background/variation/recompose; retained context and duplicate protection');
-dom.window.close();
+
+
+const {exportPack,safeName}=await import('../lib/campaign-export.mjs');win.exportPack=exportPack;
+const packController=fs.readFileSync('lib/campaign-packs.mjs','utf8').replace(/^import .*;\n/gm,'');vm.runInContext('(function(){'+packController+'})()',ctx);
+const savedRecord=(await store.listVisuals())[0];await win.Packs.prepare(savedRecord);win.document.getElementById('packName').value='سفر العائلة';win.document.getElementById('packCaption').value='كل شيء في مكانه';win.document.getElementById('packCTA').value='اكتشف المنتج';
+const packCalls=requests.length;await win.Packs.add(savedRecord);const pack=(await store.listPacks())[0];assert.equal(pack.entries.length,1);assert.equal(pack.entries[0].caption,'كل شيء في مكانه');assert.equal(await pack.entries[0].record.product.image.text(),'original pixels');
+for(let i=0;i<12;i++)await store.saveVisual({...savedRecord,id:'later-'+i,ts:Date.now()+i});assert.equal((await store.listVisuals()).length,10);assert.equal((await store.listPacks())[0].entries[0].record.id,savedRecord.id);
+await win.Packs.render();assert.ok(win.document.querySelector('#campaignPacks h3').textContent.includes('سفر العائلة'));win.document.querySelector('#campaignPacks .historyItem button').click();assert.equal(win.document.getElementById('visualResult').classList.contains('hidden'),false);
+const bundle=await exportPack(pack);assert.ok(bundle.name.includes('سفر-العائلة'));assert.equal(requests.length,packCalls);assert.equal(safeName('../../evil/<script>'),'evil-script');
+// Verify ZIP interoperability and CRC with Python's independent standard reader.
+const {mkdtempSync,writeFileSync,rmSync}=await import('node:fs');const {tmpdir}=await import('node:os');const {join}=await import('node:path');const {execFileSync}=await import('node:child_process');const dir=mkdtempSync(join(tmpdir(),'shaghil-zip-'));
+try{const archive=join(dir,'pack.zip');writeFileSync(archive,Buffer.from(await bundle.blob.arrayBuffer()));execFileSync('python3',['-c',"import zipfile,sys,json; z=zipfile.ZipFile(sys.argv[1]); assert z.testzip() is None; names=z.namelist(); assert len(names)==3; assert all('..' not in n for n in names); m=json.loads(z.read(next(n for n in names if n.endswith('manifest.json')))); assert m['campaign']=='سفر العائلة'; assert m['entries'][0]['fidelity']=='exact'; assert 'كل شيء في مكانه' in z.read(next(n for n in names if n.endswith('-copy.txt'))).decode()",archive])}finally{rmSync(dir,{recursive:true,force:true})}
+for(const file of ['index.html',...fs.readdirSync('lib').filter(f=>f.endsWith('.mjs')).map(f=>'lib/'+f)])assert.ok(!fs.readFileSync(file,'utf8').includes('OPENAI_API_KEY'));
+assert.equal(requests.length,packCalls);console.log('PASS V0.7 M4: approved pack snapshots survive history pruning; reopening; UTF-8 ZIP images/copy/manifest; independent CRC check; zero API calls; no browser credentials');
+await win.Packs.prepare(savedRecord);dom.window.close();
