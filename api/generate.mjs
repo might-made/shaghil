@@ -73,7 +73,11 @@ export default async function handler(req, res) {
   try {
     if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: "OPENAI_API_KEY is not configured" });
     const { brain, engine, inputs, refinement, previous } = task;
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    // No SDK retries and a client timeout comfortably under this function's maxDuration (60s):
+    // without it, a slow call (campaign asks for by far the largest output) can run past the
+    // platform's own hard timeout, which kills the function before this code can return JSON,
+    // surfacing Vercel's own non-JSON error page to the browser instead.
+    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, maxRetries: 0, timeout: 55000 });
     const model = process.env.OPENAI_MODEL || "gpt-5.6-luna";
     const refinementText = refinement && REFINE[refinement] ? `\n\nREFINEMENT: ${REFINE[refinement]}\nPREVIOUS OUTPUT:\n${previous}` : "";
     const response = await client.responses.create({
@@ -85,7 +89,7 @@ export default async function handler(req, res) {
     if (!response.output_text?.trim()) throw new Error("Empty model response");
     return res.status(200).json({ text: response.output_text, model });
   } catch (err) {
-    console.error("SHAGHIL generation error:", err?.status || "unknown");
+    console.error("SHAGHIL generation error:", task.engine, err?.name || "unknown", err?.status || "", err?.message || "");
     return res.status(500).json({ error: "تعذّر إنشاء النتيجة، جرّب مرة ثانية" });
   }
 }

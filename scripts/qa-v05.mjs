@@ -52,7 +52,7 @@ function app(){
   const nodes=new Map();
   function node(id){return {id,value:'',textContent:'',hidden:false,classList:{toggle(_,hidden){nodes.get(id).hidden=hidden}},focus(){},remove(){},set innerHTML(value){this.html=value;if(id==='engineForm'){for(const key of ['period','channel','instruction','constraint','message','occasion','duration','topic'])nodes.delete(key);for(const match of value.matchAll(/<(input|textarea|select)\b[^>]*id="([^"]+)"[^>]*>/g)){const n=node(match[2]);n.value=match[0].match(/value="([^"]*)"/)?.[1]||'';if(match[1]==='select')n.value=value.slice(match.index).match(/<option>([^<]+)/)?.[1]||'';nodes.set(match[2],n)}}},get innerHTML(){return this.html||''}}}
   for(const match of html.matchAll(/id="([^"]+)"/g))nodes.set(match[1],node(match[1]));
-  const context=vm.createContext({document:{getElementById:id=>nodes.get(id),createElement:()=>node('toast'),body:{appendChild(){}}},localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},navigator:{clipboard:{writeText:async text=>{copied=text}}},setTimeout(){},fetch:async(url,options)=>{const payload=JSON.parse(options.body);requests.push(payload);if(pending)return pending;return {ok:true,json:async()=>({text:`## ${payload.engine}\nنتيجة قابلة للنسخ`})}}});
+  const context=vm.createContext({document:{getElementById:id=>nodes.get(id),createElement:()=>node('toast'),body:{appendChild(){}}},localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},navigator:{clipboard:{writeText:async text=>{copied=text}}},setTimeout(){},fetch:async(url,options)=>{const payload=JSON.parse(options.body);requests.push(payload);if(pending)return pending;return {ok:true,status:200,text:async()=>JSON.stringify({text:`## ${payload.engine}\nنتيجة قابلة للنسخ`})}}});
   vm.runInContext(script,context);
   return {context,nodes,run:code=>vm.runInContext(code,context)};
 }
@@ -80,7 +80,36 @@ assert.equal(JSON.parse(storage.get('shaghilHistory')).length,10);
 storage.set('shaghilHistory',JSON.stringify([{engine:'whatsapp',text:'رد قديم',ts:0}]));ui.run('openHistory(0)');await ui.run("refine('shorter')");assert.equal(requests.at(-1).engine,'whatsapp');
 ui.run('openHistory(1)');const oldCount=requests.length;await ui.run('run(true)');assert.equal(requests.length,oldCount);assert.equal(ui.nodes.get('engine').hidden,false);
 // A response arriving after navigation must not replace the new screen.
-let resolve;pending=new Promise(r=>{resolve=r});ui.run("openEngine('offer')");const running=ui.run('run()');const inFlight=requests.length;await ui.run('run()');assert.equal(requests.length,inFlight);ui.run('home()');resolve({ok:true,json:async()=>({text:'late'})});await running;pending=null;assert.equal(ui.nodes.get('home').hidden,false);
+let resolve;pending=new Promise(r=>{resolve=r});ui.run("openEngine('offer')");const running=ui.run('run()');const inFlight=requests.length;await ui.run('run()');assert.equal(requests.length,inFlight);ui.run('home()');resolve({ok:true,status:200,text:async()=>JSON.stringify({text:'late'})});await running;pending=null;assert.equal(ui.nodes.get('home').hidden,false);
 storage.set('brain','{broken');ui=app();assert.equal(ui.nodes.get('welcome').hidden,false);
 storage.set('brain',JSON.stringify({...brain,name:'<img src=x onerror=alert(1)>'}));ui.run('brainScreen()');assert.ok(!ui.nodes.get('brainGrid').innerHTML.includes('<img'));
 console.log('PASS: save → reload → all six engines → generate → copy → refinements → second version → home; history restoration, legacy history, duplicate requests, navigation races, malformed storage and escaped Brain');
+
+// Regression for the Founder Live QA failure: سوّ حملة (campaign) with a blank occasion and
+// 7-day duration threw a raw "Unexpected token ... is not valid JSON" instead of a controlled
+// error, because /api/generate's response was parsed with an unguarded r.json(). Cover both
+// the exact successful case and a non-JSON upstream/platform failure response.
+const najoob={name:'نجوب',category:'سفر',product:'منظم سفر العائلة',customer:'العائلة السعودية',location:'السعودية',price:'150-300 SAR',tone:'سعودي طبيعي',objective:'زيادة المبيعات'};
+ui=app();
+for(const [k,v]of Object.entries(najoob))ui.nodes.get(k).value=v;
+ui.run('saveBrain()');assert.equal(ui.nodes.get('home').hidden,false);
+ui.run("openEngine('campaign')");
+ui.nodes.get('occasion').value='';ui.nodes.get('duration').value='7 أيام';
+await ui.run('run()');
+assert.equal(ui.nodes.get('output').hidden,false);
+assert.equal(requests.at(-1).engine,'campaign');
+assert.deepEqual(requests.at(-1).inputs,{occasion:'',duration:'7 أيام'});
+assert.deepEqual(requests.at(-1).brain,najoob);
+assert.ok(ui.nodes.get('out').innerHTML.includes('campaign'));
+console.log('PASS: campaign engine (سوّ حملة) succeeds for the Najoob Business Brain with a blank occasion and 7-day duration');
+
+ui.context.fetch=async(url,options)=>{JSON.parse(options.body);return {ok:false,status:500,text:async()=>'An error occurred with your deployment. FUNCTION_INVOCATION_TIMEOUT'}};
+ui.run("openEngine('campaign')");
+ui.nodes.get('occasion').value='';ui.nodes.get('duration').value='7 أيام';
+await ui.run('run()');
+assert.equal(ui.nodes.get('output').hidden,false);
+const shown=ui.nodes.get('out').innerHTML;
+assert.ok(!shown.includes('Unexpected token'),'a non-JSON upstream response must never surface the raw JSON.parse error');
+assert.ok(!shown.includes('An error o'),'the raw platform error text must never reach the user');
+assert.ok(shown.includes('ما قدرنا نكمل المهمة'),'a controlled, actionable Arabic error must be shown instead');
+console.log('PASS: a non-JSON upstream/provider response (e.g. a platform timeout page) surfaces as a controlled error, never a raw JSON.parse failure');
