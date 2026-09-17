@@ -47,3 +47,5 @@ const {execFileSync}=await import('node:child_process');
 // which would collide with the products earlier suites in this same process already saved.
 execFileSync(process.execPath,['scripts/qa-v07-product-persistence.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/qa-v07-migration.mjs'],{stdio:'inherit'});
+// Orchestrates its own two child processes (two separate simulated browser origins).
+execFileSync(process.execPath,['scripts/qa-v08-workspace-transfer.mjs'],{stdio:'inherit'});
