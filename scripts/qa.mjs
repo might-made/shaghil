@@ -50,3 +50,4 @@ execFileSync(process.execPath,['scripts/qa-v07-migration.mjs'],{stdio:'inherit'}
 // Orchestrates its own two child processes (two separate simulated browser origins).
 execFileSync(process.execPath,['scripts/qa-v08-workspace-transfer.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/qa-v08-import-recovery-ui.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/qa-v08-history-nav.mjs'],{stdio:'inherit'});
