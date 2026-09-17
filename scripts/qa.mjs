@@ -43,4 +43,7 @@ await import('./qa-v07.mjs');
 await import('./qa-v07-upload-ux.mjs');
 
 const {execFileSync}=await import('node:child_process');
+// Runs in its own process (fresh IndexedDB) since it counts saved products by name/id,
+// which would collide with the products earlier suites in this same process already saved.
+execFileSync(process.execPath,['scripts/qa-v07-product-persistence.mjs'],{stdio:'inherit'});
 execFileSync(process.execPath,['scripts/qa-v07-migration.mjs'],{stdio:'inherit'});
