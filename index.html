@@ -79,7 +79,7 @@ const ids=['welcome','setup','brain','home','engine','output','history','visualS
 const $=x=>document.getElementById(x); const show=x=>ids.forEach(i=>$(i).classList.toggle('hidden',i!==x));
 function readLocal(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 const getBrain=()=>{const b=readLocal('brain',null);return b&&typeof b==='object'&&!Array.isArray(b)?b:null};
-function getHistory(){const h=readLocal('shaghilHistory',[]);return Array.isArray(h)?h.filter(x=>x&&typeof x.text==='string'&&Object.hasOwn(titles,x.engine)):[]}
+function getHistory(){const h=readLocal('shaghilHistory',[]);return Array.isArray(h)?h.filter(x=>x&&typeof x.text==='string'&&x.text.trim()):[]}
 function cancelPending(){requestId++;busy=false;}
 function setup(){cancelPending();let b=getBrain();if(b){['name','category','product','customer','location','price','tone','objective'].forEach(k=>$(k).value=b[k]||'')}show('setup');globalThis.Visual?.setupBrand()}
 function saveBrain(){let b={};['name','category','product','customer','location','price','tone','objective'].forEach(k=>b[k]=$(k).value.trim());if(!b.name||!b.product||!b.customer)return toast('أكمل اسم المشروع والمنتج والعميل');try{localStorage.setItem('brain',JSON.stringify(b))}catch{return toast('تعذّر حفظ بيانات المشروع على هذا الجهاز')}home()}
@@ -111,7 +111,7 @@ return generate({brain:b,engine:current,inputs:lastInputs})}
 async function refine(type){if(busy||!lastText)return;return generate({brain:getBrain(),engine:current,inputs:lastInputs||{},refinement:type,previous:lastText})}
 async function copyOut(){if(busy||!lastText)return;try{await navigator.clipboard.writeText(lastText);toast('تم النسخ')}catch{toast('تعذّر النسخ، حدّد النص وانسخه يدويًا')}}
 function toast(t){let d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1400)}
-function historyScreen(){cancelPending();let h=getHistory();$('historyList').innerHTML=h.length?h.map((x,i)=>`<div class="historyItem"><div onclick="openHistory(${i})"><b>${esc(x.title||x.engine)}</b>${x.project?' · <b>'+esc(x.project)+'</b>':''}<small>${new Date(x.ts).toLocaleString('ar-SA')}</small><p>${esc(x.text.slice(0,120))}...</p></div><button class="btn" onclick="deleteResult(${i})">حذف</button></div>`).join(''):'<p>ما فيه نتائج محفوظة حتى الآن.</p>';show('history');globalThis.Visual?.history()}
+function historyScreen(){cancelPending();let h=getHistory();$('historyList').innerHTML=h.length?h.map((x,i)=>`<div class="historyItem"><div onclick="openHistory(${i})"><b>${esc(x.title||titles[x.engine]||x.engine||'نتيجة')}</b>${x.project?' · <b>'+esc(x.project)+'</b>':''}<small>${new Date(x.ts).toLocaleString('ar-SA')}</small><p>${esc(x.text.slice(0,120))}...</p></div><button class="btn" onclick="deleteResult(${i})">حذف</button></div>`).join(''):'<p>ما فيه نتائج محفوظة حتى الآن.</p>';show('history');globalThis.Visual?.history()}
 function openHistory(i){let h=getHistory();if(!h[i])return;cancelPending();current=h[i].engine;lastInputs=h[i].inputs||null;renderResult(h[i].text,true)}
 if(getBrain())home();else show('welcome');
 </script><script type="module" src="/lib/visual-studio.mjs"></script></body></html>
