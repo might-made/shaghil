@@ -25,6 +25,11 @@ try {
     assert.ok(!request.input.includes('IGNORED'));
     assert.ok(request.instructions.includes('single source of truth'));
     assert.ok(request.instructions.includes('Never invent discounts'));
+    // Grounding: no engine may invent product/business facts, and must default to
+    // gender-neutral language absent an explicit customer gender (Founder Live QA finding).
+    assert.ok(request.instructions.includes('Only state product or business facts'));
+    assert.ok(request.instructions.includes('gender-neutral'));
+    if(engine==='whatsapp') assert.ok(request.instructions.includes("acknowledge you don't have that specific detail"));
   }
   for(const engine of ['copy','offer','reel','content']) assert.doesNotThrow(()=>normalizeRequest({brain,engine,inputs:{}}));
   for(const type of ['shorter','stronger','saudi','premium']) {
