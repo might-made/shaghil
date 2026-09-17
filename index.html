@@ -22,7 +22,9 @@ h1{font-size:44px;line-height:1.05;margin:8px 0 12px}h2{margin:0 0 12px}p{color:
 
 <section id="welcome" class="card"><div class="status">FUNCTIONAL MVP</div><h1>مشروعك.<br>لكن أسرع.</h1><p>جهّز بيانات مشروعك مرة واحدة في Business Brain، وشغّل ست أدوات تساعدك تنجز.</p><div class="actions"><button class="btn primary" onclick="setup()">ابدأ</button><button class="btn" onclick="demo()">Demo</button></div></section>
 
-<section id="setup" class="card hidden"><h2>جهّز Business Brain</h2><div class="form">
+<section id="setup" class="card hidden"><h2>جهّز Business Brain</h2>
+<div class="brandSection"><h3>استيراد مساحة عمل محفوظة</h3><p>عندك ملف نسخة مُصدّرة من رابط شغّل آخر (Business Brain، الهوية، مكتبة المنتجات، التصاميم، الحزم والسجل)؟ استورده هنا بدل تعبئة البيانات من جديد.</p><div><label for="workspaceImportFileSetup">استيراد نسخة محفوظة</label><input id="workspaceImportFileSetup" type="file" accept="application/json" onchange="Workspace.import(this.files[0])"></div><p class="workspaceStatus status" role="status"></p></div>
+<div class="form">
 <div><label>اسم المشروع</label><input id="name"></div><div><label>القطاع</label><input id="category" placeholder="قهوة، عطور، خدمات..."></div>
 <div class="full"><label>وش تبيع؟</label><textarea id="product"></textarea></div><div><label>مين عميلك؟</label><input id="customer"></div><div><label>المدينة/السوق</label><input id="location" value="السعودية"></div>
 <div><label>متوسط السعر</label><input id="price" placeholder="مثال 100–250 SAR"></div><div><label>النبرة</label><select id="tone"><option>سعودي طبيعي</option><option>احترافي</option><option>فاخر</option><option>ودود</option></select></div>
@@ -40,7 +42,7 @@ h1{font-size:44px;line-height:1.05;margin:8px 0 12px}h2{margin:0 0 12px}p{color:
 <div class="actions"><button id="saveProjectBtn" class="btn primary" onclick="Visual.saveProject()">حفظ والبدء</button></div></section>
 
 <section id="brain" class="card hidden"><h2>Business Brain</h2><div class="brain" id="brainGrid"></div><p id="brandSummary"></p><div class="actions"><button class="btn" onclick="setup(true)">تعديل</button><button class="btn primary" onclick="home()">ابدأ شغّل</button></div>
-<div class="brandSection"><h3>نقل مساحة العمل بين الروابط</h3><p>كل رابط Preview يخزّن بياناته في هذا المتصفح فقط ولا يشاركها مع رابط آخر. صدّر نسخة كاملة من هنا (Business Brain، الهوية، مكتبة المنتجات، التصاميم، الحزم والسجل) ثم استوردها على الرابط الجديد بدون إعادة إدخال أي شيء يدويًا.</p><div class="actions"><button class="btn" onclick="Workspace.export()">تصدير نسخة كاملة</button></div><div><label for="workspaceImportFile">استيراد نسخة محفوظة</label><input id="workspaceImportFile" type="file" accept="application/json" onchange="Workspace.import(this.files[0])"></div><p id="workspaceStatus" role="status" class="status"></p></div>
+<div class="brandSection"><h3>نقل مساحة العمل بين الروابط</h3><p>كل رابط Preview يخزّن بياناته في هذا المتصفح فقط ولا يشاركها مع رابط آخر. صدّر نسخة كاملة من هنا (Business Brain، الهوية، مكتبة المنتجات، التصاميم، الحزم والسجل) ثم استوردها على الرابط الجديد بدون إعادة إدخال أي شيء يدويًا.</p><div class="actions"><button class="btn" onclick="Workspace.export()">تصدير نسخة كاملة</button></div><div><label for="workspaceImportFile">استيراد نسخة محفوظة</label><input id="workspaceImportFile" type="file" accept="application/json" onchange="Workspace.import(this.files[0])"></div><p class="workspaceStatus status" role="status"></p></div>
 </section>
 
 <section id="home" class="hidden"><div class="card"><div class="status">SHAGHIL HOME</div><h1 id="hello">وش تبغى تنجز اليوم؟</h1><p>كل Engine يستخدم Business Brain تلقائيًا.</p></div><div class="grid">
