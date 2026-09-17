@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>شغّل — V0.7</title>
+<title>شغّل — V0.8</title>
 <style>
 :root{--bg:#0e1012;--p:#181b1f;--p2:#20242a;--t:#f6f4ef;--m:#aab0b6;--l:#2d333a;--a:#e7f95b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:Inter,system-ui,-apple-system,"Segoe UI",Tahoma,Arial}
@@ -18,7 +18,7 @@ h1{font-size:44px;line-height:1.05;margin:8px 0 12px}h2{margin:0 0 12px}p{color:
 </style>
 </head>
 <body><div class="wrap">
-<div class="top"><div class="brand"><div class="logo">ش</div><div><b>شغّل</b><small>Built by MIGHT MADE · V0.7</small></div></div><div><button class="btn" onclick="home()">الرئيسية</button> <button class="btn" onclick="brainScreen()">Business Brain</button></div></div>
+<div class="top"><div class="brand"><div class="logo">ش</div><div><b>شغّل</b><small>Built by MIGHT MADE · V0.8</small></div></div><div><button class="btn" onclick="home()">الرئيسية</button> <button class="btn" onclick="brainScreen()">Business Brain</button></div></div>
 
 <section id="welcome" class="card"><div class="status">FUNCTIONAL MVP</div><h1>مشروعك.<br>لكن أسرع.</h1><p>جهّز بيانات مشروعك مرة واحدة في Business Brain، وشغّل ست أدوات تساعدك تنجز.</p><div class="actions"><button class="btn primary" onclick="setup()">ابدأ</button><button class="btn" onclick="demo()">Demo</button></div></section>
 
@@ -51,7 +51,7 @@ h1{font-size:44px;line-height:1.05;margin:8px 0 12px}h2{margin:0 0 12px}p{color:
 </div></section>
 
 <section id="engine" class="card hidden"><h2 id="engineTitle"></h2><p>بيانات مشروعك مأخوذة تلقائيًا من Business Brain</p><div id="engineForm"></div><div class="actions"><button id="runBtn" class="btn primary" onclick="run()">شغّل</button><button class="btn" onclick="home()">إلغاء</button></div></section>
-<section id="output" class="card hidden"><div class="resultTop"><h2>النتيجة</h2><button class="btn" onclick="historyScreen()">السجل</button></div><div class="refine"><button class="btn" onclick="refine('shorter')">أقصر</button><button class="btn" onclick="refine('stronger')">CTA أقوى</button><button class="btn" onclick="refine('saudi')">سعودي أكثر</button><button class="btn" onclick="refine('premium')">Premium</button></div><div id="contentCards" class="grid hidden"></div><div class="out" id="out"></div><div id="visualEntry" class="actions hidden"><button class="btn primary" onclick="Visual.choose()">اصنع التصميم</button><span class="status">اختر فكرة من النتيجة، أو ظلّل نص الفكرة أولًا</span></div><div class="actions"><button class="btn primary" onclick="copyOut()">نسخ النتيجة</button><button class="btn" onclick="run(true)">نسخة ثانية</button><button class="btn" onclick="home()">مهمة جديدة</button></div></section><section id="history" class="card hidden"><div class="resultTop"><h2>آخر النتائج</h2><button class="btn" onclick="home()">إغلاق</button></div><div id="historyList"></div><h3>التصاميم المحفوظة</h3><div id="visualHistoryList" class="visualHistoryList"></div><h3>حزم الحملات المعتمدة</h3><p>المشروع ← الحملة ← الفكرة ← التصميم والمعالجة. الحزم تحفظ نسخًا مستقلة عن سجل التصاميم الأخير.</p><div id="campaignPacks"></div></section>
+<section id="output" class="card hidden"><div class="resultTop"><h2>النتيجة</h2><div class="actions"><button id="saveResultBtn" class="btn primary" onclick="saveResult()">حفظ في السجل</button><button class="btn" onclick="historyScreen()">السجل</button></div></div><p id="saveResultStatus" class="status" role="status"></p><div class="refine"><button class="btn" onclick="refine('shorter')">أقصر</button><button class="btn" onclick="refine('stronger')">CTA أقوى</button><button class="btn" onclick="refine('saudi')">سعودي أكثر</button><button class="btn" onclick="refine('premium')">Premium</button></div><div id="contentCards" class="grid hidden"></div><div class="out" id="out"></div><div id="visualEntry" class="actions hidden"><button class="btn primary" onclick="Visual.choose()">اصنع التصميم</button><span class="status">اختر فكرة من النتيجة، أو ظلّل نص الفكرة أولًا</span></div><div class="actions"><button class="btn primary" onclick="copyOut()">نسخ النتيجة</button><button class="btn" onclick="run(true)">نسخة ثانية</button><button class="btn" onclick="home()">مهمة جديدة</button></div></section><section id="history" class="card hidden"><div class="resultTop"><h2>آخر النتائج</h2><button class="btn" onclick="home()">إغلاق</button></div><p class="status">النتائج المحفوظة هنا فقط — اضغط "حفظ في السجل" من شاشة النتيجة لحفظ نتيجة مفيدة.</p><div id="historyList"></div><h3>التصاميم المحفوظة</h3><div id="visualHistoryList" class="visualHistoryList"></div><h3>حزم الحملات المعتمدة</h3><p>المشروع ← الحملة ← الفكرة ← التصميم والمعالجة. الحزم تحفظ نسخًا مستقلة عن سجل التصاميم الأخير.</p><div id="campaignPacks"></div></section>
 
 <section id="visualStudio" class="card hidden"><div class="resultTop"><h2>Visual Studio</h2><button class="btn" onclick="Visual.back()">رجوع للمحتوى</button></div>
 <p>بيانات مشروعك وهويتك مأخوذة تلقائيًا من Business Brain وBrand Brain.</p><p id="studioBrand" class="status"></p>
@@ -71,7 +71,7 @@ h1{font-size:44px;line-height:1.05;margin:8px 0 12px}h2{margin:0 0 12px}p{color:
 </section>
 </div>
 <script>
-const ids=['welcome','setup','brain','home','engine','output','history','visualStudio','visualResult']; let current=null; let lastInputs=null; let lastText=''; let busy=false; let requestId=0;
+const ids=['welcome','setup','brain','home','engine','output','history','visualStudio','visualResult']; let current=null; let lastInputs=null; let lastText=''; let busy=false; let requestId=0; let savedNow=false;
 const $=x=>document.getElementById(x); const show=x=>ids.forEach(i=>$(i).classList.toggle('hidden',i!==x));
 function readLocal(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 const getBrain=()=>{const b=readLocal('brain',null);return b&&typeof b==='object'&&!Array.isArray(b)?b:null};
@@ -94,8 +94,10 @@ if(e==='reel')h=`<div><label for="duration">المدة</label><select id="durati
 $('engineForm').innerHTML='<div class="form">'+h+'</div>';show('engine')}
 function esc(x){return String(x||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
 function md(x){let z=esc(x);z=z.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>').replace(/^---$/gm,'<hr>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');let lines=z.split('\n'),out='',ul=false;for(let line of lines){if(/^[-•] /.test(line)){if(!ul){out+='<ul>';ul=true}out+='<li>'+line.replace(/^[-•] /,'')+'</li>'}else{if(ul){out+='</ul>';ul=false}if(line.trim()&&!/^<(h|hr)/.test(line))out+='<p>'+line+'</p>';else out+=line}}if(ul)out+='</ul>';return out}
-function saveHistory(text){let h=getHistory();h.unshift({engine:current,title:titles[current],text,inputs:lastInputs,ts:Date.now()});try{localStorage.setItem('shaghilHistory',JSON.stringify(h.slice(0,10)))}catch{toast('النتيجة جاهزة، لكن تعذّر حفظها في السجل')}}
-function renderResult(text,save=true){lastText=text;$('out').innerHTML=md(text);if(save)saveHistory(text);show('output');globalThis.Visual?.resultEntry()}
+function updateSaveStatus(){const btn=$('saveResultBtn');if(btn)btn.disabled=savedNow;$('saveResultStatus').textContent=savedNow?'تم الحفظ في السجل ✓':'لم يُحفظ بعد — اضغط "حفظ في السجل" للاحتفاظ بهذه النتيجة'}
+function saveResult(){if(!lastText||savedNow)return;let h=getHistory();const b=getBrain();h.unshift({id:crypto.randomUUID(),engine:current,title:titles[current],project:b?.name||'',text:lastText,inputs:lastInputs,ts:Date.now()});try{localStorage.setItem('shaghilHistory',JSON.stringify(h.slice(0,30)))}catch{return toast('تعذّر الحفظ؛ مساحة المتصفح ممتلئة')}savedNow=true;updateSaveStatus();toast('تم الحفظ في السجل')}
+function deleteResult(i){let h=getHistory();if(!h[i]||!confirm('حذف هذه النتيجة من السجل؟'))return;h.splice(i,1);try{localStorage.setItem('shaghilHistory',JSON.stringify(h))}catch{}historyScreen()}
+function renderResult(text,saved=false){lastText=text;$('out').innerHTML=md(text);savedNow=saved;updateSaveStatus();show('output');globalThis.Visual?.resultEntry()}
 function loading(){globalThis.Visual?.hideEntry();show('output');$('out').innerHTML='<div class="skeleton"></div><div class="skeleton" style="width:82%"></div><div class="skeleton" style="width:68%"></div><div class="skeleton"></div>'}
 async function generate(payload){if(busy)return;busy=true;const id=++requestId;lastText='';loading();try{let r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});let raw=await r.text();let j;try{j=JSON.parse(raw)}catch{console.error('SHAGHIL non-JSON response',r.status,raw.slice(0,300));throw new Error('تعذّر الاتصال بالخادم، جرّب مرة ثانية')}if(id!==requestId)return;if(!r.ok)throw new Error(j.error||'تعذّر الاتصال');if(typeof j.text!=='string'||!j.text.trim())throw new Error('لم تصل نتيجة، جرّب مرة ثانية');renderResult(j.text)}catch(e){if(id!==requestId)return;$('out').innerHTML='<h3>ما قدرنا نكمل المهمة</h3><p>'+esc(e.message)+'</p><p>جرّب نسخة ثانية، وإذا استمرت المشكلة راجع إعدادات الاتصال.</p>'}finally{if(id===requestId)busy=false}}
 async function run(again=false){if(busy)return;let b=getBrain();if(!b||!['name','product','customer'].every(k=>typeof b[k]==='string'&&b[k].trim())){toast('أكمل بيانات مشروعك في Business Brain');return setup()}if(!Object.hasOwn(fields,current))return home();if(!again){lastInputs=Object.fromEntries(fields[current].map(k=>[k,$(k)?.value.trim()||'']))}else if(!lastInputs){toast('حدّد تفاصيل المهمة لإنشاء نسخة جديدة');return openEngine(current)}
@@ -105,7 +107,7 @@ return generate({brain:b,engine:current,inputs:lastInputs})}
 async function refine(type){if(busy||!lastText)return;return generate({brain:getBrain(),engine:current,inputs:lastInputs||{},refinement:type,previous:lastText})}
 async function copyOut(){if(busy||!lastText)return;try{await navigator.clipboard.writeText(lastText);toast('تم النسخ')}catch{toast('تعذّر النسخ، حدّد النص وانسخه يدويًا')}}
 function toast(t){let d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1400)}
-function historyScreen(){cancelPending();let h=getHistory();$('historyList').innerHTML=h.length?h.map((x,i)=>`<div class="historyItem" onclick="openHistory(${i})"><b>${esc(x.title||x.engine)}</b><small>${new Date(x.ts).toLocaleString('ar-SA')}</small><p>${esc(x.text.slice(0,120))}...</p></div>`).join(''):'<p>ما فيه نتائج محفوظة حتى الآن.</p>';show('history');globalThis.Visual?.history()}
-function openHistory(i){let h=getHistory();if(!h[i])return;cancelPending();current=h[i].engine;lastInputs=h[i].inputs||null;renderResult(h[i].text,false)}
+function historyScreen(){cancelPending();let h=getHistory();$('historyList').innerHTML=h.length?h.map((x,i)=>`<div class="historyItem"><div onclick="openHistory(${i})"><b>${esc(x.title||x.engine)}</b>${x.project?' · <b>'+esc(x.project)+'</b>':''}<small>${new Date(x.ts).toLocaleString('ar-SA')}</small><p>${esc(x.text.slice(0,120))}...</p></div><button class="btn" onclick="deleteResult(${i})">حذف</button></div>`).join(''):'<p>ما فيه نتائج محفوظة حتى الآن.</p>';show('history');globalThis.Visual?.history()}
+function openHistory(i){let h=getHistory();if(!h[i])return;cancelPending();current=h[i].engine;lastInputs=h[i].inputs||null;renderResult(h[i].text,true)}
 if(getBrain())home();else show('welcome');
 </script><script type="module" src="/lib/visual-studio.mjs"></script></body></html>

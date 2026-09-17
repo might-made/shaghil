@@ -52,12 +52,12 @@ console.log('PASS: six server engines, authoritative context, optional defaults,
 // Exercise the real inline application script with a minimal DOM and mocked transport.
 const html=fs.readFileSync('index.html','utf8');
 const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
-const storage=new Map();const requests=[];let copied='';let pending;
+const storage=new Map();const requests=[];let copied='';let pending;let uuidSeq=0;let confirmResult=true;
 function app(){
   const nodes=new Map();
-  function node(id){return {id,value:'',textContent:'',hidden:false,classList:{toggle(_,hidden){nodes.get(id).hidden=hidden}},focus(){},remove(){},set innerHTML(value){this.html=value;if(id==='engineForm'){for(const key of ['period','channel','instruction','constraint','message','occasion','duration','topic'])nodes.delete(key);for(const match of value.matchAll(/<(input|textarea|select)\b[^>]*id="([^"]+)"[^>]*>/g)){const n=node(match[2]);n.value=match[0].match(/value="([^"]*)"/)?.[1]||'';if(match[1]==='select')n.value=value.slice(match.index).match(/<option>([^<]+)/)?.[1]||'';nodes.set(match[2],n)}}},get innerHTML(){return this.html||''}}}
+  function node(id){return {id,value:'',textContent:'',hidden:false,disabled:false,classList:{toggle(_,hidden){nodes.get(id).hidden=hidden}},focus(){},remove(){},set innerHTML(value){this.html=value;if(id==='engineForm'){for(const key of ['period','channel','instruction','constraint','message','occasion','duration','topic'])nodes.delete(key);for(const match of value.matchAll(/<(input|textarea|select)\b[^>]*id="([^"]+)"[^>]*>/g)){const n=node(match[2]);n.value=match[0].match(/value="([^"]*)"/)?.[1]||'';if(match[1]==='select')n.value=value.slice(match.index).match(/<option>([^<]+)/)?.[1]||'';nodes.set(match[2],n)}}},get innerHTML(){return this.html||''}}}
   for(const match of html.matchAll(/id="([^"]+)"/g))nodes.set(match[1],node(match[1]));
-  const context=vm.createContext({document:{getElementById:id=>nodes.get(id),createElement:()=>node('toast'),body:{appendChild(){}}},localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},navigator:{clipboard:{writeText:async text=>{copied=text}}},setTimeout(){},fetch:async(url,options)=>{const payload=JSON.parse(options.body);requests.push(payload);if(pending)return pending;return {ok:true,status:200,text:async()=>JSON.stringify({text:`## ${payload.engine}\nنتيجة قابلة للنسخ`})}}});
+  const context=vm.createContext({document:{getElementById:id=>nodes.get(id),createElement:()=>node('toast'),body:{appendChild(){}}},localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},navigator:{clipboard:{writeText:async text=>{copied=text}}},setTimeout(){},crypto:{randomUUID:()=>'uuid-'+(++uuidSeq)},confirm:()=>confirmResult,fetch:async(url,options)=>{const payload=JSON.parse(options.body);requests.push(payload);if(pending)return pending;return {ok:true,status:200,text:async()=>JSON.stringify({text:`## ${payload.engine}\nنتيجة قابلة للنسخ`})}}});
   vm.runInContext(script,context);
   return {context,nodes,run:code=>vm.runInContext(code,context)};
 }
@@ -73,14 +73,31 @@ for(const [engine,inputs]of Object.entries(cases)){
   for(const [k,v]of Object.entries(inputs))ui.nodes.get(k).value=v;
   await ui.run('run()');assert.equal(ui.nodes.get('output').hidden,false);
   assert.deepEqual(requests.at(-1).brain,brain);assert.deepEqual(requests.at(-1).inputs,inputs);
+  // A fresh generation must never be silently auto-saved: the Save button starts enabled
+  // and the status line must say so, until the Founder explicitly saves it.
+  assert.equal(ui.nodes.get('saveResultBtn').disabled,false);
+  assert.ok(!ui.nodes.get('saveResultStatus').textContent.includes('تم الحفظ'));
   await ui.run('copyOut()');assert.ok(copied.includes(engine));
   for(const type of ['shorter','stronger','saudi','premium']){await ui.run(`refine('${type}')`);assert.equal(requests.at(-1).refinement,type);assert.ok(requests.at(-1).previous)}
   await ui.run('run(true)');assert.deepEqual(requests.at(-1).inputs,inputs);
+  await ui.run('saveResult()');
+  assert.equal(ui.nodes.get('saveResultBtn').disabled,true);
+  assert.ok(ui.nodes.get('saveResultStatus').textContent.includes('تم الحفظ'));
+  const savedEntry=JSON.parse(storage.get('shaghilHistory'))[0];
+  assert.equal(savedEntry.engine,engine);assert.equal(savedEntry.project,brain.name);assert.ok(savedEntry.id);
   ui.run('home()');assert.equal(ui.nodes.get('home').hidden,false);
 }
 ui.run("openEngine('whatsapp')");const count=requests.length;ui.nodes.get('message').value='   ';await ui.run('run()');assert.equal(requests.length,count);
-ui.run('historyScreen();openHistory(0)');await ui.run('run(true)');assert.equal(requests.at(-1).engine,'reel');assert.deepEqual(requests.at(-1).inputs,cases.reel);
-assert.equal(JSON.parse(storage.get('shaghilHistory')).length,10);
+ui.run('savedNow=false;updateSaveStatus()');
+ui.run('historyScreen();openHistory(0)');
+assert.equal(ui.nodes.get('saveResultBtn').disabled,true,'reopening an already-saved result must not offer to re-save it');
+await ui.run('run(true)');assert.equal(requests.at(-1).engine,'reel');assert.deepEqual(requests.at(-1).inputs,cases.reel);
+assert.equal(ui.nodes.get('saveResultBtn').disabled,false,'a regenerated (second-version) result is new and unsaved again');
+assert.equal(JSON.parse(storage.get('shaghilHistory')).length,6);
+// Delete removes exactly the targeted saved result, guarded by confirmation.
+const beforeDelete=JSON.parse(storage.get('shaghilHistory')).length;
+confirmResult=false;ui.run('deleteResult(0)');assert.equal(JSON.parse(storage.get('shaghilHistory')).length,beforeDelete);
+confirmResult=true;ui.run('deleteResult(0)');assert.equal(JSON.parse(storage.get('shaghilHistory')).length,beforeDelete-1);
 // Older saved results still refine, but ask for fresh task details for a new version.
 storage.set('shaghilHistory',JSON.stringify([{engine:'whatsapp',text:'رد قديم',ts:0}]));ui.run('openHistory(0)');await ui.run("refine('shorter')");assert.equal(requests.at(-1).engine,'whatsapp');
 ui.run('openHistory(1)');const oldCount=requests.length;await ui.run('run(true)');assert.equal(requests.length,oldCount);assert.equal(ui.nodes.get('engine').hidden,false);
