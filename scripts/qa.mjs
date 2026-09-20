@@ -55,3 +55,4 @@ execFileSync(process.execPath,['scripts/qa-v08-history-render.mjs'],{stdio:'inhe
 
 await import('./qa-v09-pilot-readiness.mjs');
 await import('./qa-v09-background-isolation.mjs');
+await import('./qa-product-closure-export-warning.mjs');
