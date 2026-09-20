@@ -54,3 +54,4 @@ execFileSync(process.execPath,['scripts/qa-v08-history-nav.mjs'],{stdio:'inherit
 execFileSync(process.execPath,['scripts/qa-v08-history-render.mjs'],{stdio:'inherit'});
 
 await import('./qa-v09-pilot-readiness.mjs');
+await import('./qa-v09-background-isolation.mjs');
