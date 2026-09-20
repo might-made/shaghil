@@ -1,0 +1,25 @@
+:root{
+  --bg:#1C1712;
+  --surface:#262019;
+  --fg:#F5EEE1;
+  --muted:#A6957E;
+  --border:#3A3126;
+  --brand:#B8563A;
+  --brand-on:#F5EEE1;
+  --secondary:#2B6C63;
+  --success:#6B8E4E;
+  --warning:#C98A3B;
+  --error:#B23B3B;
+
+  --font-ar-display:'Almarai', sans-serif;
+  --font-ar-body:'Almarai', sans-serif;
+  --font-en-display:'Manrope', sans-serif;
+  --font-en-ui:'Manrope', sans-serif;
+  --en-tracking:0;
+  --en-case:none;
+
+  --radius-lg:22px;
+  --radius-md:14px;
+  --radius-btn:14px;
+  --radius-pill:24px;
+}

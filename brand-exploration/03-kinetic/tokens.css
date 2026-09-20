@@ -1,0 +1,25 @@
+:root{
+  --bg:#0E1012;
+  --surface:#181B1F;
+  --fg:#F6F4EF;
+  --muted:#AAB0B6;
+  --border:#2D333A;
+  --brand:#2F5AF0;
+  --brand-on:#F6F4EF;
+  --secondary:#5B6268;
+  --success:#4C9A6A;
+  --warning:#D9A441;
+  --error:#E1483B;
+
+  --font-ar-display:'Tajawal', sans-serif;
+  --font-ar-body:'Tajawal', sans-serif;
+  --font-en-display:'Sora', sans-serif;
+  --font-en-ui:'Inter', sans-serif;
+  --en-tracking:-.01em;
+  --en-case:none;
+
+  --radius-lg:10px;
+  --radius-md:6px;
+  --radius-btn:6px;
+  --radius-pill:12px;
+}

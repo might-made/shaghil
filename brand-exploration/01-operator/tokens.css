@@ -1,0 +1,25 @@
+:root{
+  --bg:#0F1113;
+  --surface:#1A1D20;
+  --fg:#F3F1EC;
+  --muted:#8C949B;
+  --border:#2B3034;
+  --brand:#E8873A;
+  --brand-on:#12100D;
+  --secondary:#B08D57;
+  --success:#3F9E6B;
+  --warning:#D9A441;
+  --error:#D14343;
+
+  --font-ar-display:'Noto Kufi Arabic', sans-serif;
+  --font-ar-body:'IBM Plex Sans Arabic', sans-serif;
+  --font-en-display:'Space Grotesk', sans-serif;
+  --font-en-ui:'IBM Plex Sans', sans-serif;
+  --en-tracking:.04em;
+  --en-case:uppercase;
+
+  --radius-lg:16px;
+  --radius-md:10px;
+  --radius-btn:8px;
+  --radius-pill:16px;
+}
