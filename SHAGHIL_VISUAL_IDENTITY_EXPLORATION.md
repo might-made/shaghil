@@ -2,35 +2,30 @@
 
 Branch: `shaghil-brand-final`. Basis: `SHAGHIL_BRAND_DIRECTIONS.md` (commit `b16a71db7604c3bb9a6450dd44d928bc2a65df9b`), Product Closure baseline `1b2b3f5d53c388db9dfb0f030b7b250bddbaac55` (untouched). Visual exploration and documentation only — no application code was modified.
 
-## On visual reviewability
+## Presentation fix (superseding the first delivery)
 
-This exploration produces **genuinely reviewable, browser-rendered visual assets** — real HTML/CSS pages using real, freely-licensed web fonts (loaded live from Google Fonts) and real hand-built SVG marks, not text descriptions standing in for visuals. Open any `board.html` file in a browser to see actual rendered Arabic/Latin typography, real color, a real vector mark at multiple sizes, and real UI-fragment mockups — this is a standard, legitimate way to produce comparable brand boards without custom type-design tooling or an image generator.
-
-**Genuine limitation, disclosed rather than hidden:** no custom typeface was drawn (all three directions use existing, freely-licensed fonts, as the brand strategy document specified) and no raster/photographic imagery was produced (Directions 01/03 use none by design; Direction 02's "warm photography treatment" is described but not photographed, since no real product photography exists to art-direct yet). Two font substitutions were made from the strategy document for reliable free-CDN delivery in this environment: **Manrope** replaces "General Sans" in Direction 02, and **Sora** replaces "Neue Montreal" in Direction 03 — both disclosed inline on their respective boards. If a custom typeface or photographed imagery is wanted for the next phase, that is a production step beyond this exploration, not something this phase silently skipped.
+The first version of this exploration delivered each direction as a multi-file board (`board.html` + a sibling `tokens.css` + `../shared.css` + a sibling `mark.svg`, loaded via relative paths). When opened as a single standalone file outside its original folder, those relative paths resolved to nothing, so none of the layout/color/type CSS applied and the mark never loaded — leaving raw, unstyled, RTL-default markup, which is what produced the reported "blank viewport / narrow right-hand column" failure. This is now fixed: every board is a **single, fully self-contained HTML file** (`review-board.html`) with all CSS and the SVG mark inlined directly — the only remaining external reference is the Google Fonts stylesheet link itself, verified to load correctly in this environment (see "Visual QA method" in the final report). In addition, high-resolution **static PNG renders** of each board were produced directly with headless Chromium, so the Founder can review the identity with zero dependency on any file, folder, or font loading at all.
 
 ## What was explored
 
-Three complete, structurally identical brand boards — one per direction — each covering: Arabic wordmark (dark/light/small-size), English wordmark and its relationship to the Arabic form, a symbol/mark shown at 16/32/64/96px plus app icon/favicon/social-avatar mockups, a full color system (10 tokens with hex/RGB/usage role), a nine-step Arabic+Latin typography hierarchy with rationale, a same-content UI brand sample (header, two cards, input, status, result block), a same-content Visual Studio sample (product thumbnail, controls, Generate CTA, loading state, result placeholder), a same-content public-website hero, a "by MIGHT MADE" lockup, a shape/icon/status system, a described-and-animated motion principle, and a factual (non-scored, non-ranked) evaluation table.
+Three complete, structurally identical review boards — one per direction — each covering, at large presentation scale (1600px canvas): a brand hero (huge شغّل + SHAGHIL + mark + "by MIGHT MADE" on the primary background), a logo system (dark panel, light panel, and a combined Arabic+English+symbol lockup), a 9-swatch color palette (each swatch showing color, name, and hex at a size actually readable without zooming), a 6-block Arabic+Latin typography hierarchy (Display/Heading/Body/UI Label + Latin Display/Body), an app-icon/favicon/social-avatar row at true comparative scale (16/32/64px + app icon + browser tab + avatar), a realistic Product UI mockup (header, two engine cards, input, status, generated result with primary/secondary actions), a realistic Visual Studio mockup (product image area, controls, Generate CTA, loading state, proportionate result placeholder), a full-width public-website hero, and a Brand Language row (cards, buttons, input, three direction-specific icons, dividers, status dots, and an animated motion demo).
 
-**Fairness verification:** all three `board.html` files were parsed and diffed structurally (not just visually eyeballed) — each contains exactly the same count of every content block (5 wordmark instances, 9 mark placements, 10 color swatches, 9 typography rows, 2 lockups, 11 evaluation rows, and the UI/Visual-Studio/hero mockups all present). The three differ only in their linked `tokens.css` (color/type/radius values) and direction-specific rationale text — never in structure, content depth, or polish.
+**Fairness verification:** all three `review-board.html` files were generated from one shared JavaScript template (`render.mjs`) with only per-direction tokens substituted, then parsed and diffed structurally — each contains exactly the same count of every content block (9 sections, 9 swatches, 6 typography blocks, 6 icon cells, 7 brand-language row children, identical Product UI / Visual Studio / website-hero markup). Rendering each at a 1600px viewport in real headless Chromium additionally confirmed **identical total page height (4559px + 3134px + 868px section-by-section) across all three** — true visual parity, not just matching DOM counts.
 
 ## File map
 
 ```
 brand-exploration/
-  shared.css                    structural CSS shared identically by all three boards
+  render.mjs                     generator: one shared template, three token sets → 3 HTML files
+  screenshot.mjs                 renders each HTML in real headless Chromium, slices into 3 PNGs each
   01-operator/
-    tokens.css                  color, font, radius tokens for Direction 01
-    mark.svg                    symbol: base bar + 3-position indicator tick (ش abstracted)
-    board.html                  full visual board
-  02-craftsman/
-    tokens.css
-    mark.svg                    symbol: stamped seal — one curved stroke + one dot (ش abstracted)
-    board.html
-  03-kinetic/
-    tokens.css
-    mark.svg                    symbol: diagonal execution stroke + base notch (ش abstracted)
-    board.html
+    review-board.html            self-contained board (all CSS + mark inlined; only Google Fonts is external)
+    mark.svg                     standalone symbol: base bar + 3-position indicator tick (ش abstracted)
+    01-operator-brand.png        hero + logo system + color + typography + app icon/favicon
+    01-operator-product.png      Product UI mockup + Visual Studio mockup + brand language
+    01-operator-web.png          public website hero
+  02-craftsman/                  same file set — stamped seal — one curved stroke + one dot (ش abstracted)
+  03-kinetic/                    same file set — diagonal execution stroke + base notch (ش abstracted)
 SHAGHIL_VISUAL_IDENTITY_EXPLORATION.md   this document
 ```
 
@@ -42,7 +37,7 @@ SHAGHIL_VISUAL_IDENTITY_EXPLORATION.md   this document
 
 ## Exact colors
 
-All ten tokens (background, surface, foreground, muted, border, brand signal, secondary, success, warning, error) are specified with hex and RGB values on each board's §E and reproduced in each direction's `tokens.css`. Summary of the primary brand-signal token per direction:
+All ten tokens (background, surface, foreground, muted, border, brand signal, secondary, success, warning, error) are shown as large swatches with name and hex in each board's Section 3. Summary of the primary brand-signal token per direction:
 
 | Direction | Brand signal | Hex | RGB |
 |---|---|---|---|
@@ -54,7 +49,7 @@ None of the three reuse MIGHT MADE's Electric Lime or Champagne as SHAGHIL's own
 
 ## Typography
 
-Each board's §F renders an actual nine-row hierarchy (Arabic Display/H1/H2/Body/UI label/metadata, Latin Display/H1/Body-UI) in the real chosen faces, with a rationale paragraph. Summary:
+Each board's Section 4 renders an actual large-scale hierarchy (Arabic Display/Heading/Body/UI label, Latin Display/Body-UI) in the real chosen faces. Summary:
 
 | Direction | Arabic | Latin |
 |---|---|---|
@@ -64,23 +59,23 @@ Each board's §F renders an actual nine-row hierarchy (Arabic Display/H1/H2/Body
 
 ## Symbol rationale
 
-All three marks are built from the same source letterform (ش's base stroke + dot cluster), abstracted differently per direction's metaphor, and each board's §C states explicitly how the mark behaves at 16px — none rely on detail that only survives at large size. None use a robot, brain, magic star, chat bubble, literal power-button glyph, or a literal Saudi cultural motif, per instruction.
+All three marks are built from the same source letterform (ش's base stroke + dot cluster), abstracted differently per direction's metaphor, and each board's Section 5 shows the mark at 16/32/64px plus app-icon/favicon/avatar scale — none rely on detail that only survives at large size. None use a robot, brain, magic star, chat bubble, literal power-button glyph, or a literal Saudi cultural motif, per instruction.
 
 ## Arabic wordmark rationale
 
-Each board's §A explains, letterform by letterform (ش, غ, the shadda, overall rhythm), why that direction's chosen face reads as intentional rather than a default-font placeholder — the exact gap identified in the Phase 1 audit (`SHAGHIL_BRAND_DIRECTIONS.md` §1: "no Arabic typeface is chosen at all... a functional placeholder, not a designed mark"). All three genuinely resolve that gap, each in a different register.
+Each board's Section 1 and Section 2 render شغّل at genuinely large display scale (up to 150px) so letterform character (ش, غ, the shadda, overall rhythm) is actually visible, not just described — the exact gap identified in the Phase 1 audit (`SHAGHIL_BRAND_DIRECTIONS.md` §1: "no Arabic typeface is chosen at all... a functional placeholder, not a designed mark"). All three genuinely resolve that gap, each in a different register.
 
 ## UI implications
 
-Each board's §G/§K apply the direction's tokens to the same realistic fragment of the real product's actual current screen content (top nav, engine cards, an input, a status line, a result block with save/second-version actions) — proving each direction is implementable against the existing, closed product structure without any layout change. No product screen was redesigned; only color, type, radius, and iconography vary.
+Each board's Section 6 and Section 7 apply the direction's tokens to a large, realistic fragment of the real product's actual current screen content (top nav, engine cards, an input, a status line, a result block with save/second-version actions, and a full Visual Studio panel) — proving each direction is implementable against the existing, closed product structure without any layout change. No product screen was redesigned; only color, type, radius, and iconography vary.
 
 ## Website implications
 
-Each board's §I renders the identical Founder-specified hero content (شغّل / حوّل سياق نشاطك إلى شغل جاهز. / Business Brain → Content → Campaigns → Visuals / ابدأ شغلك / by MIGHT MADE) in that direction's system — a conceptual mockup only, confirming no direction requires different messaging or structure to work as a hero, only different typography/color/mark.
+Each board's Section 8 renders the identical Founder-specified hero content (شغّل / حوّل سياق نشاطك إلى شغل جاهز. / Business Brain → Content → Campaigns → Visuals / ابدأ شغلك / by MIGHT MADE) in that direction's system at full landing-page scale — a conceptual mockup only, confirming no direction requires different messaging or structure to work as a hero, only different typography/color/mark.
 
 ## MIGHT MADE relationship
 
-No attempt was made to reconstruct, redesign, or approximate MIGHT MADE's actual locked Primary Signature or logo in any board — "by MIGHT MADE" is rendered as small, muted, letter-spaced plain text only, on every board (§J), per explicit instruction. Each board's evaluation table (§ "Relationship to MIGHT MADE") states the factual color/register distance from MIGHT MADE's approved charcoal/off-white/Champagne/restrained-Lime system: Direction 03 sits closest (near-monochrome base, flagged as needing explicit care to stay distinct rather than merged), Direction 01 shares MIGHT MADE's *principle* of one controlled signal color without sharing its palette, and Direction 02 diverges furthest (warm ink base). None of the three use Electric Lime or Champagne as SHAGHIL's own accent.
+No attempt was made to reconstruct, redesign, or approximate MIGHT MADE's actual locked Primary Signature or logo in any board — "by MIGHT MADE" is rendered as small, muted, letter-spaced plain text only, in the Section 1 hero and the Section 8 website hero on every board, per explicit instruction. Factual color/register distance from MIGHT MADE's approved charcoal/off-white/Champagne/restrained-Lime system, visible directly on each board's Section 3 palette: Direction 03 sits closest (near-monochrome base, flagged as needing explicit care to stay distinct rather than merged), Direction 01 shares MIGHT MADE's *principle* of one controlled signal color without sharing its palette, and Direction 02 diverges furthest (warm ink base). None of the three use Electric Lime or Champagne as SHAGHIL's own accent.
 
 ## Implementation implications
 
