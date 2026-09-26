@@ -1,0 +1,58 @@
+{
+  "id": "C2",
+  "name": "Graphite Pulse",
+  "territory": "Dark-UI-first system engineered for the product's existing dark default: a refined graphite neutral scale carrying a crisp electric mint-cyan 'pulse' as the single signal color — legible, technical, restrained. Light mode is a deliberately-designed companion, not a naive inversion.",
+  "dark": {
+    "primary": "#29F0C6",
+    "secondary": "#7C8A90",
+    "accent": "#29F0C6",
+    "background": "#0A0C0D",
+    "surface": "#131619",
+    "elevatedSurface": "#1B1F23",
+    "textPrimary": "#F5F7F7",
+    "textSecondary": "#A6AFB4",
+    "border": "#262B2F",
+    "interactiveCta": "#29F0C6",
+    "interactiveCtaText": "#06120D",
+    "hover": "#5CF5D6",
+    "focus": "#29F0C6",
+    "disabledBg": "#202427",
+    "disabledText": "#5C6469",
+    "success": "#3DDC84",
+    "warning": "#FFC24B",
+    "error": "#FF6B6B",
+    "info": "#5AC8FA"
+  },
+  "light": {
+    "primary": "#0F9C82",
+    "secondary": "#4B565C",
+    "accent": "#0F9C82",
+    "background": "#FFFFFF",
+    "surface": "#F2F4F4",
+    "elevatedSurface": "#FFFFFF",
+    "textPrimary": "#101214",
+    "textSecondary": "#565F64",
+    "border": "#DEE2E3",
+    "interactiveCta": "#0D8670",
+    "interactiveCtaText": "#FFFFFF",
+    "hover": "#0C7F6B",
+    "focus": "#0F9C82",
+    "disabledBg": "#E5E8E8",
+    "disabledText": "#9AA3A5",
+    "success": "#1C874A",
+    "warning": "#9A6300",
+    "error": "#C4291B",
+    "info": "#1D6FB8"
+  },
+  "tonalRamp": {
+    "mint": {
+      "50": "#E3FFF8", "100": "#B8FCEC", "200": "#7FF6DD", "300": "#5CF5D6",
+      "400": "#29F0C6", "500": "#0F9C82", "600": "#0C7F6B", "700": "#096355",
+      "800": "#074A40", "900": "#04322B"
+    }
+  },
+  "dominanceRatio": "78% neutrals (graphite scale dominates in dark mode — this is a dark-first system) · 14% mint-pulse primary (CTAs, focus, active states, data highlights) · 8% semantic",
+  "primaryAppearsWhere": "Primary CTA, focus rings, active nav/tab indicators, progress bars, key data highlights (e.g. a single stat callout), the loading-skeleton shimmer accent.",
+  "primaryMustNotAppearWhere": "Never as a large background fill (an all-mint screen reads cheap/neon), never behind long-form Arabic result text, never as a border around generated Visual Studio images, never for error/destructive actions.",
+  "logoUsage": "Context-dependent: white on the dark graphite background (primary default context, since this system is dark-first), black on white/light-neutral surfaces for print/light contexts. Logo remains strictly monochrome; the mint pulse never touches the mark itself."
+}

@@ -1,0 +1,58 @@
+{
+  "id": "C3",
+  "name": "Dusk Oud",
+  "territory": "Warm, culturally resonant premium direction built from sand, oud, and desert-dusk material references — not flag-color mimicry. A deep terracotta-ember primary against warm stone neutrals, with an antique-gold accent for restrained moments of richness.",
+  "light": {
+    "primary": "#A8402A",
+    "secondary": "#6B4A34",
+    "accent": "#C08A2E",
+    "background": "#FBF7F2",
+    "surface": "#F3EBE1",
+    "elevatedSurface": "#FFFFFF",
+    "textPrimary": "#241B14",
+    "textSecondary": "#6E6055",
+    "border": "#E4D8C9",
+    "interactiveCta": "#A8402A",
+    "interactiveCtaText": "#FFFFFF",
+    "hover": "#8E3521",
+    "focus": "#A8402A",
+    "disabledBg": "#EBE1D4",
+    "disabledText": "#AE9F8D",
+    "success": "#3C7A4E",
+    "warning": "#9A6300",
+    "error": "#C4291B",
+    "info": "#3E6E8E"
+  },
+  "dark": {
+    "primary": "#E07A52",
+    "secondary": "#C8B49C",
+    "accent": "#D9A94A",
+    "background": "#17120D",
+    "surface": "#201A14",
+    "elevatedSurface": "#2A231C",
+    "textPrimary": "#F5EEE5",
+    "textSecondary": "#BDAE9B",
+    "border": "#3A3226",
+    "interactiveCta": "#E07A52",
+    "interactiveCtaText": "#1A1008",
+    "hover": "#EC9673",
+    "focus": "#E07A52",
+    "disabledBg": "#332A22",
+    "disabledText": "#7A6E5E",
+    "success": "#6FCF8E",
+    "warning": "#F0B23A",
+    "error": "#F0685A",
+    "info": "#6FA8C9"
+  },
+  "tonalRamp": {
+    "terracotta": {
+      "50": "#FBEEE8", "100": "#F4D5C6", "200": "#E9AF8E", "300": "#E07A52",
+      "400": "#C4562F", "500": "#A8402A", "600": "#8E3521", "700": "#712A1A",
+      "800": "#521E13", "900": "#33130C"
+    }
+  },
+  "dominanceRatio": "75% warm neutrals (sand/stone background, surface, text, border) · 17% terracotta-ember primary (CTAs, active states, focus) · 8% antique-gold accent + semantic (used sparingly for premium accents and status)",
+  "primaryAppearsWhere": "Primary CTA, active nav/tab, focus rings, key highlight moments (e.g. a featured campaign pack), the logo tile background on marketing surfaces.",
+  "primaryMustNotAppearWhere": "Body/result text, large full-bleed screens (a wall of terracotta reads heavy, not premium), borders on generated Visual Studio imagery, disabled or destructive states.",
+  "logoUsage": "Context-dependent: black on the warm off-white/sand background and light neutral surfaces, white on dark oud-brown or on the terracotta primary. Logo stays strictly monochrome black/white; warmth lives in the surrounding chrome, never recolors the mark."
+}

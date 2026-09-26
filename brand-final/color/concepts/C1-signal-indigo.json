@@ -1,0 +1,58 @@
+{
+  "id": "C1",
+  "name": "Signal Indigo",
+  "territory": "Proprietary digital signal color — an ownable, highly saturated indigo-violet as the single brand hue, paired with a warm coral counter-accent so the system never reads as generic all-blue AI tech.",
+  "light": {
+    "primary": "#4B3FF2",
+    "secondary": "#14151A",
+    "accent": "#FF6B4A",
+    "background": "#FFFFFF",
+    "surface": "#F5F5F8",
+    "elevatedSurface": "#FFFFFF",
+    "textPrimary": "#14151A",
+    "textSecondary": "#585C68",
+    "border": "#E3E4EA",
+    "interactiveCta": "#4B3FF2",
+    "interactiveCtaText": "#FFFFFF",
+    "hover": "#3B2FE0",
+    "focus": "#4B3FF2",
+    "disabledBg": "#E4E4EC",
+    "disabledText": "#9799A8",
+    "success": "#1C8555",
+    "warning": "#9A6300",
+    "error": "#C4291B",
+    "info": "#0E6FA8"
+  },
+  "dark": {
+    "primary": "#8377FF",
+    "secondary": "#C7C8D6",
+    "accent": "#FF8B6E",
+    "background": "#0B0B10",
+    "surface": "#16161D",
+    "elevatedSurface": "#1E1E27",
+    "textPrimary": "#F2F2F5",
+    "textSecondary": "#B0B1BE",
+    "border": "#2B2C36",
+    "interactiveCta": "#8377FF",
+    "interactiveCtaText": "#0B0B10",
+    "hover": "#9A90FF",
+    "focus": "#8377FF",
+    "disabledBg": "#2A2B34",
+    "disabledText": "#71737F",
+    "success": "#4ADE80",
+    "warning": "#FBBF24",
+    "error": "#FF8A80",
+    "info": "#5AC8FA"
+  },
+  "tonalRamp": {
+    "indigo": {
+      "50": "#EEECFF", "100": "#DAD6FF", "200": "#B6ADFF", "300": "#9186FF",
+      "400": "#6E60FF", "500": "#4B3FF2", "600": "#3B2FE0", "700": "#2E24B3",
+      "800": "#211A85", "900": "#150F52"
+    }
+  },
+  "dominanceRatio": "72% neutrals (background/surface/text/border) · 18% primary indigo (CTAs, active nav, links, selected states, key brand touchpoints) · 10% coral accent + semantic (used only for highlight badges, celebratory moments, and status)",
+  "primaryAppearsWhere": "Primary CTA buttons, active/selected nav and tab states, focus rings, links, progress/loading indicators, the logo tile background, key brand touchpoints (top bar mark, empty-state illustration accents).",
+  "primaryMustNotAppearWhere": "Body/result text color, large full-bleed backgrounds, generated Visual Studio imagery frames/borders (would compete with user content), disabled states, error/destructive actions (error has its own token).",
+  "logoUsage": "Context-dependent: black on white/light neutral surfaces, white on dark or primary-indigo surfaces. The logo itself is never recolored into the primary indigo — it stays strictly monochrome (true black or true white) per the locked master; indigo appears in the surrounding UI chrome, not the mark."
+}

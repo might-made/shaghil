@@ -1,0 +1,776 @@
+{
+  "C1": {
+    "light": [
+      {
+        "label": "Body text / background",
+        "fg": "#14151A",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 18.23,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / background",
+        "fg": "#585C68",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 6.68,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Body text / surface",
+        "fg": "#14151A",
+        "bg": "#F5F5F8",
+        "large": false,
+        "ratio": 16.75,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / surface",
+        "fg": "#585C68",
+        "bg": "#F5F5F8",
+        "large": false,
+        "ratio": 6.14,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "CTA text / CTA background",
+        "fg": "#FFFFFF",
+        "bg": "#4B3FF2",
+        "large": false,
+        "ratio": 6.38,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Nav text / background (nav = elevatedSurface)",
+        "fg": "#14151A",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 18.23,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Input text / input background (input = surface)",
+        "fg": "#14151A",
+        "bg": "#F5F5F8",
+        "large": false,
+        "ratio": 16.75,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Placeholder-ish secondary text / input bg",
+        "fg": "#585C68",
+        "bg": "#F5F5F8",
+        "large": false,
+        "ratio": 6.14,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Success text / background",
+        "fg": "#1C8555",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 4.63,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Warning text / background",
+        "fg": "#9A6300",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 5.05,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Error text / background",
+        "fg": "#C4291B",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 5.71,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Info text / background",
+        "fg": "#0E6FA8",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 5.44,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Primary (link/icon use) / background",
+        "fg": "#4B3FF2",
+        "bg": "#FFFFFF",
+        "large": true,
+        "ratio": 6.38,
+        "threshold": 3,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Focus ring / background (UI component, 3:1)",
+        "fg": "#4B3FF2",
+        "bg": "#FFFFFF",
+        "large": true,
+        "ratio": 6.38,
+        "threshold": 3,
+        "verdict": "PASS"
+      }
+    ],
+    "dark": [
+      {
+        "label": "Body text / background",
+        "fg": "#F2F2F5",
+        "bg": "#0B0B10",
+        "large": false,
+        "ratio": 17.57,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / background",
+        "fg": "#B0B1BE",
+        "bg": "#0B0B10",
+        "large": false,
+        "ratio": 9.24,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Body text / surface",
+        "fg": "#F2F2F5",
+        "bg": "#16161D",
+        "large": false,
+        "ratio": 16.11,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / surface",
+        "fg": "#B0B1BE",
+        "bg": "#16161D",
+        "large": false,
+        "ratio": 8.47,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "CTA text / CTA background",
+        "fg": "#0B0B10",
+        "bg": "#8377FF",
+        "large": false,
+        "ratio": 5.65,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Nav text / background (nav = elevatedSurface)",
+        "fg": "#F2F2F5",
+        "bg": "#1E1E27",
+        "large": false,
+        "ratio": 14.8,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Input text / input background (input = surface)",
+        "fg": "#F2F2F5",
+        "bg": "#16161D",
+        "large": false,
+        "ratio": 16.11,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Placeholder-ish secondary text / input bg",
+        "fg": "#B0B1BE",
+        "bg": "#16161D",
+        "large": false,
+        "ratio": 8.47,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Success text / background",
+        "fg": "#4ADE80",
+        "bg": "#0B0B10",
+        "large": false,
+        "ratio": 11.27,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Warning text / background",
+        "fg": "#FBBF24",
+        "bg": "#0B0B10",
+        "large": false,
+        "ratio": 11.76,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Error text / background",
+        "fg": "#FF8A80",
+        "bg": "#0B0B10",
+        "large": false,
+        "ratio": 8.6,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Info text / background",
+        "fg": "#5AC8FA",
+        "bg": "#0B0B10",
+        "large": false,
+        "ratio": 10.36,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Primary (link/icon use) / background",
+        "fg": "#8377FF",
+        "bg": "#0B0B10",
+        "large": true,
+        "ratio": 5.65,
+        "threshold": 3,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Focus ring / background (UI component, 3:1)",
+        "fg": "#8377FF",
+        "bg": "#0B0B10",
+        "large": true,
+        "ratio": 5.65,
+        "threshold": 3,
+        "verdict": "PASS"
+      }
+    ]
+  },
+  "C2": {
+    "light": [
+      {
+        "label": "Body text / background",
+        "fg": "#101214",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 18.77,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / background",
+        "fg": "#565F64",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 6.53,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Body text / surface",
+        "fg": "#101214",
+        "bg": "#F2F4F4",
+        "large": false,
+        "ratio": 17,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / surface",
+        "fg": "#565F64",
+        "bg": "#F2F4F4",
+        "large": false,
+        "ratio": 5.91,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "CTA text / CTA background",
+        "fg": "#FFFFFF",
+        "bg": "#0D8670",
+        "large": false,
+        "ratio": 4.51,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Nav text / background (nav = elevatedSurface)",
+        "fg": "#101214",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 18.77,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Input text / input background (input = surface)",
+        "fg": "#101214",
+        "bg": "#F2F4F4",
+        "large": false,
+        "ratio": 17,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Placeholder-ish secondary text / input bg",
+        "fg": "#565F64",
+        "bg": "#F2F4F4",
+        "large": false,
+        "ratio": 5.91,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Success text / background",
+        "fg": "#1C874A",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 4.55,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Warning text / background",
+        "fg": "#9A6300",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 5.05,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Error text / background",
+        "fg": "#C4291B",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 5.71,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Info text / background",
+        "fg": "#1D6FB8",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 5.23,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Primary (link/icon use) / background",
+        "fg": "#0F9C82",
+        "bg": "#FFFFFF",
+        "large": true,
+        "ratio": 3.44,
+        "threshold": 3,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Focus ring / background (UI component, 3:1)",
+        "fg": "#0F9C82",
+        "bg": "#FFFFFF",
+        "large": true,
+        "ratio": 3.44,
+        "threshold": 3,
+        "verdict": "PASS"
+      }
+    ],
+    "dark": [
+      {
+        "label": "Body text / background",
+        "fg": "#F5F7F7",
+        "bg": "#0A0C0D",
+        "large": false,
+        "ratio": 18.23,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / background",
+        "fg": "#A6AFB4",
+        "bg": "#0A0C0D",
+        "large": false,
+        "ratio": 8.79,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Body text / surface",
+        "fg": "#F5F7F7",
+        "bg": "#131619",
+        "large": false,
+        "ratio": 16.89,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / surface",
+        "fg": "#A6AFB4",
+        "bg": "#131619",
+        "large": false,
+        "ratio": 8.14,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "CTA text / CTA background",
+        "fg": "#06120D",
+        "bg": "#29F0C6",
+        "large": false,
+        "ratio": 13.07,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Nav text / background (nav = elevatedSurface)",
+        "fg": "#F5F7F7",
+        "bg": "#1B1F23",
+        "large": false,
+        "ratio": 15.42,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Input text / input background (input = surface)",
+        "fg": "#F5F7F7",
+        "bg": "#131619",
+        "large": false,
+        "ratio": 16.89,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Placeholder-ish secondary text / input bg",
+        "fg": "#A6AFB4",
+        "bg": "#131619",
+        "large": false,
+        "ratio": 8.14,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Success text / background",
+        "fg": "#3DDC84",
+        "bg": "#0A0C0D",
+        "large": false,
+        "ratio": 10.99,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Warning text / background",
+        "fg": "#FFC24B",
+        "bg": "#0A0C0D",
+        "large": false,
+        "ratio": 12.2,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Error text / background",
+        "fg": "#FF6B6B",
+        "bg": "#0A0C0D",
+        "large": false,
+        "ratio": 7.06,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Info text / background",
+        "fg": "#5AC8FA",
+        "bg": "#0A0C0D",
+        "large": false,
+        "ratio": 10.34,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Primary (link/icon use) / background",
+        "fg": "#29F0C6",
+        "bg": "#0A0C0D",
+        "large": true,
+        "ratio": 13.42,
+        "threshold": 3,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Focus ring / background (UI component, 3:1)",
+        "fg": "#29F0C6",
+        "bg": "#0A0C0D",
+        "large": true,
+        "ratio": 13.42,
+        "threshold": 3,
+        "verdict": "PASS"
+      }
+    ]
+  },
+  "C3": {
+    "light": [
+      {
+        "label": "Body text / background",
+        "fg": "#241B14",
+        "bg": "#FBF7F2",
+        "large": false,
+        "ratio": 15.85,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / background",
+        "fg": "#6E6055",
+        "bg": "#FBF7F2",
+        "large": false,
+        "ratio": 5.68,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Body text / surface",
+        "fg": "#241B14",
+        "bg": "#F3EBE1",
+        "large": false,
+        "ratio": 14.32,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / surface",
+        "fg": "#6E6055",
+        "bg": "#F3EBE1",
+        "large": false,
+        "ratio": 5.13,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "CTA text / CTA background",
+        "fg": "#FFFFFF",
+        "bg": "#A8402A",
+        "large": false,
+        "ratio": 6.12,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Nav text / background (nav = elevatedSurface)",
+        "fg": "#241B14",
+        "bg": "#FFFFFF",
+        "large": false,
+        "ratio": 16.91,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Input text / input background (input = surface)",
+        "fg": "#241B14",
+        "bg": "#F3EBE1",
+        "large": false,
+        "ratio": 14.32,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Placeholder-ish secondary text / input bg",
+        "fg": "#6E6055",
+        "bg": "#F3EBE1",
+        "large": false,
+        "ratio": 5.13,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Success text / background",
+        "fg": "#3C7A4E",
+        "bg": "#FBF7F2",
+        "large": false,
+        "ratio": 4.82,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Warning text / background",
+        "fg": "#9A6300",
+        "bg": "#FBF7F2",
+        "large": false,
+        "ratio": 4.73,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Error text / background",
+        "fg": "#C4291B",
+        "bg": "#FBF7F2",
+        "large": false,
+        "ratio": 5.35,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Info text / background",
+        "fg": "#3E6E8E",
+        "bg": "#FBF7F2",
+        "large": false,
+        "ratio": 5.15,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Primary (link/icon use) / background",
+        "fg": "#A8402A",
+        "bg": "#FBF7F2",
+        "large": true,
+        "ratio": 5.74,
+        "threshold": 3,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Focus ring / background (UI component, 3:1)",
+        "fg": "#A8402A",
+        "bg": "#FBF7F2",
+        "large": true,
+        "ratio": 5.74,
+        "threshold": 3,
+        "verdict": "PASS"
+      }
+    ],
+    "dark": [
+      {
+        "label": "Body text / background",
+        "fg": "#F5EEE5",
+        "bg": "#17120D",
+        "large": false,
+        "ratio": 16.16,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / background",
+        "fg": "#BDAE9B",
+        "bg": "#17120D",
+        "large": false,
+        "ratio": 8.59,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Body text / surface",
+        "fg": "#F5EEE5",
+        "bg": "#201A14",
+        "large": false,
+        "ratio": 14.96,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Secondary text / surface",
+        "fg": "#BDAE9B",
+        "bg": "#201A14",
+        "large": false,
+        "ratio": 7.95,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "CTA text / CTA background",
+        "fg": "#1A1008",
+        "bg": "#E07A52",
+        "large": false,
+        "ratio": 6.31,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Nav text / background (nav = elevatedSurface)",
+        "fg": "#F5EEE5",
+        "bg": "#2A231C",
+        "large": false,
+        "ratio": 13.46,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Input text / input background (input = surface)",
+        "fg": "#F5EEE5",
+        "bg": "#201A14",
+        "large": false,
+        "ratio": 14.96,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Placeholder-ish secondary text / input bg",
+        "fg": "#BDAE9B",
+        "bg": "#201A14",
+        "large": false,
+        "ratio": 7.95,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Success text / background",
+        "fg": "#6FCF8E",
+        "bg": "#17120D",
+        "large": false,
+        "ratio": 9.74,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Warning text / background",
+        "fg": "#F0B23A",
+        "bg": "#17120D",
+        "large": false,
+        "ratio": 9.86,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Error text / background",
+        "fg": "#F0685A",
+        "bg": "#17120D",
+        "large": false,
+        "ratio": 6.05,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Info text / background",
+        "fg": "#6FA8C9",
+        "bg": "#17120D",
+        "large": false,
+        "ratio": 7.19,
+        "threshold": 4.5,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Primary (link/icon use) / background",
+        "fg": "#E07A52",
+        "bg": "#17120D",
+        "large": true,
+        "ratio": 6.27,
+        "threshold": 3,
+        "verdict": "PASS"
+      },
+      {
+        "label": "Focus ring / background (UI component, 3:1)",
+        "fg": "#E07A52",
+        "bg": "#17120D",
+        "large": true,
+        "ratio": 6.27,
+        "threshold": 3,
+        "verdict": "PASS"
+      }
+    ]
+  }
+}
