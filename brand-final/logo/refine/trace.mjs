@@ -151,6 +151,34 @@ function douglasPeucker(points, epsilon) {
   return [points[0], points[points.length - 1]];
 }
 
+// Root-cause fix for a real rendering artifact found during W1 master QA: the Moore-neighbor
+// boundary trace starts and ends at the same pixel, so after Douglas-Peucker simplification the
+// closed polygon's first and last vertices can land within 1px of each other (a near-duplicate
+// seam) while the vertex just beyond either side sits far away. Catmull-Rom's tangent at that
+// seam is computed from the *next-but-one* neighbor on each side (p[i-1], p[i], p[i+1], p[i+2]),
+// so a ~1px segment paired with a neighbor ~500px away produces a wildly exaggerated tangent —
+// visible as a small stray spike at that single point (confirmed: reproduced exactly at the lam
+// stem's top seam; confirmed NOT removable by morphological opening at any tested strength 1-10,
+// since it is a curve-fitting artifact, not a raster-thickness one — see
+// test-morph-cleanup.mjs). Fix: remove near-duplicate consecutive vertices (treating the
+// polygon as the closed loop it is) before curve fitting, so the seam tangent is computed from
+// real, well-separated neighbors like every other point on the curve. This changes nothing
+// except the exact 1-2 vertices that were near-duplicates — verified against every other
+// letterform feature in test-morph-cleanup.mjs's before/after comparison.
+function dedupeClosedPolygon(polygon, minDist = 3) {
+  if (polygon.length < 4) return polygon;
+  const out = [polygon[0]];
+  for (let i = 1; i < polygon.length; i++) {
+    const prev = out[out.length - 1];
+    if (Math.hypot(polygon[i].x - prev.x, polygon[i].y - prev.y) >= minDist) out.push(polygon[i]);
+  }
+  // check wrap-around: last kept point vs first point
+  while (out.length > 3 && Math.hypot(out[out.length - 1].x - out[0].x, out[out.length - 1].y - out[0].y) < minDist) {
+    out.pop();
+  }
+  return out;
+}
+
 function polyToPathD(poly, smooth) {
   if (!smooth || poly.length < 4) {
     return 'M ' + poly.map((p) => `${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(' L ') + ' Z';
@@ -170,7 +198,7 @@ function polyToPathD(poly, smooth) {
 // General-purpose region tracer. invert=true traces background instead of ink (for extracting
 // enclosed counters/negative-space); excludeEdgeTouching=true drops any component touching the
 // crop border, which is how a true enclosed counter is distinguished from open background.
-export function traceRegion(imageData, { width, height, threshold = 128, epsilon = 1.4, minArea = 6, smooth = true, invert = false, excludeEdgeTouching = false, maxComponents = Infinity, openIterations = 0 } = {}) {
+export function traceRegion(imageData, { width, height, threshold = 128, epsilon = 1.4, minArea = 6, smooth = true, invert = false, excludeEdgeTouching = false, maxComponents = Infinity, openIterations = 0, seamDedupeDist = 3 } = {}) {
   let bin = binarize(imageData, width, height, threshold, invert);
   if (openIterations > 0) bin = morphOpen(bin, width, height, openIterations);
   const { labels, components } = labelComponents(bin, width, height);
@@ -185,15 +213,19 @@ export function traceRegion(imageData, { width, height, threshold = 128, epsilon
   if (candidates.length > maxComponents) candidates = candidates.slice(0, maxComponents);
   const subpaths = [];
   const kept = [];
+  let seamPointsRemoved = 0;
   for (const { ci, c } of candidates) {
     const boundary = traceComponentBoundary(labels, ci, width, height, c);
     if (!boundary || boundary.length < 4) continue;
-    subpaths.push(douglasPeucker(boundary, epsilon));
+    const simplified = douglasPeucker(boundary, epsilon);
+    const deduped = seamDedupeDist > 0 ? dedupeClosedPolygon(simplified, seamDedupeDist) : simplified;
+    seamPointsRemoved += simplified.length - deduped.length;
+    subpaths.push(deduped);
     kept.push(c);
   }
   const dList = subpaths.map((poly) => polyToPathD(poly, smooth));
   const d = dList.join(' ');
-  return { d, dList, subpathCount: subpaths.length, componentCount: components.length, components: kept };
+  return { d, dList, subpathCount: subpaths.length, componentCount: components.length, components: kept, seamPointsRemoved, polygons: subpaths };
 }
 
 export function traceToPath(imageData, opts = {}) {
