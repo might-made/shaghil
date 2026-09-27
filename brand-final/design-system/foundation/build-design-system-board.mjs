@@ -187,7 +187,7 @@ h4 { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: 
 </section>
 
 <section>
-  <h2>08 · Buttons</h2>
+  <h2>08 · Buttons — Hierarchy Under Real Conditions</h2>
   <h4>Variants</h4>
   <div class="row">${btn('إجراء أساسي', 'primary', 'md', 'light')}${btn('إجراء ثانوي', 'secondary', 'md', 'light')}${btn('إجراء شفاف', 'ghost', 'md', 'light')}${btn('حذف', 'destructive', 'md', 'light')}</div>
   <h4 style="margin-top:20px">States (primary)</h4>
@@ -195,6 +195,21 @@ h4 { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: 
   <button style="height:40px;padding:0 16px;border-radius:12px;${tf('Button', 'ar')}color:${L.ctaText};background:${L.cta};border:none;display:flex;align-items:center;gap:8px"><span class="spinner" style="border-color:rgba(255,255,255,.35);border-top-color:#fff"></span>جارٍ الإنشاء</button></div>
   <h4 style="margin-top:20px">Sizes</h4>
   <div class="row" style="align-items:center">${btn('صغير', 'secondary', 'sm', 'light')}${btn('متوسط', 'secondary', 'md', 'light')}</div>
+
+  <h4 style="margin-top:28px">Grouped actions — several together (light)</h4>
+  <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border};width:520px">
+    <b style="${tf('H4', 'ar')}color:${L.textPrimary}">حفظ التعديلات؟</b>
+    <p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:4px">لديك تغييرات غير محفوظة في Business Brain.</p>
+    <div class="row" style="margin-top:${SP['space-md']}">${btn('إلغاء', 'ghost', 'sm', 'light')}${btn('حذف المسودة', 'destructive', 'sm', 'light')}${btn('حفظ', 'primary', 'sm', 'light')}</div>
+  </div>
+  <p class="rule-text" style="margin-top:10px">Exactly one primary per group. Destructive sits visually apart (red fill, not just red text) so it's never mistaken for the safe default even sitting directly beside the primary action.</p>
+
+  <h4 style="margin-top:24px">Same group — dark mode</h4>
+  <div class="cardBase" style="background:${D.surface};border:1px solid ${D.border};width:520px">
+    <b style="${tf('H4', 'ar')}color:${D.textPrimary}">حفظ التعديلات؟</b>
+    <p style="${tf('Body Small', 'ar')}color:${D.textSecondary};margin-top:4px">لديك تغييرات غير محفوظة في Business Brain.</p>
+    <div class="row" style="margin-top:${SP['space-md']}">${btn('إلغاء', 'ghost', 'sm', 'dark')}${btn('حذف المسودة', 'destructive', 'sm', 'dark')}${btn('حفظ', 'primary', 'sm', 'dark')}</div>
+  </div>
 </section>
 
 <section>
@@ -208,15 +223,32 @@ h4 { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: 
 </section>
 
 <section>
-  <h2>10 · Cards — Distinct Semantic Types</h2>
+  <h2>10 · Cards — One Family, Five Roles</h2>
+  <p class="rule-text">Every card shares the same base grammar: radius-md, ${SP['space-md']} internal padding, 1px default border. They differentiate only through border treatment, internal structure, and behavior — never through five unrelated visual styles.</p>
+  <h4 style="margin-top:20px">1 · Standard content — static, no action</h4>
+  <div class="cardBase" style="width:280px;background:${L.surface};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">محتوى قياسي</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">بطاقة معلومات عامة — بدون إجراء مباشر.</p></div>
+
+  <h4 style="margin-top:24px">2 · Selectable — default vs. selected (border weight/color is the only change)</h4>
   <div class="row">
-    <div class="cardBase" style="width:260px;background:${L.surface};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">محتوى قياسي</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">بطاقة محتوى عامة — بدون إجراء مباشر.</p></div>
-    <div class="cardBase" style="width:260px;background:${L.surface};border:2px solid ${L.signalPrimary}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">بطاقة قابلة للاختيار</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">محددة حاليًا — حدّ الإشارة يوضّح الاختيار.</p></div>
-    <div class="cardBase" style="width:260px;background:${L.surface};border:1px solid ${L.border};cursor:default"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">🗓️ سوّ محتوى</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">بطاقة إجراء — الضغط عليها يفتح أداة.</p></div>
-    <div class="cardBase" style="width:260px;background:${L.surface};border:1px solid ${L.border}"><div style="${tf('Label', 'ar')}color:${L.textSecondary}">إجمالي المبيعات</div><div style="${tf('Numeric / KPI', 'ar')}color:${L.textPrimary};margin-top:4px">${bdi('45,000 SAR')}</div><div style="${tf('Caption', 'ar')}color:${L.success};margin-top:2px">${bdi('+24%')}</div></div>
-    <div class="cardBase" style="width:260px;background:${L.surfaceSubtle};border:1px dashed ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">حاوية تصميم مولّد</b><div style="width:100%;height:70px;border-radius:8px;background:repeating-linear-gradient(45deg,${L.border},${L.border} 8px,transparent 8px,transparent 16px);margin-top:8px"></div></div>
+    <div class="cardBase" style="width:260px;background:${L.surface};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">Instagram Post — 1:1</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">غير محددة</p></div>
+    <div class="cardBase" style="width:260px;background:${L.signalSubtleBg};border:2px solid ${L.signalPrimary}"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">Instagram Story — 9:16</b>${iconWrap(icons.check, 18, L.signalPrimary)}</div><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">محددة الآن</p></div>
   </div>
-  <p class="rule-text" style="margin-top:16px">No card is nested inside another card anywhere in this system — hierarchy is expressed through the card's own border/background weight, not through nesting.</p>
+
+  <h4 style="margin-top:24px">3 · Action (engine tile) — default vs. hover (background shifts, border does not)</h4>
+  <div class="row">
+    <div class="cardBase" style="width:260px;background:${L.surface};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">🗓️ سوّ محتوى</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">خطة محتوى مرتبطة بهدف مشروعك.</p></div>
+    <div class="cardBase" style="width:260px;background:${L.surfaceSubtle};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">🗓️ سوّ محتوى</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">خطة محتوى مرتبطة بهدف مشروعك.</p><div class="frameLabel" style="text-align:right;color:${L.signalPrimary};margin-top:4px">hover — 120ms</div></div>
+  </div>
+
+  <h4 style="margin-top:24px">4 · KPI / data — differentiated by content structure only, same base card</h4>
+  <div class="cardBase" style="width:260px;background:${L.surface};border:1px solid ${L.border}"><div style="${tf('Label', 'ar')}color:${L.textSecondary}">إجمالي المبيعات</div><div style="${tf('Numeric / KPI', 'ar')}color:${L.textPrimary};margin-top:4px">${bdi('45,000 SAR')}</div><div style="${tf('Caption', 'ar')}color:${L.success};margin-top:2px">${bdi('+24%')}</div></div>
+
+  <h4 style="margin-top:24px">5 · Generated-output container — empty (dashed) vs. filled (solid, once real content exists)</h4>
+  <div class="row">
+    <div class="cardBase" style="width:260px;background:${L.surfaceSubtle};border:1px dashed ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textMuted}">لم يُنشأ تصميم بعد</b><div style="width:100%;height:70px;border-radius:8px;background:repeating-linear-gradient(45deg,${L.border},${L.border} 8px,transparent 8px,transparent 16px);margin-top:8px"></div></div>
+    <div class="cardBase" style="width:260px;background:${L.surface};border:1px solid ${L.border}"><div style="width:100%;height:70px;border-radius:8px;background:${L.signalSubtleBg};display:flex;align-items:center;justify-content:center;color:${L.signalPrimary};font-family:Arial;font-size:11px">صورة التصميم</div><div class="row" style="margin-top:8px">${btn('تحميل', 'secondary', 'sm', 'light')}</div></div>
+  </div>
+  <p class="rule-text" style="margin-top:16px">No card is nested inside another card anywhere in this system — hierarchy is expressed through the card's own border/background weight and internal structure, never through nesting.</p>
 </section>
 
 <section>
@@ -268,6 +300,22 @@ h4 { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: 
   </div>
   <div class="row" style="margin-top:16px">${btn('أعد التوليد', 'secondary', 'sm', 'dark')}${btn('تحسين', 'secondary', 'sm', 'dark')}${btn('حفظ', 'primary', 'sm', 'dark')}</div>
   <p class="rule-text" style="margin-top:16px;color:#ccc">The signal mint marks Generating/Thinking only — a controlled, single-purpose activation color, never a decorative gradient or sparkle animation. Completed uses semantic success green, Failed uses semantic error red, both distinct from the signal color per the locked color system's rule.</p>
+
+  <h4 style="margin-top:28px;color:#888">Thinking vs. Generating — a functional difference, not a decorative one</h4>
+  <div class="row">
+    <div class="cardBase" style="width:340px;background:${D.surface};border:1px solid ${D.signalPrimary}">
+      <div style="display:flex;align-items:center;gap:8px;color:${D.signalPrimary};font-family:Arial;font-size:12px"><span class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:${D.signalPrimary}"></span>الذكاء الاصطناعي يفكر...</div>
+      <div style="margin-top:10px;height:10px;border-radius:5px;background:linear-gradient(90deg,${D.surfaceSubtle},${D.border},${D.surfaceSubtle});background-size:200% 100%"></div>
+      <div style="margin-top:6px;height:10px;width:70%;border-radius:5px;background:${D.surfaceSubtle}"></div>
+      <div class="frameLabel" style="text-align:right;color:#777;margin-top:10px">no partial content yet — interpreting the request. No Stop action; nothing exists to interrupt.</div>
+    </div>
+    <div class="cardBase" style="width:340px;background:${D.surface};border:1px solid ${D.signalPrimary}">
+      <div style="display:flex;align-items:center;gap:8px;color:${D.signalPrimary};font-family:Arial;font-size:12px"><span class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:${D.signalPrimary}"></span>جارٍ الإنشاء...</div>
+      <p style="${tf('Body Small', 'ar')}color:${D.textPrimary};margin-top:10px">ابدأ من فهم مشروعك، وبعدها شغّل الأدوات المناسبة له. جهّز بيانات مشروعك<span style="display:inline-block;width:2px;height:14px;background:${D.signalPrimary};margin-inline-start:2px;vertical-align:middle"></span></p>
+      <div class="row" style="margin-top:10px">${btn('إيقاف', 'ghost', 'sm', 'dark')}</div>
+      <div class="frameLabel" style="text-align:right;color:#777;margin-top:6px">real partial content is visible and growing — a Stop action is now available because there's something to interrupt.</div>
+    </div>
+  </div>
 </section>
 
 <section>
@@ -292,6 +340,14 @@ h4 { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: 
     <div style="width:220px;padding:10px;background:${L.surfaceElevated};border-radius:10px;box-shadow:${uiTokens.elevation.subtle.light}"><div style="${tf('Body Small', 'ar')}color:${L.textPrimary};padding:6px 8px">تعديل</div><div style="${tf('Body Small', 'ar')}color:${L.textPrimary};padding:6px 8px">نسخة ثانية</div><div style="${tf('Body Small', 'ar')}color:${L.error};padding:6px 8px">حذف</div></div>
   </div>
   <p class="rule-text" style="margin-top:14px">Confirmation dialog replaces the native browser confirm() found in the audit — same brand surface, radius, and typography as the rest of the system.</p>
+  <h4 style="margin-top:24px">Same dialog — dark mode</h4>
+  <div style="position:relative;width:420px;height:240px;background-color:${uiTokens.elevation.scrim.dark};border-radius:12px;display:flex;align-items:center;justify-content:center">
+    <div style="width:320px;padding:20px;background:${D.surfaceElevated};border-radius:16px;box-shadow:${uiTokens.elevation.overlay.dark}">
+      <b style="${tf('H4', 'ar')}color:${D.textPrimary}">حذف هذه النتيجة؟</b>
+      <p style="${tf('Body Small', 'ar')}color:${D.textSecondary};margin-top:8px">لا يمكن التراجع عن هذا الإجراء.</p>
+      <div class="row" style="margin-top:14px">${btn('إلغاء', 'secondary', 'sm', 'dark')}${btn('حذف', 'destructive', 'sm', 'dark')}</div>
+    </div>
+  </div>
 </section>
 
 <section>
@@ -338,74 +394,153 @@ h4 { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: 
 </section>
 
 <section>
-  <h2>22 · Home / Engine Simulation</h2>
-  <div class="uiMock" style="background:${L.bgPrimary}">
+  <h2>22 · Home / Engine Selection — Full Simulation</h2>
+  <div class="uiMock" style="background:${L.bgPrimary};width:1080px">
+    <div class="uiTop" style="background:${L.surfaceElevated};border-bottom:1px solid ${L.border}">
+      <div class="uiBrand"><div class="uiLogoTile" style="background:${L.textPrimary}">${fitTo(recolorMaster('#ffffff'), 18)}</div><b style="${tf('H4', 'ar')}color:${L.textPrimary}">شغّل</b></div>
+      <div class="uiNav">
+        <button style="${tf('Button', 'ar')}background:${L.surfaceSubtle};color:${L.signalPrimary};box-shadow:inset 0 0 0 1.5px ${L.signalPrimary}">الرئيسية</button>
+        <button style="${tf('Button', 'ar')}background:transparent;color:${L.textSecondary}">Business Brain</button>
+        <button style="${tf('Button', 'ar')}background:transparent;color:${L.textSecondary}">السجل</button>
+      </div>
+    </div>
     <div class="uiBody">
-      <div style="${tf('H1', 'ar')}color:${L.textPrimary}">وش تبغى تنجز اليوم؟</div>
-      <div class="grid3" style="margin-top:16px">
-        ${['🗓️ سوّ محتوى', '✍️ اكتب لي', '💬 رد على عميل'].map((t) => `<div class="cardBase" style="background:${L.surface};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">${t}</b></div>`).join('')}
+      <div style="${tf('H1', 'ar')}color:${L.textPrimary}">Brew 27 — وش تبغى تنجز اليوم؟</div>
+      <p style="${tf('Body', 'ar')}color:${L.textSecondary};margin-top:6px">كل أداة تستخدم Business Brain تلقائيًا.</p>
+      <div class="grid3" style="margin-top:${SP['space-lg']}">
+        <div class="cardBase" style="background:${L.surfaceSubtle};border:1px solid ${L.border};position:relative"><span style="position:absolute;top:10px;left:10px">${badge('الأكثر استخدامًا', 'signal', 'light')}</span><b style="${tf('H4', 'ar')}color:${L.textPrimary}">🗓️ سوّ محتوى</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">خطة محتوى مرتبطة بهدف مشروعك.</p></div>
+        <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">✍️ اكتب لي</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">Caption، إعلان، WhatsApp ووصف منتج.</p></div>
+        <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">🎯 ابنِ عرض</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">عرض مقنع مبني على قيمة منتجك.</p></div>
+        <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">💬 رد على عميل</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">بيع، اعتراض، متابعة أو شكوى.</p></div>
+        <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">🚀 سوّ حملة</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">Big Idea + محتوى + WhatsApp.</p></div>
+        <div class="cardBase" style="background:${L.surfaceSubtle};border:1px solid ${L.border}"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">🎬 اكتب Reel</b><p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:6px">Hook + Scenes + VO + CTA.</p><div class="frameLabel" style="text-align:right;color:${L.signalPrimary};margin-top:4px">hover</div></div>
       </div>
     </div>
   </div>
 </section>
 
 <section>
-  <h2>23 · Business Brain Simulation</h2>
-  <div class="uiMock" style="background:${L.surfaceElevated};border-color:${L.border}">
-    <div class="uiBody"><div style="${tf('H1', 'ar')}color:${L.textPrimary}">Business Brain</div>
-      <div class="grid3" style="margin-top:14px"><div class="cardBase" style="background:${L.surface};border:1px solid ${L.border}"><small style="${tf('Label', 'ar')}color:${L.textMuted}">اسم المشروع</small><b style="${tf('H4', 'ar')}color:${L.textPrimary};display:block">Brew 27</b></div></div>
-      <div class="row" style="margin-top:14px">${btn('تعديل', 'secondary', 'md', 'light')}${btn('ابدأ شغّل', 'primary', 'md', 'light')}</div>
+  <h2>23 · Business Brain — Populated, Dense Simulation</h2>
+  <div class="uiMock" style="background:${L.surfaceElevated};border-color:${L.border};width:1080px">
+    <div class="uiBody">
+      <div style="${tf('H1', 'ar')}color:${L.textPrimary}">Business Brain</div>
+      <div class="grid3" style="margin-top:${SP['space-lg']}">
+        ${[['اسم المشروع', 'Brew 27'], ['القطاع', 'قهوة مختصة'], ['وش تبيع؟', 'قهوة مختصة وحلويات مع توصيل داخل جدة'], ['مين عميلك؟', 'موظفون وطلاب 20–35'], ['المدينة/السوق', 'جدة'], ['متوسط السعر', '50–100 SAR'], ['النبرة', 'سعودي طبيعي'], ['الهدف الحالي', 'رجوع العملاء']].map(([label, val]) => `<div class="cardBase" style="background:${L.surface};border:1px solid ${L.border}"><small style="${tf('Label', 'ar')}color:${L.textMuted}">${esc(label)}</small><b style="${tf('H4', 'ar')}color:${L.textPrimary};display:block;margin-top:2px">${esc(val)}</b></div>`).join('')}
+      </div>
+      <div class="row" style="margin-top:${SP['space-lg']}">${btn('تعديل', 'secondary', 'md', 'light')}${btn('ابدأ شغّل', 'primary', 'md', 'light')}</div>
     </div>
   </div>
 </section>
 
 <section>
-  <h2>24 · Brand Brain Simulation</h2>
-  <div class="uiMock" style="background:${L.surfaceElevated};border-color:${L.border}">
-    <div class="uiBody"><div style="${tf('H1', 'ar')}color:${L.textPrimary}">Brand Brain</div>
-      ${inputField('اللون الأساسي', 'light', 'default', '#24BC99')}
+  <h2>24 · Brand Brain — Populated Identity Simulation</h2>
+  <div class="uiMock" style="background:${L.surfaceElevated};border-color:${L.border};width:1080px">
+    <div class="uiBody">
+      <div style="${tf('H1', 'ar')}color:${L.textPrimary}">Brand Brain</div>
+      <p style="${tf('Body', 'ar')}color:${L.textSecondary};margin-top:6px">هوية مشروعك البصرية.</p>
+      <div class="grid3" style="margin-top:${SP['space-lg']}">
+        <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border}"><small style="${tf('Label', 'ar')}color:${L.textMuted}">اللون الأساسي</small><div class="row" style="align-items:center;margin-top:6px"><span style="width:20px;height:20px;border-radius:6px;background:${L.signalPrimary};display:inline-block"></span><b style="${tf('Body Small', 'ar')}color:${L.textPrimary}">${bdi('#24BC99')}</b></div></div>
+        <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border}"><small style="${tf('Label', 'ar')}color:${L.textMuted}">الجمهور المستهدف</small><b style="${tf('H4', 'ar')}color:${L.textPrimary};display:block;margin-top:2px">موظفون وطلاب، 20–35، جدة</b></div>
+        <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border}"><small style="${tf('Label', 'ar')}color:${L.textMuted}">نبرة العلامة التجارية</small><b style="${tf('H4', 'ar')}color:${L.textPrimary};display:block;margin-top:2px">سعودي طبيعي، واثق وودود</b></div>
+      </div>
+      <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border};margin-top:${SP['space-sm']}"><small style="${tf('Label', 'ar')}color:${L.textMuted}">الأسلوب البصري</small><p style="${tf('Body Small', 'ar')}color:${L.textPrimary};margin-top:4px">تصوير سعودي عصري، natural lighting، تكوين بسيط والمنتج هو البطل — بدون نص إضافي على الصورة.</p></div>
     </div>
   </div>
 </section>
 
 <section style="background:${D.bgPrimary}">
-  <h2 style="color:#999">25 · Visual Studio Simulation</h2>
-  <div class="uiMock" style="background:${D.surfaceElevated};border-color:${D.border}">
-    <div class="uiBody"><div style="${tf('H1', 'ar')}color:${D.textPrimary}">Visual Studio</div>
-      <div class="row" style="margin-top:14px"><div class="cardBase" style="background:${D.surface};border:1px dashed ${D.border};width:260px;height:150px;display:flex;align-items:center;justify-content:center;color:${D.textMuted};font-family:Arial;font-size:12px">التصميم الناتج</div>${btn('اصنع التصميم', 'primary', 'md', 'dark')}</div>
+  <h2 style="color:#999">25 · Visual Studio — Controls, Generating, and Result (Dark)</h2>
+  <div class="row" style="align-items:flex-start">
+    <div class="uiMock" style="background:${D.surfaceElevated};border-color:${D.border};width:520px">
+      <div class="uiBody">
+        <div style="${tf('H2', 'ar')}color:${D.textPrimary}">Visual Studio</div>
+        <p style="${tf('Body Small', 'ar')}color:${D.textSecondary};margin-top:4px">بيانات مشروعك وهويتك مأخوذة تلقائيًا.</p>
+        <div class="row" style="margin-top:${SP['space-md']}">
+          ${inputField('المقاس', 'dark', 'default', 'Instagram Story — 9:16')}
+          ${inputField('الأسلوب', 'dark', 'default', 'Premium')}
+        </div>
+        <div class="row" style="margin-top:${SP['space-md']}">${btn('اصنع التصميم', 'primary', 'md', 'dark')}</div>
+      </div>
+    </div>
+    <div class="cardBase" style="width:320px;background:${D.surface};border:1px solid ${D.signalPrimary}">
+      <div style="display:flex;align-items:center;gap:8px;color:${D.signalPrimary};font-family:Arial;font-size:12px"><span class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:${D.signalPrimary}"></span>جارٍ توليد التصميم...</div>
+      <div style="width:100%;height:140px;border-radius:8px;background:repeating-linear-gradient(45deg,${D.border},${D.border} 8px,transparent 8px,transparent 16px);margin-top:10px"></div>
+      <div class="frameLabel" style="text-align:right;color:#777;margin-top:8px">Generating state — no action available yet</div>
+    </div>
+    <div class="cardBase" style="width:320px;background:${D.surface};border:1px solid ${D.border}">
+      <div style="width:100%;height:140px;border-radius:8px;background:${D.signalSubtleBg};display:flex;align-items:center;justify-content:center;color:${D.signalPrimary};font-family:Arial;font-size:11px">التصميم النهائي</div>
+      <div class="row" style="margin-top:10px">${btn('نسخة ثانية', 'secondary', 'sm', 'dark')}${btn('تحميل', 'primary', 'sm', 'dark')}</div>
     </div>
   </div>
 </section>
 
 <section>
-  <h2>26 · Generated Result Simulation</h2>
-  <div class="uiMock" style="background:${L.bgPrimary}">
+  <h2>26 · Generated Result — Long-Form, 680px Reading Measure</h2>
+  <div class="uiMock" style="background:${L.bgPrimary};width:1080px">
     <div class="uiBody">
-      <div style="${tf('H2', 'ar')}color:${L.textPrimary}">خطة المحتوى الأسبوعية</div>
-      <p style="${tf('Body', 'ar')}color:${L.textPrimary};margin-top:10px">ابدأ من فهم مشروعك، وبعدها شغّل الأدوات المناسبة له. جهّز بيانات مشروعك مرة واحدة في Business Brain.</p>
-      <div class="row" style="margin-top:14px">${btn('نسخ', 'secondary', 'sm', 'light')}${btn('حفظ في السجل', 'primary', 'sm', 'light')}</div>
+      <div style="max-width:${uiTokens.layout.readingMeasure}">
+        <div style="${tf('H2', 'ar')}color:${L.textPrimary}">خطة المحتوى الأسبوعية</div>
+        <div class="row rtl" style="margin-top:6px">${badge('سوّ محتوى', 'neutral', 'light')}<span style="${tf('Metadata', 'ar')}color:${L.textMuted}">Brew 27 · 27 سبتمبر 2026</span></div>
+        <p style="${tf('Body', 'ar')}color:${L.textPrimary};margin-top:${SP['space-md']}">ابدأ من فهم مشروعك، وبعدها شغّل الأدوات المناسبة له. جهّز بيانات مشروعك مرة واحدة في Business Brain، واحصل على محتوى، عروض، وردود جاهزة تلقائيًا.</p>
+        <p style="${tf('Body', 'ar')}color:${L.textPrimary};margin-top:${SP['space-sm']}">شغّل يفهم نبرة علامتك التجارية ويحافظ عليها في كل نص يكتبه لك، من منشور إنستغرام إلى رد واتساب على عميل غاضب.</p>
+        <ul style="${tf('Body', 'ar')}color:${L.textPrimary};margin:${SP['space-sm']} 0;padding-inline-start:24px">
+          <li style="margin:4px 0">يوم الأحد: منشور تعريفي بالمنتج الجديد</li>
+          <li style="margin:4px 0">يوم الثلاثاء: عرض خاص بنسبة ${bdi('15%')} لعملاء الواتساب</li>
+          <li style="margin:4px 0">يوم الخميس: Reel قصير عن قصة العلامة</li>
+        </ul>
+        <p style="${tf('Body', 'ar')}color:${L.textPrimary};margin-top:${SP['space-sm']}">أهم نقطة هذا الأسبوع: <span style="font-weight:${typeTokens.emphasisException.weight}">زيادة المبيعات بنسبة ${bdi('24%')}</span> مقارنة بالأسبوع الماضي.</p>
+        <div class="row" style="margin-top:${SP['space-lg']}">${btn('تحسين', 'secondary', 'sm', 'light')}${btn('نسخة ثانية', 'secondary', 'sm', 'light')}${btn('حفظ في السجل', 'primary', 'sm', 'light')}</div>
+      </div>
     </div>
   </div>
 </section>
 
 <section>
-  <h2>27 · History Simulation</h2>
-  <div class="uiMock" style="background:${L.bgPrimary}">
+  <h2>27 · History — Multiple Entries, Scan Hierarchy</h2>
+  <div class="uiMock" style="background:${L.bgPrimary};width:1080px">
     <div class="uiBody">
-      <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border};margin-bottom:8px"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">سوّ محتوى</b> · <span style="${tf('Caption', 'ar')}color:${L.textSecondary}">Brew 27</span><div style="${tf('Metadata', 'ar')}color:${L.textMuted}">27 سبتمبر 2026</div></div>
+      ${[
+        ['سوّ محتوى', 'Brew 27', '27 سبتمبر 2026', 'خطة محتوى أسبوعية مرتبطة بهدف رجوع العملاء...', 'neutral', 'محفوظ'],
+        ['رد على عميل', 'Brew 27', '25 سبتمبر 2026', 'شكرًا لتواصلك، نعتذر عن التأخير في التوصيل...', 'success', 'محفوظ'],
+        ['اكتب Reel', 'Brew 27', '22 سبتمبر 2026', 'Hook: وش لو قهوتك تجيك قبل لا تطلبها؟...', 'neutral', 'مسودة'],
+      ].map(([title, project, date, excerpt, kind, status]) => `
+      <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border};margin-bottom:${SP['space-xs']};display:flex;justify-content:space-between;align-items:center;gap:16px">
+        <div style="flex:1">
+          <div class="row rtl" style="align-items:center;gap:8px"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">${esc(title)}</b>${badge(status, kind === 'success' ? 'success' : 'neutral', 'light')}<span style="${tf('Caption', 'ar')}color:${L.textSecondary}">· ${esc(project)}</span></div>
+          <div style="${tf('Metadata', 'ar')}color:${L.textMuted};margin-top:2px">${esc(date)}</div>
+          <p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:4px">${esc(excerpt)}</p>
+        </div>
+        <div class="row" style="flex-shrink:0">${btn('فتح', 'secondary', 'sm', 'light')}<span style="display:inline-flex;width:32px;height:32px;align-items:center;justify-content:center;border-radius:8px;color:${L.error}">${iconWrap(icons.close, 16, L.error)}</span></div>
+      </div>`).join('')}
     </div>
   </div>
 </section>
 
 <section>
-  <h2>28 · Mobile Simulation</h2>
-  <div class="mobileFrame">
-    <div class="screen" style="background:${L.bgPrimary};padding:16px">
-      <div style="display:flex;align-items:center;gap:8px"><div style="width:24px;height:24px;border-radius:6px;background:${L.textPrimary}"></div><b style="${tf('H4', 'ar')}color:${L.textPrimary}">شغّل</b></div>
-      <div style="${tf('H2', 'ar')}color:${L.textPrimary};margin-top:14px">مشروعك. لكن أسرع.</div>
-      <div class="cardBase" style="background:${L.surface};border:1px solid ${L.border};margin-top:12px"><b style="${tf('H4', 'ar')}color:${L.textPrimary}">🗓️ سوّ محتوى</b></div>
-      <div style="margin-top:12px">${btn('ابدأ', 'primary', 'md', 'light')}</div>
+  <h2>28 · Mobile — Full Realistic Workflow (375px)</h2>
+  <div class="row" style="align-items:flex-start">
+    <div>
+      <div class="mobileFrame">
+        <div class="screen" style="background:${L.bgPrimary};padding:${SP['space-md']}">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:8px"><div style="width:24px;height:24px;border-radius:6px;background:${L.textPrimary};display:flex;align-items:center;justify-content:center">${fitTo(recolorMaster('#ffffff'), 14)}</div><b style="${tf('H4', 'ar')}color:${L.textPrimary}">شغّل</b></div>
+            ${iconWrap(icons.search, 20, L.textSecondary)}
+          </div>
+          <div style="${tf('H2', 'ar')}color:${L.textPrimary};margin-top:${SP['space-md']}">سوّ محتوى</div>
+          <p style="${tf('Body Small', 'ar')}color:${L.textSecondary};margin-top:4px">بيانات مشروعك مأخوذة تلقائيًا من Business Brain</p>
+          <div style="margin-top:${SP['space-md']}"><label style="${tf('Label', 'ar')}color:${L.textPrimary};display:block;margin-bottom:${SP['space-xs']}">الفترة</label><div style="height:40px;border-radius:8px;background:${L.surface};border:1px solid ${L.border};display:flex;align-items:center;padding:0 ${SP['space-sm']};${tf('Input', 'ar')}color:${L.textPrimary}">7 أيام</div></div>
+          <div class="cardBase" style="background:${D.surface};border:1px solid ${D.signalPrimary};margin-top:${SP['space-md']}">
+            <div style="display:flex;align-items:center;gap:8px;color:${D.signalPrimary};font-family:Arial;font-size:12px"><span class="spinner" style="border-color:rgba(255,255,255,.2);border-top-color:${D.signalPrimary}"></span>جارٍ الإنشاء...</div>
+          </div>
+          <div style="position:sticky;bottom:0;background:${L.bgPrimary};padding-top:${SP['space-md']};margin-top:${SP['space-md']}">
+            <button style="width:100%;height:40px;border-radius:12px;${tf('Button', 'ar')}color:${L.ctaText};background:${L.cta};border:none">شغّل</button>
+            <button style="width:100%;height:40px;border-radius:12px;${tf('Button', 'ar')}color:${L.textPrimary};background:transparent;border:none;margin-top:6px">إلغاء</button>
+          </div>
+        </div>
+      </div>
+      <div class="frameLabel">375px — full workflow, no horizontal overflow, 40px targets throughout</div>
     </div>
+    <p class="rule-text" style="max-width:500px">Verified: no compressed action labels (button text wraps to a second line before truncating), sensible top-to-bottom stacking (header → title → form → AI state → sticky CTA), Arabic renders at full Body/Label sizes unchanged from desktop, and RTL holds throughout — the search icon sits at the reading-start (left, since this is RTL) matching the locked navigation rule.</p>
   </div>
 </section>
 
