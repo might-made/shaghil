@@ -1,0 +1,74 @@
+{
+  "id": "SHAGHIL-DS-FOUNDATION",
+  "name": "SHAGHIL Product Design System — Foundation Tokens",
+  "status": "FOUNDER REVIEW - NOT LOCKED",
+  "referencesLockedSystems": {
+    "color": "brand-final/color/final/shaghil-color-tokens.json (Graphite Pulse — do not duplicate hex values, reference by token name)",
+    "typography": "brand-final/typography/final/shaghil-typography-tokens.json (IBM Plex Sans Arabic + IBM Plex Sans)"
+  },
+  "spacing": {
+    "rationale": "Validated against the real audited product (SHAGHIL_UI_AUDIT.md): existing padding/margin/gap values (5,7,8,9,10,12,13,14,16,18,20,22px) already loosely gesture toward a 4/8 rhythm without being disciplined about it - this scale formalizes that intent rather than importing an arbitrary one.",
+    "scale": { "1": "4px", "2": "8px", "3": "12px", "4": "16px", "5": "20px", "6": "24px", "7": "32px", "8": "40px", "9": "48px", "10": "64px" },
+    "semantic": {
+      "space-2xs": "4px",
+      "space-xs": "8px",
+      "space-sm": "12px",
+      "space-md": "16px",
+      "space-lg": "24px",
+      "space-xl": "32px",
+      "space-2xl": "48px",
+      "space-3xl": "64px"
+    },
+    "unnamedUtility": { "20px": "occasional in-between card/grid gap where 16 is tight and 24 is loose", "40px": "occasional in-between section spacing on tablet where 32 is tight and 48 is loose" }
+  },
+  "layout": {
+    "contentMaxWidth": "1080px",
+    "contentMaxWidthRationale": "Matches the current product's own .wrap max-width - already proven to work for the 3-up engine grid and forms; kept rather than replaced.",
+    "readingMeasure": "680px",
+    "readingMeasureRationale": "A distinct, narrower max-width reserved for AI-generated long-form output and other extended reading content, separate from the wider dashboard/grid shell width.",
+    "shell": "No persistent sidebar exists in the current product and none is introduced here - the shell is a top app bar plus a single stacked content column. This matches the product's real, current structure and the operational (not dashboard-heavy) nature of SHAGHIL's actual screens.",
+    "pageGutter": { "mobile": "space-md (16px)", "tablet": "space-lg (24px)", "desktop": "space-xl (32px)" },
+    "cardGrid": { "desktop": "3 columns", "tablet": "2 columns", "mobile": "1 column", "gap": "space-sm (12px)" },
+    "breakpoints": { "mobile": "375px", "tablet": "768px", "desktop": "1440px" }
+  },
+  "radius": {
+    "rationale": "Consolidates the audit's 7 uncoordinated values (8/12/13/14/16/20/22px) into 4 deliberate steps. Pill-shaped (radius-full) is reserved for status badges/avatars only, never general buttons or cards, per the explicit instruction to avoid excessive pill-shaped UI.",
+    "scale": {
+      "radius-sm": "8px",
+      "radius-md": "12px",
+      "radius-lg": "16px",
+      "radius-full": "999px"
+    }
+  },
+  "elevation": {
+    "rationale": "The current product uses zero box-shadow anywhere and carries all hierarchy through surface color and border - already aligned with the Founder's stated principle. This system formalizes that as a rule and adds only the minimum shadow needed for genuinely floating elements (menus, modals).",
+    "none": "no shadow - the default for nearly all UI, hierarchy comes from graphite surface tokens",
+    "subtle": { "light": "0 2px 8px rgba(16,18,20,0.08)", "dark": "0 2px 8px rgba(0,0,0,0.32)", "use": "a popover/dropdown menu that must visually lift off a busy background" },
+    "overlay": { "light": "0 12px 32px rgba(16,18,20,0.16)", "dark": "0 12px 32px rgba(0,0,0,0.48)", "use": "modal/dialog surface only" },
+    "scrim": { "light": "rgba(16,18,20,0.32)", "dark": "rgba(7,8,10,0.64)", "use": "backdrop behind a modal/drawer" }
+  },
+  "borders": {
+    "rationale": "References the locked Graphite Pulse tokens by name - no new hex values are introduced. The existing product's single 1px-solid-border convention (already consistent per the audit) is preserved as the default.",
+    "default": "graphite.border (1px)",
+    "subtle": "graphite.border at reduced visual weight - used for the quietest internal dividers",
+    "strong": "graphite.borderStrong (1-2px) - selected/active card outline, emphasized dividers",
+    "focus": "signal.border / signal.primary (2px) - focus-visible ring on every interactive element",
+    "semanticSuccess": "semantic.success (1-2px) - success input border / left-accent",
+    "semanticWarning": "semantic.warning (1-2px)",
+    "semanticError": "semantic.error (1-2px) - error input border / left-accent",
+    "semanticInfo": "semantic.info (1-2px)"
+  },
+  "componentDimensions": {
+    "button": { "small": "32px height", "medium": "40px height", "large": "not defined in this phase - the product's operational screens are fully served by small/medium; a large CTA size would only be relevant to a future marketing site, out of scope here" },
+    "input": "40px height (aligns with medium button for side-by-side layouts)",
+    "icon": { "inline": "16px", "default": "20px", "header": "24px" },
+    "iconStrokeWeight": "1.5px"
+  },
+  "interactionTiming": {
+    "rationale": "The current product has zero hover/pressed transitions anywhere (a real audit finding) - these are new, deliberately restrained values, not decorative motion.",
+    "fast": "120ms - hover/pressed color and border changes",
+    "base": "200ms - panel reveal, focus ring appearance, card selection",
+    "slow": "320ms - modal/drawer enter-exit",
+    "easing": "cubic-bezier(0.2, 0, 0, 1) - a calm, precise 'productive' ease, not bouncy or playful"
+  }
+}

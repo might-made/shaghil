@@ -1,0 +1,77 @@
+/* SHAGHIL Product Design System — Foundation Tokens
+   Status: FOUNDER REVIEW — NOT LOCKED
+   Not yet wired into the live product — reference tokens for a future implementation phase.
+
+   This file assumes brand-final/color/final/shaghil-color-tokens.css and
+   brand-final/typography/final/shaghil-typography-tokens.css are loaded alongside it —
+   borders/focus rings/elevation below reference those custom properties (--shaghil-border,
+   --shaghil-border-strong, --shaghil-signal-border, --shaghil-success, etc.) by name rather
+   than duplicating or silently changing their hex values. */
+
+:root {
+  /* Spacing scale — validated against the real product (see SHAGHIL_UI_AUDIT.md) */
+  --shaghil-space-2xs: 4px;
+  --shaghil-space-xs: 8px;
+  --shaghil-space-sm: 12px;
+  --shaghil-space-md: 16px;
+  --shaghil-space-lg: 24px;
+  --shaghil-space-xl: 32px;
+  --shaghil-space-2xl: 48px;
+  --shaghil-space-3xl: 64px;
+  /* Unnamed utility steps, used sparingly for genuine in-between cases */
+  --shaghil-space-20: 20px;
+  --shaghil-space-40: 40px;
+
+  /* Layout */
+  --shaghil-content-max-width: 1080px;
+  --shaghil-reading-measure: 680px;
+  --shaghil-gutter-mobile: var(--shaghil-space-md);
+  --shaghil-gutter-tablet: var(--shaghil-space-lg);
+  --shaghil-gutter-desktop: var(--shaghil-space-xl);
+
+  /* Breakpoints (documented as custom properties; actual media queries must hardcode these
+     values since CSS media queries cannot consume custom properties) */
+  --shaghil-breakpoint-mobile: 375px;
+  --shaghil-breakpoint-tablet: 768px;
+  --shaghil-breakpoint-desktop: 1440px;
+
+  /* Radius — 4 deliberate steps replacing the audited product's 7 uncoordinated values */
+  --shaghil-radius-sm: 8px;
+  --shaghil-radius-md: 12px;
+  --shaghil-radius-lg: 16px;
+  --shaghil-radius-full: 999px;
+
+  /* Elevation — used sparingly; most UI uses "none" and relies on graphite surface tokens */
+  --shaghil-elevation-subtle-light: 0 2px 8px rgba(16, 18, 20, 0.08);
+  --shaghil-elevation-subtle-dark: 0 2px 8px rgba(0, 0, 0, 0.32);
+  --shaghil-elevation-overlay-light: 0 12px 32px rgba(16, 18, 20, 0.16);
+  --shaghil-elevation-overlay-dark: 0 12px 32px rgba(0, 0, 0, 0.48);
+  --shaghil-scrim-light: rgba(16, 18, 20, 0.32);
+  --shaghil-scrim-dark: rgba(7, 8, 10, 0.64);
+
+  /* Component dimensions */
+  --shaghil-button-height-sm: 32px;
+  --shaghil-button-height-md: 40px;
+  --shaghil-input-height: 40px;
+  --shaghil-icon-inline: 16px;
+  --shaghil-icon-default: 20px;
+  --shaghil-icon-header: 24px;
+  --shaghil-icon-stroke-weight: 1.5px;
+
+  /* Interaction timing — the product currently has none of this; new and deliberately restrained */
+  --shaghil-transition-fast: 120ms;
+  --shaghil-transition-base: 200ms;
+  --shaghil-transition-slow: 320ms;
+  --shaghil-easing: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Borders — reference the locked Graphite Pulse custom properties by name, never a new hex value */
+:root {
+  --shaghil-border-default: 1px solid var(--shaghil-border);
+  --shaghil-border-strong-value: 1px solid var(--shaghil-border-strong);
+  --shaghil-border-focus: 2px solid var(--shaghil-signal-border, var(--shaghil-focus));
+  --shaghil-border-success: 1px solid var(--shaghil-success);
+  --shaghil-border-warning: 1px solid var(--shaghil-warning);
+  --shaghil-border-error: 1px solid var(--shaghil-error);
+  --shaghil-border-info: 1px solid var(--shaghil-info);
+}
