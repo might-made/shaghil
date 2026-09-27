@@ -1,8 +1,29 @@
-# SHAGHIL Product Design System — Foundation
+# SHAGHIL Product Design System
 
-**STATUS: FOUNDER REVIEW — NOT LOCKED**
+**STATUS: SHAGHIL PRODUCT DESIGN SYSTEM — FOUNDER APPROVED — LOCKED**
 
-Branch: `shaghil-design-system`, created from the locked brand baseline at `4ed4cae13707498f3cd4e5c43de7f95b4bbce386` on `shaghil-brand-final`. Phase 1 exploration and foundation only — this is not a logo phase, color exploration, typography exploration, website redesign, product redesign, or runtime implementation. The live product is untouched.
+Branch: `shaghil-design-system`, created from the locked brand baseline at `4ed4cae13707498f3cd4e5c43de7f95b4bbce386` on `shaghil-brand-final`. Founder reviewed the initial foundation board and approved the overall direction in principle, then reviewed Refinement Pass 01 (grouped button hierarchy, card semantic differentiation, Thinking-vs-Generating behavior, realistic Home/Business Brain/Brand Brain/Visual Studio/Generated Result/History simulations, full 375px mobile workflow, and expanded dark-mode validation) and approved it with no second refinement pass required. Founder-validated design-system baseline: `b1db54605894cfa5c54af92ca385fa66475017e7`.
+
+This phase was foundation and refinement only — not a logo phase, color exploration, typography exploration, website redesign, product redesign, or runtime implementation. The live product remains untouched throughout.
+
+## Immutability rule
+
+**The SHAGHIL Product Design System is now a locked production foundation.** Future product implementation must consume this system as-is. Do not silently redesign or reinterpret the logo, color, typography, spacing, radius, components, AI states, or responsive rules documented here. Any future change to a locked foundation requires explicit Founder approval and must be documented as a new, dated revision — never a silent edit to this document or its token files.
+
+## Locked foundation stack
+
+| Layer | System | Status |
+|---|---|---|
+| Logo | SHAGHIL Master Wordmark | **LOCKED** |
+| Color | Graphite Pulse | **LOCKED** |
+| Typography | IBM Plex Sans Arabic + IBM Plex Sans | **LOCKED** |
+| Product Design System | This document's Founder-approved foundation | **LOCKED** |
+
+This stack is now the complete source of truth for the upcoming implementation phase.
+
+## Approved foundation scope
+
+Founder approval covers every part of this locked foundation: design principles; the spacing system; the grid/layout system; responsive behavior at 375/768/1440; the radius system; the border/elevation system; the button system; the input/form system; the card grammar (one shared base, five differentiated roles); navigation; badges; feedback/semantic states; confirmation/dialog behavior; the AI-state system (including the Refinement Pass 01 Thinking-vs-Generating distinction); iconography rules; RTL/bilingual rules; accessibility rules; light mode; dark mode; and the six real-application patterns — Home/Engine Selection, Business Brain, Brand Brain, Visual Studio, Generated Result, and History.
 
 ## Relationship to the locked brand
 
@@ -95,8 +116,12 @@ SHAGHIL_DESIGN_SYSTEM_FOUNDATION.md
 
 ## Scope confirmation
 
-Not touched this phase: the locked logo, the locked Graphite Pulse color tokens, the locked typography tokens, `index.html`/`lib`/`api`. No implementation into the live product. No merge to `main` or to `shaghil-brand-final`. No frozen historical branch modified.
+Not touched across this entire phase (foundation + Refinement Pass 01 + this freeze): the locked logo, the locked Graphite Pulse color tokens, the locked typography tokens, `index.html`/`lib`/`api`. No implementation into the live product. No merge to `main` or to `shaghil-brand-final`. No frozen historical branch modified.
 
-## Founder review action
+## Freeze record
 
-Review the board (`SHAGHIL_DESIGN_SYSTEM_FOUNDATION.png`), particularly Sections 08–16 (component foundation), 22–28 (real application simulations), and 29 (Do/Don't). This system is **not locked** — it awaits Founder review before any further phase begins.
+Reviewed and approved by the Founder across two review cycles (initial foundation, then Refinement Pass 01). Status is now **SHAGHIL PRODUCT DESIGN SYSTEM — FOUNDER APPROVED — LOCKED**. No component, token, icon, or board visual was changed as part of this freeze — it is a documentation-only closeout of the already-approved `b1db546` baseline.
+
+## Next phase
+
+**SHAGHIL PRODUCT IMPLEMENTATION.** Purpose: apply the locked Logo + Graphite Pulse color + IBM Plex typography + this Product Design System to the existing SHAGHIL product. Implementation must happen on a new branch created from the appropriate validated product baseline — not yet created as part of this freeze.
