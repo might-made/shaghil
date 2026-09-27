@@ -1,8 +1,17 @@
-# SHAGHIL Typography System — Final Production Prep
+# SHAGHIL Typography System — Final
 
-**STATUS: FOUNDER SELECTED — FINAL PRODUCTION TYPOGRAPHY PREP**
+**STATUS: SHAGHIL TYPOGRAPHY SYSTEM — FOUNDER APPROVED — LOCKED**
 
-Not yet LOCKED — this status is reserved until the Founder reviews the final board below. Founder selected **T2 — Technical / AI-Native** from the three exploration directions (`SHAGHIL_TYPOGRAPHY_EXPLORATION.md`, commit `8560492`). This document turns it into a refined, final production-ready system. Branch: `shaghil-brand-final`. The locked logo and locked Graphite Pulse color system are unchanged and untouched.
+Founder QA: **PASS**. Founder reviewed the final production board and the production-prep commit (`9f6e882c40188c21a5c3a292b80e44e91ab87f83`) and approved the system as-is, with the following explicit locked guidance:
+
+- 11px (Metadata) is the practical minimum text size — production text must not go below this threshold.
+- No further optical refinement is requested.
+- No Arabic/Latin size compensation is required (confirming the tested optical-parity finding above).
+- The existing type scale, weights, line-heights, and bilingual rules are approved exactly as documented — nothing below was altered to reach this lock.
+
+Founder selected **T2 — Technical / AI-Native** from the three exploration directions (`SHAGHIL_TYPOGRAPHY_EXPLORATION.md`, commit `8560492`), refined into this final production system, then approved it here. Branch: `shaghil-brand-final`. The locked logo and locked Graphite Pulse color system remain unchanged and untouched throughout.
+
+**This typography system is now immutable.** Future work — implementation, website, or any other brand phase — must treat every value in this document and in `brand-final/typography/final/shaghil-typography-tokens.{json,css}` as fixed, unless the Founder explicitly reopens this system.
 
 ## Founder selection
 
@@ -128,6 +137,6 @@ Both families reconfirmed OFL-licensed via direct `METADATA.pb` inspection in th
 
 Not touched this phase: logo geometry, the locked Graphite Pulse palette, C1/C3 color exploration, T1/T3 typography exploration, runtime/product code. No T4 created. No direction combined. No display typography borrowed from T3. No font substituted from the Founder's selection.
 
-## Founder review action
+## Lock record
 
-Review the final board (`SHAGHIL_TYPOGRAPHY_SYSTEM_FINAL.png`) in full, particularly Sections 04–05 (scale + optical rule), 14 (long-form), 15 (numbers/SAR), and 22 (Do/Don't). Status remains **FOUNDER SELECTED — FINAL PRODUCTION TYPOGRAPHY PREP** until the Founder marks it LOCKED. No implementation, website, or further brand-system work will begin until then.
+Reviewed and approved by the Founder. Status is now **SHAGHIL TYPOGRAPHY SYSTEM — FOUNDER APPROVED — LOCKED**. No implementation, website, or further brand-system work has been started under this lock — the next SHAGHIL phase resumes fresh from this locked baseline, with the logo, color, and typography systems all treated as immutable foundations to build on.
