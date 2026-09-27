@@ -1,6 +1,8 @@
 # SHAGHIL — Phase 3, Founder Refinement 02
 
-Status: **PHASE 3 — FOUNDER REFINEMENT 02 COMPLETE — REVIEW REQUIRED** (Phase 3 remains not locked).
+**STATUS: FOUNDER APPROVED — PHASE 3 LOCKED** (approved and locked at `dac09fa41ca182548fdfedaf731ae0c267bdcd15` — see `SHAGHIL_IMPLEMENTATION_PHASE3_LOCK.md` for the closeout record. The line below reflects this document's status at the time it was written, before lock.)
+
+*Original status at time of writing: PHASE 3 — FOUNDER REFINEMENT 02 COMPLETE — REVIEW REQUIRED (Phase 3 remains not locked).*
 Base commit: `e16bfd8` (SHAGHIL Phase 3 Founder Refinement 01, on `shaghil-product-implementation`).
 Scope: exactly one blocking issue — the global navigation header rendering across the Generated Result image — and nothing else. No terminology, architecture, or feature changes were made in this pass.
 

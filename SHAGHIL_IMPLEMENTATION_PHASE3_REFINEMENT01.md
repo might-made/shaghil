@@ -1,6 +1,8 @@
 # SHAGHIL — Phase 3, Founder Refinement 01
 
-Status: **PHASE 3 — FOUNDER REFINEMENT 01 COMPLETE — REVIEW REQUIRED** (Phase 3 remains not locked).
+**STATUS: FOUNDER APPROVED — PHASE 3 LOCKED** (approved and locked at `dac09fa41ca182548fdfedaf731ae0c267bdcd15` — see `SHAGHIL_IMPLEMENTATION_PHASE3_LOCK.md` for the closeout record. The line below reflects this document's status at the time it was written, before lock.)
+
+*Original status at time of writing: PHASE 3 — FOUNDER REFINEMENT 01 COMPLETE — REVIEW REQUIRED (Phase 3 remains not locked).*
 Base commit: `00810ee` (SHAGHIL Phase 3 Batch 1+2, on `shaghil-product-implementation`).
 Scope: a complete Arabic-first terminology pass across all user-facing copy, plus the two Phase 3 product-origin corrections (History mislabeling and back-navigation destination). No new engines, navigation destinations, or architecture were introduced.
 

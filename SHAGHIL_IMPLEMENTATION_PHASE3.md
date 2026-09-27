@@ -1,6 +1,8 @@
 # SHAGHIL — Phase 3 Implementation Report
 
-Status: **PHASE 3 IMPLEMENTED — FOUNDER REVIEW REQUIRED** (not locked).
+**STATUS: FOUNDER APPROVED — PHASE 3 LOCKED** (approved and locked at `dac09fa41ca182548fdfedaf731ae0c267bdcd15` — see `SHAGHIL_IMPLEMENTATION_PHASE3_LOCK.md` for the closeout record. The line below reflects this document's status at the time it was written, before lock.)
+
+*Original status at time of writing: PHASE 3 IMPLEMENTED — FOUNDER REVIEW REQUIRED (not locked).*
 Base commit: `26c2a5b` (SHAGHIL Phase 3 audit, on `shaghil-product-implementation`).
 Scope: exactly Batch 1 + Batch 2 of the Founder's Phase 3 Implementation Authorization. Batch 3 is deferred, not implemented.
 
