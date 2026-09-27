@@ -1,6 +1,8 @@
 # SHAGHIL Implementation — Phase 2: Founder Review Refinement Pass 01
 
-**STATUS: PHASE 2 — FOUNDER REFINEMENT 01 COMPLETE — REVIEW REQUIRED**
+**STATUS: FOUNDER APPROVED — PHASE 2 LOCKED** (approved and locked at `5c999c9a845d2399f29b9247d9798484766664d7` — see `SHAGHIL_IMPLEMENTATION_PHASE2_LOCK.md` for the closeout record. The line below reflects this document's status at the time it was written, before lock.)
+
+*Original status at time of writing: PHASE 2 — FOUNDER REFINEMENT 01 COMPLETE — REVIEW REQUIRED*
 
 Three tightly scoped fixes on top of the Founder-approved-in-direction Phase 2 implementation (`9353e8d`). Not Phase 3, not a redesign, no new features. Full detail below.
 
