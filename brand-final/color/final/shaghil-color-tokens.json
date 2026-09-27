@@ -1,0 +1,92 @@
+{
+  "id": "C2-FINAL",
+  "name": "Graphite Pulse — Final Production Color System",
+  "basedOnExploration": "C2-graphite-pulse (commit 0df322364940ced970200fe86d7f06985ad8a431)",
+  "principle": "Color is a system signal, not decoration. Graphite carries the environment; the mint/cyan signal is a controlled activation color used sparingly, never a dominant surface color. The SHAGHIL master logo remains fundamentally black/white.",
+  "dark": {
+    "graphite": {
+      "bgDeepest": "#07080A",
+      "bgPrimary": "#0A0C0D",
+      "surface": "#131619",
+      "surfaceSubtle": "#171B1F",
+      "surfaceElevated": "#1B1F23",
+      "border": "#262B2F",
+      "borderStrong": "#5A6169",
+      "textPrimary": "#F5F7F7",
+      "textSecondary": "#A6AFB4",
+      "textMuted": "#838D92"
+    },
+    "signal": {
+      "primary": "#24BC99",
+      "hover": "#35DEB7",
+      "pressed": "#1A9377",
+      "subtleBg": "#123029",
+      "border": "#24BC99",
+      "textOnLight": "#127D64"
+    },
+    "interactive": {
+      "cta": "#24BC99",
+      "ctaText": "#071410",
+      "ctaHover": "#35DEB7",
+      "ctaPressed": "#1A9377",
+      "focus": "#24BC99",
+      "disabledBg": "#202427",
+      "disabledText": "#5C6469"
+    },
+    "semantic": {
+      "success": "#34C25E",
+      "warning": "#FFC24B",
+      "error": "#FF6B6B",
+      "info": "#5AC8FA"
+    }
+  },
+  "light": {
+    "graphite": {
+      "bgDeepest": "#EEF1F1",
+      "bgPrimary": "#FFFFFF",
+      "surface": "#F5F7F7",
+      "surfaceSubtle": "#EDEFEF",
+      "surfaceElevated": "#FFFFFF",
+      "border": "#DEE2E3",
+      "borderStrong": "#828B8E",
+      "textPrimary": "#101214",
+      "textSecondary": "#565F64",
+      "textMuted": "#636B6F"
+    },
+    "signal": {
+      "primary": "#127D64",
+      "hover": "#0F6B56",
+      "pressed": "#0B5645",
+      "subtleBg": "#E7F8F4",
+      "border": "#127D64",
+      "textOnLight": "#127D64"
+    },
+    "interactive": {
+      "cta": "#127D64",
+      "ctaText": "#FFFFFF",
+      "ctaHover": "#0F6B56",
+      "ctaPressed": "#0B5645",
+      "focus": "#127D64",
+      "disabledBg": "#E5E8E8",
+      "disabledText": "#9AA3A5"
+    },
+    "semantic": {
+      "success": "#1A7A40",
+      "warning": "#9A6300",
+      "error": "#C4291B",
+      "info": "#1D6FB8"
+    }
+  },
+  "hueMap": {
+    "signalHue": 166,
+    "successHueDark": 138,
+    "successHueLight": 144,
+    "note": "Success green sits ~25-28 degrees of hue away from the mint signal (166) specifically so the brand-activation color and the success state are never mistaken for one another at a glance."
+  },
+  "dominanceRule": "Neutral/graphite environment: dominant (~80%). White/light-neutral supporting surfaces: the remainder of the non-signal area. Mint/cyan signal: restrained, single-digit-percent of any given screen, reserved for one primary action or state at a time. Semantic colors: functional only, shown only when their state is actually true.",
+  "logoColorRule": {
+    "primary": "Black logo on light surfaces; white logo on dark surfaces. This is the default, universal usage.",
+    "secondaryControlled": "The mint signal color may recolor the logo fill ONLY in specifically controlled contexts (e.g. a single hero moment on a primary-signal-colored tile, such as a favicon/app-icon treatment) — never as the default or universal master. Geometry is identical in every case; only the fill attribute changes.",
+    "neverRecolored": "The logo is never rendered in any color other than black, white, or the controlled mint exception above. It is never recolored in graphite grays, semantic colors, or any other token."
+  }
+}

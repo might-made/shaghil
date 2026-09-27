@@ -1,0 +1,330 @@
+{
+  "dark": [
+    {
+      "label": "Primary text / background",
+      "fg": "#F5F7F7",
+      "bg": "#0A0C0D",
+      "large": false,
+      "ratio": 18.23,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Secondary text / background",
+      "fg": "#A6AFB4",
+      "bg": "#0A0C0D",
+      "large": false,
+      "ratio": 8.79,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Muted text / background",
+      "fg": "#838D92",
+      "bg": "#0A0C0D",
+      "large": false,
+      "ratio": 5.78,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Primary text / surface",
+      "fg": "#F5F7F7",
+      "bg": "#131619",
+      "large": false,
+      "ratio": 16.89,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Secondary text / surface",
+      "fg": "#A6AFB4",
+      "bg": "#131619",
+      "large": false,
+      "ratio": 8.14,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Muted text / surface",
+      "fg": "#838D92",
+      "bg": "#131619",
+      "large": false,
+      "ratio": 5.35,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "CTA text / CTA background",
+      "fg": "#071410",
+      "bg": "#24BC99",
+      "large": false,
+      "ratio": 7.82,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "CTA text / CTA hover background",
+      "fg": "#071410",
+      "bg": "#35DEB7",
+      "large": false,
+      "ratio": 11,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "CTA text / CTA pressed background",
+      "fg": "#071410",
+      "bg": "#1A9377",
+      "large": false,
+      "ratio": 4.91,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Signal as link/text / background (signal.primary on own-mode surface)",
+      "fg": "#24BC99",
+      "bg": "#0A0C0D",
+      "large": false,
+      "ratio": 8.15,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Signal textOnLight / white chip (its documented use: on a light surface regardless of mode)",
+      "fg": "#127D64",
+      "bg": "#FFFFFF",
+      "large": false,
+      "ratio": 5.07,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Focus ring / background (UI component, 3:1)",
+      "fg": "#24BC99",
+      "bg": "#0A0C0D",
+      "large": true,
+      "ratio": 8.15,
+      "threshold": 3,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Signal border / background (UI component, 3:1)",
+      "fg": "#24BC99",
+      "bg": "#0A0C0D",
+      "large": true,
+      "ratio": 8.15,
+      "threshold": 3,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Strong border / background (UI component, 3:1)",
+      "fg": "#5A6169",
+      "bg": "#0A0C0D",
+      "large": true,
+      "ratio": 3.13,
+      "threshold": 3,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Success text / background",
+      "fg": "#34C25E",
+      "bg": "#0A0C0D",
+      "large": false,
+      "ratio": 8.42,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Warning text / background",
+      "fg": "#FFC24B",
+      "bg": "#0A0C0D",
+      "large": false,
+      "ratio": 12.2,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Error text / background",
+      "fg": "#FF6B6B",
+      "bg": "#0A0C0D",
+      "large": false,
+      "ratio": 7.06,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Info text / background",
+      "fg": "#5AC8FA",
+      "bg": "#0A0C0D",
+      "large": false,
+      "ratio": 10.34,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    }
+  ],
+  "light": [
+    {
+      "label": "Primary text / background",
+      "fg": "#101214",
+      "bg": "#FFFFFF",
+      "large": false,
+      "ratio": 18.77,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Secondary text / background",
+      "fg": "#565F64",
+      "bg": "#FFFFFF",
+      "large": false,
+      "ratio": 6.53,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Muted text / background",
+      "fg": "#636B6F",
+      "bg": "#FFFFFF",
+      "large": false,
+      "ratio": 5.44,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Primary text / surface",
+      "fg": "#101214",
+      "bg": "#F5F7F7",
+      "large": false,
+      "ratio": 17.46,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Secondary text / surface",
+      "fg": "#565F64",
+      "bg": "#F5F7F7",
+      "large": false,
+      "ratio": 6.07,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Muted text / surface",
+      "fg": "#636B6F",
+      "bg": "#F5F7F7",
+      "large": false,
+      "ratio": 5.06,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "CTA text / CTA background",
+      "fg": "#FFFFFF",
+      "bg": "#127D64",
+      "large": false,
+      "ratio": 5.07,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "CTA text / CTA hover background",
+      "fg": "#FFFFFF",
+      "bg": "#0F6B56",
+      "large": false,
+      "ratio": 6.45,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "CTA text / CTA pressed background",
+      "fg": "#FFFFFF",
+      "bg": "#0B5645",
+      "large": false,
+      "ratio": 8.64,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Signal as link/text / background (signal.primary on own-mode surface)",
+      "fg": "#127D64",
+      "bg": "#FFFFFF",
+      "large": false,
+      "ratio": 5.07,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Signal textOnLight / white chip (its documented use: on a light surface regardless of mode)",
+      "fg": "#127D64",
+      "bg": "#FFFFFF",
+      "large": false,
+      "ratio": 5.07,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Focus ring / background (UI component, 3:1)",
+      "fg": "#127D64",
+      "bg": "#FFFFFF",
+      "large": true,
+      "ratio": 5.07,
+      "threshold": 3,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Signal border / background (UI component, 3:1)",
+      "fg": "#127D64",
+      "bg": "#FFFFFF",
+      "large": true,
+      "ratio": 5.07,
+      "threshold": 3,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Strong border / background (UI component, 3:1)",
+      "fg": "#828B8E",
+      "bg": "#FFFFFF",
+      "large": true,
+      "ratio": 3.48,
+      "threshold": 3,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Success text / background",
+      "fg": "#1A7A40",
+      "bg": "#FFFFFF",
+      "large": false,
+      "ratio": 5.38,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Warning text / background",
+      "fg": "#9A6300",
+      "bg": "#FFFFFF",
+      "large": false,
+      "ratio": 5.05,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Error text / background",
+      "fg": "#C4291B",
+      "bg": "#FFFFFF",
+      "large": false,
+      "ratio": 5.71,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    },
+    {
+      "label": "Info text / background",
+      "fg": "#1D6FB8",
+      "bg": "#FFFFFF",
+      "large": false,
+      "ratio": 5.23,
+      "threshold": 4.5,
+      "verdict": "PASS"
+    }
+  ]
+}

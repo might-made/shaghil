@@ -1,0 +1,79 @@
+/* SHAGHIL Color System — Final Production Tokens (C2 — Graphite Pulse)
+   Status: FOUNDER APPROVED — LOCKED
+   Not yet implemented into the live product — reference tokens for the future
+   implementation phase. See SHAGHIL_COLOR_SYSTEM_FINAL.md for usage rules. */
+
+:root,
+[data-theme="dark"] {
+  /* Graphite neutral hierarchy */
+  --shaghil-bg-deepest: #07080A;
+  --shaghil-bg-primary: #0A0C0D;
+  --shaghil-surface: #131619;
+  --shaghil-surface-subtle: #171B1F;
+  --shaghil-surface-elevated: #1B1F23;
+  --shaghil-border: #262B2F;
+  --shaghil-border-strong: #5A6169;
+  --shaghil-text-primary: #F5F7F7;
+  --shaghil-text-secondary: #A6AFB4;
+  --shaghil-text-muted: #838D92;
+
+  /* Mint/cyan signal scale — controlled activation color, not a surface color */
+  --shaghil-signal-primary: #24BC99;
+  --shaghil-signal-hover: #35DEB7;
+  --shaghil-signal-pressed: #1A9377;
+  --shaghil-signal-subtle-bg: #123029;
+  --shaghil-signal-border: #24BC99;
+  --shaghil-signal-text-on-light: #127D64;
+
+  /* Interactive */
+  --shaghil-cta-bg: #24BC99;
+  --shaghil-cta-text: #071410;
+  --shaghil-cta-hover-bg: #35DEB7;
+  --shaghil-cta-pressed-bg: #1A9377;
+  --shaghil-focus: #24BC99;
+  --shaghil-disabled-bg: #202427;
+  --shaghil-disabled-text: #5C6469;
+
+  /* Semantic */
+  --shaghil-success: #34C25E;
+  --shaghil-warning: #FFC24B;
+  --shaghil-error: #FF6B6B;
+  --shaghil-info: #5AC8FA;
+}
+
+[data-theme="light"] {
+  /* Graphite neutral hierarchy */
+  --shaghil-bg-deepest: #EEF1F1;
+  --shaghil-bg-primary: #FFFFFF;
+  --shaghil-surface: #F5F7F7;
+  --shaghil-surface-subtle: #EDEFEF;
+  --shaghil-surface-elevated: #FFFFFF;
+  --shaghil-border: #DEE2E3;
+  --shaghil-border-strong: #828B8E;
+  --shaghil-text-primary: #101214;
+  --shaghil-text-secondary: #565F64;
+  --shaghil-text-muted: #636B6F;
+
+  /* Mint/cyan signal scale */
+  --shaghil-signal-primary: #127D64;
+  --shaghil-signal-hover: #0F6B56;
+  --shaghil-signal-pressed: #0B5645;
+  --shaghil-signal-subtle-bg: #E7F8F4;
+  --shaghil-signal-border: #127D64;
+  --shaghil-signal-text-on-light: #127D64;
+
+  /* Interactive */
+  --shaghil-cta-bg: #127D64;
+  --shaghil-cta-text: #FFFFFF;
+  --shaghil-cta-hover-bg: #0F6B56;
+  --shaghil-cta-pressed-bg: #0B5645;
+  --shaghil-focus: #127D64;
+  --shaghil-disabled-bg: #E5E8E8;
+  --shaghil-disabled-text: #9AA3A5;
+
+  /* Semantic */
+  --shaghil-success: #1A7A40;
+  --shaghil-warning: #9A6300;
+  --shaghil-error: #C4291B;
+  --shaghil-info: #1D6FB8;
+}
