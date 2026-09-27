@@ -1,6 +1,8 @@
 # SHAGHIL Implementation — Phase 1: Founder Visual Refinement Pass 01
 
-**STATUS: PHASE 1 — FOUNDER REVIEW — NOT LOCKED**
+**STATUS: FOUNDER APPROVED — PHASE 1 LOCKED** (approved and locked at `29fd3e8b9239e5a40dd6168a8021aee8b1664b1a` — see `SHAGHIL_IMPLEMENTATION_PHASE1_LOCK.md` for the closeout record. The line below reflects this document's status at the time it was written, before lock.)
+
+*Original status at time of writing: PHASE 1 — FOUNDER REVIEW — NOT LOCKED*
 
 Functional/technical QA on Phase 1 = PASS. Visual foundation = approved in direction. This is one tightly scoped visual refinement pass on top of that implementation — not Phase 2, no navigation/IA redesign, no product-behavior change, no data-model change, no new colors/gradients/glass/decorative shadows, no unrelated refactor.
 

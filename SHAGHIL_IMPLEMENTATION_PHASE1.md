@@ -1,6 +1,14 @@
 # SHAGHIL Implementation — Phase 1: Foundation Integration
 
-**STATUS: PHASE 1 IMPLEMENTED — FOUNDER REVIEW REQUIRED**
+**STATUS: FOUNDER APPROVED — PHASE 1 LOCKED**
+
+**Founder-approved runtime SHA: `29fd3e8b9239e5a40dd6168a8021aee8b1664b1a`**
+
+Phase 1 (foundation integration) plus Founder Visual Refinement Pass 01 were reviewed and approved by the Founder at the SHA above. Full approval scope, QA results, and closeout terms are recorded in `SHAGHIL_IMPLEMENTATION_PHASE1_LOCK.md`. **The Founder-approved Phase 1 runtime baseline must not be altered unless the Founder explicitly reopens Phase 1.** Future implementation work must continue from this approved baseline without retroactively changing the locked foundation — see the lock document for the exact next resume point.
+
+---
+
+*The section below is the original Phase 1 implementation record, preserved as-is from before Founder approval.*
 
 This phase integrates the locked SHAGHIL brand/design foundations (logo, Graphite Pulse color, IBM Plex Sans Arabic/Sans typography, design-system tokens) into the real runtime (`index.html`) without redesigning workflows, information architecture, or engine/API behavior. All work is on `shaghil-product-implementation` only.
 
