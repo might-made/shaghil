@@ -1,0 +1,88 @@
+/* SHAGHIL Runtime Foundations
+   Phase 1 — Foundation Integration. Sourced from the locked systems:
+   - Color:      shaghil-brand-final /brand-final/color/final/shaghil-color-tokens.json      @ 4ed4cae
+   - Typography: shaghil-brand-final /brand-final/typography/final/shaghil-typography-tokens.json @ 4ed4cae
+   - UI tokens:  shaghil-design-system /brand-final/design-system/foundation/shaghil-ui-tokens.json @ 6df58d2
+   Values below are copied verbatim from those locked sources — never invented or adjusted here.
+   Dark is the default (matching the product's existing default appearance); light applies only
+   under prefers-color-scheme: light, so no visual behavior changes for any user unless their
+   system is explicitly set to light. */
+
+/* ---- Typography: IBM Plex Sans Arabic (arabic-script glyphs only) + IBM Plex Sans (basic-latin
+   glyphs only), so mixed Arabic/English text resolves each character to its correct locked
+   family via unicode-range rather than one family's own incidental coverage of the other script. */
+@font-face { font-family: 'IBM Plex Sans Arabic'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/plexarabic-400-1.woff2') format('woff2'); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: 'IBM Plex Sans Arabic'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/plexarabic-500-5.woff2') format('woff2'); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: 'IBM Plex Sans Arabic'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/plexarabic-600-9.woff2') format('woff2'); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: 'IBM Plex Sans Arabic'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/plexarabic-700-13.woff2') format('woff2'); unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+@font-face { font-family: 'IBM Plex Sans'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/plexsans-400-6.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'IBM Plex Sans'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/plexsans-500-12.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'IBM Plex Sans'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/plexsans-600-18.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'IBM Plex Sans'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/plexsans-700-24.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+:root {
+  /* Fonts. Both families are listed together so the browser's per-character unicode-range
+     matching (declared above) resolves Arabic-script characters to Plex Sans Arabic and
+     Latin/number characters to Plex Sans within the same run of mixed text. */
+  --font-primary: 'IBM Plex Sans Arabic', 'IBM Plex Sans', Tahoma, Arial, sans-serif;
+  --media-backing: #FFFFFF; /* neutral plate behind user-uploaded product imagery; not a themed surface */
+
+  /* Graphite Pulse — dark (default) */
+  --bg-deepest: #07080A; --bg-primary: #0A0C0D; --surface: #131619; --surface-subtle: #171B1F;
+  --surface-elevated: #1B1F23; --border: #262B2F; --border-strong: #5A6169;
+  --text-primary: #F5F7F7; --text-secondary: #A6AFB4; --text-muted: #838D92;
+  --signal-primary: #24BC99; --signal-hover: #35DEB7; --signal-pressed: #1A9377; --signal-subtle-bg: #123029;
+  --cta-bg: #24BC99; --cta-text: #071410; --cta-hover-bg: #35DEB7; --cta-pressed-bg: #1A9377;
+  --focus: #24BC99; --disabled-bg: #202427; --disabled-text: #5C6469;
+  --success: #34C25E; --warning: #FFC24B; --error: #FF6B6B; --info: #5AC8FA;
+  --logo-color: #F5F7F7; /* white on dark, per the locked logo color rule */
+
+  /* Type scale (identical Arabic/Latin size+weight per the tested optical-parity rule; only
+     line-height differs by script) */
+  --fs-display: 40px; --fw-display: 600; --lh-display-ar: 1.25; --lh-display-en: 1.15;
+  --fs-h1: 30px; --fw-h1: 600; --lh-h1-ar: 1.30; --lh-h1-en: 1.20;
+  --fs-h2: 24px; --fw-h2: 600; --lh-h2-ar: 1.35; --lh-h2-en: 1.25;
+  --fs-h3: 19px; --fw-h3: 600; --lh-h3-ar: 1.40; --lh-h3-en: 1.30;
+  --fs-h4: 16px; --fw-h4: 600; --lh-h4-ar: 1.45; --lh-h4-en: 1.35;
+  --fs-body-lg: 16px; --fw-body: 400; --lh-body-lg-ar: 1.70; --lh-body-lg-en: 1.55;
+  --fs-body: 14px; --lh-body-ar: 1.70; --lh-body-en: 1.55;
+  --fs-body-sm: 12.5px; --lh-body-sm-ar: 1.65; --lh-body-sm-en: 1.50;
+  --fs-label: 12px; --fw-label: 500; --lh-label: 1.30;
+  --fs-button: 14px; --fw-button: 600;
+  --fs-input: 14px; --lh-input-ar: 1.45; --lh-input-en: 1.40;
+  --fs-caption: 11.5px; --fw-caption: 500; --lh-caption-ar: 1.45; --lh-caption-en: 1.40;
+  --fs-metadata: 11px; --fw-metadata: 500; --lh-metadata-ar: 1.40; --lh-metadata-en: 1.35;
+  --fw-emphasis: 700;
+
+  /* Spacing scale */
+  --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px;
+  --space-lg: 24px; --space-xl: 32px; --space-2xl: 48px; --space-3xl: 64px;
+
+  /* Radius scale */
+  --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-full: 999px;
+
+  /* Elevation (used sparingly; see components.css) */
+  --elevation-subtle: 0 2px 8px rgba(0, 0, 0, 0.32);
+  --elevation-overlay: 0 12px 32px rgba(0, 0, 0, 0.48);
+  --scrim: rgba(7, 8, 10, 0.64);
+
+  /* Component dimensions */
+  --button-height: 40px; --button-height-sm: 32px; --input-height: 40px;
+  --transition-fast: 120ms; --transition-base: 200ms; --easing: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-deepest: #EEF1F1; --bg-primary: #FFFFFF; --surface: #F5F7F7; --surface-subtle: #EDEFEF;
+    --surface-elevated: #FFFFFF; --border: #DEE2E3; --border-strong: #828B8E;
+    --text-primary: #101214; --text-secondary: #565F64; --text-muted: #636B6F;
+    --signal-primary: #127D64; --signal-hover: #0F6B56; --signal-pressed: #0B5645; --signal-subtle-bg: #E7F8F4;
+    --cta-bg: #127D64; --cta-text: #FFFFFF; --cta-hover-bg: #0F6B56; --cta-pressed-bg: #0B5645;
+    --focus: #127D64; --disabled-bg: #E5E8E8; --disabled-text: #9AA3A5;
+    --success: #1A7A40; --warning: #9A6300; --error: #C4291B; --info: #1D6FB8;
+    --logo-color: #101214; /* black on light, per the locked logo color rule */
+    --elevation-subtle: 0 2px 8px rgba(16, 18, 20, 0.08);
+    --elevation-overlay: 0 12px 32px rgba(16, 18, 20, 0.16);
+    --scrim: rgba(16, 18, 20, 0.32);
+  }
+}

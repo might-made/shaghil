@@ -42,7 +42,11 @@ const records=await storage.listVisuals();assert.equal(records.length,10);assert
 console.log('PASS: IndexedDB brand metadata and Blob persistence; visual history retains metadata and prunes to ten');
 
 // Run the actual browser controller in a DOM, mocking only raster composition and the network.
-const html=fs.readFileSync('index.html','utf8');const dom=new JSDOM(html,{url:'http://localhost',runScripts:'outside-only'});
+// index.html links its CSS externally (styles/foundations.css, styles/components.css); JSDOM does
+// not fetch external stylesheets, so inline them here to keep getComputedStyle() below meaningful —
+// this mirrors what any real browser does when it loads the page.
+const inlineStylesheets=html=>html.replace(/<link rel="stylesheet" href="\/(styles\/[^"]+)">/g,(_,path)=>`<style>${fs.readFileSync(path,'utf8')}</style>`);
+const html=inlineStylesheets(fs.readFileSync('index.html','utf8'));const dom=new JSDOM(html,{url:'http://localhost',runScripts:'outside-only'});
 const ctx=dom.getInternalVMContext();const win=dom.window;
 const objectURLs=new Map();let urlCounter=0;
 win.URL.createObjectURL=blob=>{const url='blob:test-'+(++urlCounter);objectURLs.set(url,blob);return url};win.URL.revokeObjectURL=url=>objectURLs.delete(url);
