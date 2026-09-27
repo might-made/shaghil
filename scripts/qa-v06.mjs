@@ -74,7 +74,11 @@ win.localStorage.setItem('brain',JSON.stringify(brain));await run('Visual.setupB
 for(const [k,v]of Object.entries(brain))win.document.getElementById(k).value=v;
 win.document.getElementById('brandStyle').value='أسلوب محفوظ جديد';await run('Visual.saveProject()');assert.equal((await storage.loadBrand()).style,'أسلوب محفوظ جديد');assert.deepEqual(JSON.parse(win.localStorage.getItem('brain')),brain);
 run("current='content';lastInputs={period:'7 أيام'};renderResult("+JSON.stringify(plan)+")");
-assert.equal(win.document.getElementById('visualEntry').classList.contains('hidden'),false);
+// A 7-day plan renders one per-idea "اصنع التصميم" card each (Phase 3 P1-01 fix), so the
+// generic bottom CTA is now suppressed to avoid three competing buttons on screen at once.
+assert.equal(win.document.getElementById('visualEntry').classList.contains('hidden'),true);
+assert.equal(win.document.getElementById('contentCards').classList.contains('hidden'),false);
+assert.equal(win.document.getElementById('contentCards').querySelectorAll('.btn.primary').length,7);
 await run('Visual.choose()');assert.equal(win.document.getElementById('visualTextMode').value,'none');assert.ok(win.document.getElementById('visualIdea').options.length>=2);
 assert.equal(win.document.getElementById('visualIdea').options.length,7);
 win.document.getElementById('visualIdea').value='2';await run('Visual.selectIdea()');assert.equal(win.document.getElementById('visualSource').textContent,dayBlocks[2]);
