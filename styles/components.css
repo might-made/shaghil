@@ -86,7 +86,8 @@ textarea{min-height:100px}
 .visualHistoryList{margin-top:var(--space-lg)}
 .resultTop{flex-wrap:wrap}
 .status[role=status]{line-height:var(--lh-body-ar)}
-button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+#visualStudio summary{cursor:pointer;padding:var(--space-2xs) 0}
 
 /* SHAGHIL-styled file upload control — the native <input type=file> stays in the DOM, keeps
    its id/onchange/accept/multiple exactly as before, and is only visually hidden (not display:none,
@@ -109,14 +110,27 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 .colorFieldValue{font-size:var(--fs-caption);color:var(--text-secondary);direction:ltr}
 
 @media(max-width:700px){
-  .top{gap:var(--space-xs);flex-wrap:wrap}
+  .top{gap:var(--space-xs);flex-wrap:wrap;padding:var(--space-xs) var(--space-md)}
   .top .btn{font-size:var(--fs-caption);padding:0 var(--space-xs)}
+  /* Keep the wordmark on its own row and give the five nav destinations a single, lightweight
+     horizontally-scrolling strip instead of wrapping into extra rows — same buttons, same
+     destinations, no new navigation architecture, substantially shorter header. */
+  .nav{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;width:100%;max-width:100%}
+  .nav::-webkit-scrollbar{display:none}
+  .nav .btn{flex-shrink:0}
   .card{padding:var(--space-md)}
   .visualPreview{max-height:60vh}
   .assetThumb{width:70px;height:70px}
 }
 
-.actions.hidden,.grid.hidden{display:none}
+/* .hidden is the single source of truth for visibility everywhere it's used (toggled only via
+   classList), so it must win over every other class on the same element that also sets display.
+   Equal-specificity same-property rules are decided by source order in this stylesheet, so this
+   override must come after every class it needs to beat. Two of these overrides already existed
+   before Phase 2; auditing the rest found two more real instances of the same bug (the
+   unsaved-product preview box and the generation spinners stayed visible at rest whenever
+   combined with .hidden) — this is the complete, general fix for that bug class. */
+.actions.hidden,.form.hidden,.grid.hidden,.assetRow.hidden,.spin.hidden{display:none}
 .ideaCard{min-width:0}
 .ideaCard p{overflow-wrap:anywhere}
 .ideaCard details{white-space:pre-wrap;max-height:300px;overflow:auto}
