@@ -69,7 +69,7 @@ assert.equal(win.document.getElementById('home').classList.contains('hidden'), f
 // Phase 2 expanded the persistent top nav from 3 to 5 destinations (adding Brand Brain and
 // Product Library) and moved it into a semantic <nav class="nav">.
 const navButtons = [...win.document.querySelector('.top .nav').querySelectorAll('button')];
-assert.deepEqual(navButtons.map(b => b.textContent), ['الرئيسية', 'Business Brain', 'Brand Brain', 'مكتبة المنتجات', 'السجل'], 'the persistent top nav must offer all five product areas');
+assert.deepEqual(navButtons.map(b => b.textContent), ['الرئيسية', 'هوية النشاط', 'هوية العلامة', 'مكتبة المنتجات', 'السجل'], 'the persistent top nav must offer all five product areas');
 const historyButton = navButtons.find(b => b.textContent === 'السجل');
 assert.ok(historyButton, 'السجل must be visible on a fresh Home');
 

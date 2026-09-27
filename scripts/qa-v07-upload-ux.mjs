@@ -43,7 +43,6 @@ await win.Products.upload(goodFile);
 assert.equal(hiddenNow(), false, 'preview must be visible immediately after successful decode');
 assert.ok(win.document.getElementById('productPreview').src, 'preview <img> must have a src set');
 assert.match(status(), /حفظ المنتج/, 'status must reference the Arabic Save Product action');
-assert.match(status(), /Save Product/, 'status must reference the English Save Product action');
 
 // The pending image must survive being left alone (no premature clearing) until an
 // actual save, replacement, cancellation or error.
@@ -53,7 +52,7 @@ assert.equal(hiddenNow(), false, 'pending preview must not disappear on its own'
 const oversized = new win.File([new Uint8Array(9 * 1024 * 1024)], 'huge.png', {type: 'image/png'});
 await win.Products.upload(oversized);
 assert.equal(hiddenNow(), true, 'preview must clear on an actual validation error');
-assert.doesNotMatch(status(), /Save Product/, 'error status must not still prompt to save');
+assert.doesNotMatch(status(), /حفظ المنتج/, 'error status must not still prompt to save');
 
 win.document.getElementById('productName').value = 'منتج بلا صورة';
 await win.Products.save();
