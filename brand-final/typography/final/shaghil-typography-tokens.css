@@ -1,0 +1,159 @@
+/* SHAGHIL Typography System — Final Production Tokens (T2 — Technical/AI-Native)
+   Status: FOUNDER SELECTED — FINAL PRODUCTION TYPOGRAPHY PREP (not yet LOCKED)
+   Not yet implemented into the live product — reference tokens for the future
+   implementation phase. See SHAGHIL_TYPOGRAPHY_SYSTEM_FINAL.md for usage rules.
+
+   Font-family stacks include an explicit fallback (Tahoma/Segoe UI for Arabic,
+   Inter/system-ui for Latin) per the exploration phase's technical font QA. */
+
+:root {
+  --shaghil-font-ar: 'IBM Plex Sans Arabic', Tahoma, 'Segoe UI', sans-serif;
+  --shaghil-font-en: 'IBM Plex Sans', Inter, system-ui, -apple-system, Arial, sans-serif;
+
+  /* Display */
+  --shaghil-display-size: 40px;
+  --shaghil-display-weight: 600;
+  --shaghil-display-lh-ar: 1.25;
+  --shaghil-display-lh-en: 1.15;
+  --shaghil-display-tracking-en: -0.3px;
+
+  /* H1 */
+  --shaghil-h1-size: 30px;
+  --shaghil-h1-weight: 600;
+  --shaghil-h1-lh-ar: 1.30;
+  --shaghil-h1-lh-en: 1.20;
+
+  /* H2 */
+  --shaghil-h2-size: 24px;
+  --shaghil-h2-weight: 600;
+  --shaghil-h2-lh-ar: 1.35;
+  --shaghil-h2-lh-en: 1.25;
+
+  /* H3 */
+  --shaghil-h3-size: 19px;
+  --shaghil-h3-weight: 600;
+  --shaghil-h3-lh-ar: 1.40;
+  --shaghil-h3-lh-en: 1.30;
+
+  /* H4 */
+  --shaghil-h4-size: 16px;
+  --shaghil-h4-weight: 600;
+  --shaghil-h4-lh-ar: 1.45;
+  --shaghil-h4-lh-en: 1.35;
+
+  /* Body Large */
+  --shaghil-body-lg-size: 16px;
+  --shaghil-body-lg-weight: 400;
+  --shaghil-body-lg-lh-ar: 1.70;
+  --shaghil-body-lg-lh-en: 1.55;
+
+  /* Body */
+  --shaghil-body-size: 14px;
+  --shaghil-body-weight: 400;
+  --shaghil-body-lh-ar: 1.70;
+  --shaghil-body-lh-en: 1.55;
+
+  /* Body Small */
+  --shaghil-body-sm-size: 12.5px;
+  --shaghil-body-sm-weight: 400;
+  --shaghil-body-sm-lh-ar: 1.65;
+  --shaghil-body-sm-lh-en: 1.50;
+
+  /* Label */
+  --shaghil-label-size: 12px;
+  --shaghil-label-weight: 500;
+  --shaghil-label-lh: 1.30;
+  --shaghil-label-tracking-en: 0.1px;
+
+  /* Button */
+  --shaghil-button-size: 14px;
+  --shaghil-button-weight: 600;
+  --shaghil-button-tracking-en: 0.1px;
+
+  /* Input */
+  --shaghil-input-size: 14px;
+  --shaghil-input-weight: 400;
+  --shaghil-input-lh-ar: 1.45;
+  --shaghil-input-lh-en: 1.40;
+
+  /* Caption */
+  --shaghil-caption-size: 11.5px;
+  --shaghil-caption-weight: 500;
+  --shaghil-caption-lh-ar: 1.45;
+  --shaghil-caption-lh-en: 1.40;
+
+  /* Metadata */
+  --shaghil-metadata-size: 11px;
+  --shaghil-metadata-weight: 500;
+  --shaghil-metadata-lh-ar: 1.40;
+  --shaghil-metadata-lh-en: 1.35;
+
+  /* Numeric / KPI */
+  --shaghil-numeric-size: 15px;
+  --shaghil-numeric-weight: 500;
+  --shaghil-numeric-lh: 1.25;
+
+  /* Emphasis exception — AI-generated content markdown bold only */
+  --shaghil-emphasis-weight: 700;
+}
+
+/* Utility classes mapping roles to :lang(ar)/:lang(en) so line-height (and, where set,
+   tracking) automatically differ by script while size/weight stay identical per the
+   tested optical-parity rule. */
+[lang="ar"] { font-family: var(--shaghil-font-ar); }
+[lang="en"] { font-family: var(--shaghil-font-en); }
+
+.shaghil-display { font-size: var(--shaghil-display-size); font-weight: var(--shaghil-display-weight); }
+.shaghil-display:lang(ar) { line-height: var(--shaghil-display-lh-ar); }
+.shaghil-display:lang(en) { line-height: var(--shaghil-display-lh-en); letter-spacing: var(--shaghil-display-tracking-en); }
+
+.shaghil-h1 { font-size: var(--shaghil-h1-size); font-weight: var(--shaghil-h1-weight); }
+.shaghil-h1:lang(ar) { line-height: var(--shaghil-h1-lh-ar); }
+.shaghil-h1:lang(en) { line-height: var(--shaghil-h1-lh-en); }
+
+.shaghil-h2 { font-size: var(--shaghil-h2-size); font-weight: var(--shaghil-h2-weight); }
+.shaghil-h2:lang(ar) { line-height: var(--shaghil-h2-lh-ar); }
+.shaghil-h2:lang(en) { line-height: var(--shaghil-h2-lh-en); }
+
+.shaghil-h3 { font-size: var(--shaghil-h3-size); font-weight: var(--shaghil-h3-weight); }
+.shaghil-h3:lang(ar) { line-height: var(--shaghil-h3-lh-ar); }
+.shaghil-h3:lang(en) { line-height: var(--shaghil-h3-lh-en); }
+
+.shaghil-h4 { font-size: var(--shaghil-h4-size); font-weight: var(--shaghil-h4-weight); }
+.shaghil-h4:lang(ar) { line-height: var(--shaghil-h4-lh-ar); }
+.shaghil-h4:lang(en) { line-height: var(--shaghil-h4-lh-en); }
+
+.shaghil-body-lg { font-size: var(--shaghil-body-lg-size); font-weight: var(--shaghil-body-lg-weight); }
+.shaghil-body-lg:lang(ar) { line-height: var(--shaghil-body-lg-lh-ar); }
+.shaghil-body-lg:lang(en) { line-height: var(--shaghil-body-lg-lh-en); }
+
+.shaghil-body { font-size: var(--shaghil-body-size); font-weight: var(--shaghil-body-weight); }
+.shaghil-body:lang(ar) { line-height: var(--shaghil-body-lh-ar); }
+.shaghil-body:lang(en) { line-height: var(--shaghil-body-lh-en); }
+
+.shaghil-body-sm { font-size: var(--shaghil-body-sm-size); font-weight: var(--shaghil-body-sm-weight); }
+.shaghil-body-sm:lang(ar) { line-height: var(--shaghil-body-sm-lh-ar); }
+.shaghil-body-sm:lang(en) { line-height: var(--shaghil-body-sm-lh-en); }
+
+.shaghil-label { font-size: var(--shaghil-label-size); font-weight: var(--shaghil-label-weight); line-height: var(--shaghil-label-lh); }
+.shaghil-label:lang(en) { letter-spacing: var(--shaghil-label-tracking-en); }
+
+.shaghil-button { font-size: var(--shaghil-button-size); font-weight: var(--shaghil-button-weight); line-height: 1; }
+.shaghil-button:lang(en) { letter-spacing: var(--shaghil-button-tracking-en); }
+
+.shaghil-input { font-size: var(--shaghil-input-size); font-weight: var(--shaghil-input-weight); }
+.shaghil-input:lang(ar) { line-height: var(--shaghil-input-lh-ar); }
+.shaghil-input:lang(en) { line-height: var(--shaghil-input-lh-en); }
+
+.shaghil-caption { font-size: var(--shaghil-caption-size); font-weight: var(--shaghil-caption-weight); }
+.shaghil-caption:lang(ar) { line-height: var(--shaghil-caption-lh-ar); }
+.shaghil-caption:lang(en) { line-height: var(--shaghil-caption-lh-en); }
+
+.shaghil-metadata { font-size: var(--shaghil-metadata-size); font-weight: var(--shaghil-metadata-weight); }
+.shaghil-metadata:lang(ar) { line-height: var(--shaghil-metadata-lh-ar); }
+.shaghil-metadata:lang(en) { line-height: var(--shaghil-metadata-lh-en); }
+
+.shaghil-numeric { font-size: var(--shaghil-numeric-size); font-weight: var(--shaghil-numeric-weight); line-height: var(--shaghil-numeric-lh); font-variant-numeric: tabular-nums; unicode-bidi: isolate; direction: ltr; }
+
+/* Reserved for markdown **bold** inside AI-generated long-form output only — not a UI role. */
+.shaghil-emphasis { font-weight: var(--shaghil-emphasis-weight); }

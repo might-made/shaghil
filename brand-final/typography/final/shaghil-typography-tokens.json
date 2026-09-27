@@ -1,0 +1,38 @@
+{
+  "id": "T2-FINAL",
+  "name": "IBM Plex Sans Arabic + IBM Plex Sans — Final Production Typography",
+  "basedOnExploration": "T2-technical-ai-native (commit 8560492)",
+  "status": "FOUNDER SELECTED - FINAL PRODUCTION TYPOGRAPHY PREP",
+  "foundation": {
+    "arabicFamily": { "name": "IBM Plex Sans Arabic", "license": "OFL", "weightsUsed": [400, 500, 600, 700], "variable": false, "source": "Google Fonts / google/fonts, verified against METADATA.pb" },
+    "latinFamily": { "name": "IBM Plex Sans", "license": "OFL", "weightsUsed": [400, 500, 600, 700], "variable": true, "source": "Google Fonts / google/fonts, verified against METADATA.pb" }
+  },
+  "opticalRule": {
+    "sizeCompensation": "none",
+    "weightCompensation": "none",
+    "evidence": "brand-final/typography/final/optical-test/optical-test.png",
+    "note": "Directly tested Arabic size compensations of +1px, +2px (~13%) and +6% to +8% against Latin at three representative role sizes (16px body, 34px H1, 12px caption). Each compensation made the pairing visibly imbalanced rather than corrected - IBM Plex Sans Arabic and IBM Plex Sans render in genuine optical parity at identical nominal px sizes and identical nominal weights, consistent with IBM's own cross-script harmonization goal for the Plex superfamily. Production rule: use identical numeric size and weight for Arabic and Latin at every role. Line-height is still deliberately differentiated per script (see scale) - that is a separate concern from size/weight parity."
+  },
+  "weightPolicy": "Exactly 3 weights govern every named role (400 Regular, 500 Medium, 600 SemiBold), each with one clear job, to avoid unnecessary weight proliferation. Weight 700 (Bold) is not assigned to any UI role - it is reserved solely for inline emphasis inside AI-generated long-form content (markdown **bold**), which is a real product behavior, not a UI hierarchy level.",
+  "scale": [
+    { "role": "Display", "px": 40, "weight": 600, "lhAr": 1.25, "lhEn": 1.15, "trackingEn": "-0.3px", "trackingAr": "0", "use": "The single largest moment on a screen - e.g. the home/welcome headline. Used once per screen at most." },
+    { "role": "H1", "px": 30, "weight": 600, "lhAr": 1.30, "lhEn": 1.20, "trackingEn": "0", "trackingAr": "0", "use": "Screen-level heading (e.g. 'Business Brain', 'Visual Studio')." },
+    { "role": "H2", "px": 24, "weight": 600, "lhAr": 1.35, "lhEn": 1.25, "trackingEn": "0", "trackingAr": "0", "use": "Section heading within a screen." },
+    { "role": "H3", "px": 19, "weight": 600, "lhAr": 1.40, "lhEn": 1.30, "trackingEn": "0", "trackingAr": "0", "use": "Card/subsection heading." },
+    { "role": "H4", "px": 16, "weight": 600, "lhAr": 1.45, "lhEn": 1.35, "trackingEn": "0", "trackingAr": "0", "use": "Minor heading, e.g. a field group label above a form." },
+    { "role": "Body Large", "px": 16, "weight": 400, "lhAr": 1.70, "lhEn": 1.55, "trackingEn": "0", "trackingAr": "0", "use": "Lead paragraph / intro copy under a headline." },
+    { "role": "Body", "px": 14, "weight": 400, "lhAr": 1.70, "lhEn": 1.55, "trackingEn": "0", "trackingAr": "0", "use": "Default reading text - descriptions, engine card copy, general UI paragraphs." },
+    { "role": "Body Small", "px": 12.5, "weight": 400, "lhAr": 1.65, "lhEn": 1.50, "trackingEn": "0", "trackingAr": "0", "use": "Secondary/de-emphasized body text." },
+    { "role": "Label", "px": 12, "weight": 500, "lhAr": 1.30, "lhEn": 1.30, "trackingEn": "0.1px", "trackingAr": "0", "use": "Form field labels, small UI category tags." },
+    { "role": "Button", "px": 14, "weight": 600, "lhAr": 1.0, "lhEn": 1.0, "trackingEn": "0.1px", "trackingAr": "0", "use": "All button text, primary and secondary." },
+    { "role": "Input", "px": 14, "weight": 400, "lhAr": 1.45, "lhEn": 1.40, "trackingEn": "0", "trackingAr": "0", "use": "Text typed or shown inside form inputs/textareas." },
+    { "role": "Caption", "px": 11.5, "weight": 500, "lhAr": 1.45, "lhEn": 1.40, "trackingEn": "0", "trackingAr": "0", "use": "Helper text under a field, status microcopy." },
+    { "role": "Metadata", "px": 11, "weight": 500, "lhAr": 1.40, "lhEn": 1.35, "trackingEn": "0", "trackingAr": "0", "use": "Timestamps, secondary list metadata, the smallest text role in the system." },
+    { "role": "Numeric / KPI", "px": 15, "weight": 500, "lh": 1.25, "tracking": "0", "numerals": "Western digits, tabular", "use": "Prices, percentages, counts, KPI figures. Always bidi-isolated (<bdi dir=\"ltr\">) when embedded in RTL flow. Single definition, not split ar/en, because the digit glyphs themselves are shared and script-independent under the product's numeral convention." }
+  ],
+  "emphasisException": {
+    "role": "Inline emphasis (AI-generated content only)",
+    "weight": 700,
+    "use": "Reserved exclusively for markdown **bold** rendered inside AI-generated long-form output. Never used for a general UI role."
+  }
+}
