@@ -66,8 +66,10 @@ await waitForRender(win, '#home', 1);
 assert.equal(win.document.getElementById('home').classList.contains('hidden'), false, 'a fresh import must land on Home');
 
 // --- fresh Home -> the history nav button must be visible ---
-const navButtons = [...win.document.querySelector('.top > div:last-child').querySelectorAll('button')];
-assert.deepEqual(navButtons.map(b => b.textContent), ['الرئيسية', 'Business Brain', 'السجل'], 'the persistent top nav must offer السجل alongside الرئيسية and Business Brain');
+// Phase 2 expanded the persistent top nav from 3 to 5 destinations (adding Brand Brain and
+// Product Library) and moved it into a semantic <nav class="nav">.
+const navButtons = [...win.document.querySelector('.top .nav').querySelectorAll('button')];
+assert.deepEqual(navButtons.map(b => b.textContent), ['الرئيسية', 'Business Brain', 'Brand Brain', 'مكتبة المنتجات', 'السجل'], 'the persistent top nav must offer all five product areas');
 const historyButton = navButtons.find(b => b.textContent === 'السجل');
 assert.ok(historyButton, 'السجل must be visible on a fresh Home');
 

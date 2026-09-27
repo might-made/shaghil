@@ -14,6 +14,7 @@ body{margin:0;background:var(--bg-primary);color:var(--text-primary);font-family
 .logo{display:flex;align-items:center;color:var(--logo-color)}
 .logo svg{height:28px;width:auto;display:block}
 .brand small{display:block;color:var(--text-muted);font-size:var(--fs-metadata);line-height:var(--lh-metadata-ar)}
+.nav{display:flex;gap:var(--space-xs);flex-wrap:wrap;justify-content:flex-end}
 
 button,input,textarea,select{font:inherit}
 .btn{height:var(--button-height);border:1px solid var(--border);background:var(--surface-elevated);color:var(--text-primary);border-radius:var(--radius-md);padding:0 var(--space-sm);font-weight:var(--fw-button);font-size:var(--fs-button);cursor:pointer;transition:background var(--transition-fast) var(--easing),border-color var(--transition-fast) var(--easing)}
@@ -50,6 +51,7 @@ textarea{min-height:100px}
 .out ul{margin:var(--space-xs) 0;padding-right:22px}
 .out li{margin:5px 0}
 .out hr{border:0;border-top:1px solid var(--border);margin:var(--space-lg) 0}
+.out.outError h3{color:var(--error)}
 .resultTop{display:flex;justify-content:space-between;gap:var(--space-sm);align-items:center}
 .refine{display:flex;gap:var(--space-xs);flex-wrap:wrap;margin:var(--space-sm) 0}
 .historyItem{background:var(--surface-subtle);border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--space-sm);margin:var(--space-xs) 0;cursor:pointer}
@@ -81,7 +83,6 @@ textarea{min-height:100px}
 .visualPreview{display:block;max-width:100%;max-height:70vh;margin:var(--space-md) auto;border-radius:var(--radius-lg)}
 .visualNotice{padding:var(--space-sm);border:1px solid var(--border);border-radius:var(--radius-md)}
 .sourceExcerpt{white-space:pre-wrap;max-height:180px;overflow:auto;background:var(--surface-subtle);padding:var(--space-md);border-radius:var(--radius-md)}
-.studioControls{margin-top:var(--space-lg)}
 .visualHistoryList{margin-top:var(--space-lg)}
 .resultTop{flex-wrap:wrap}
 .status[role=status]{line-height:var(--lh-body-ar)}
@@ -125,6 +126,12 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 #visualStudio .form{gap:var(--space-md)}
 #visualStudio label{margin-bottom:var(--space-xs)}
 #visualStudio .brandSection{margin-top:var(--space-xl);padding-top:var(--space-lg)}
+
+/* Engine input screens share the same Context -> task input -> primary action grammar;
+   give the form the same breathing room as Visual Studio for a consistent screen family. */
+#engine>p{margin-bottom:var(--space-md)}
+#engine .form{gap:var(--space-md)}
+#engine label{margin-bottom:var(--space-xs)}
 
 /* History empty-state density — when a dynamic list has nothing in it, its own top margin
    should not still hold open a gap above the section that follows. */
