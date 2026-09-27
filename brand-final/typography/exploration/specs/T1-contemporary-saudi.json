@@ -1,0 +1,30 @@
+{
+  "id": "T1",
+  "name": "Contemporary Saudi Product",
+  "rationale": "A single unified Arabic+Latin family (Cairo) rather than two coordinated families. Cairo is already in real production use across Saudi digital products and government digital services — warm rounded terminals, high x-height, unmistakably contemporary-Gulf without leaning on calligraphic cliché. Using one family for both scripts guarantees perfect metric harmony in every mixed Arabic/English string (the product's real, constant condition), at the cost of a narrower personality range than a two-family system.",
+  "arabicFamily": { "name": "Cairo", "role": "unified (Arabic + Latin)", "source": "Google Fonts / google/fonts (OFL)", "weights": "200-1000 (variable, wght axis)", "variable": true },
+  "latinFamily": { "name": "Cairo", "role": "unified (Arabic + Latin)", "source": "Google Fonts / google/fonts (OFL)", "weights": "200-1000 (variable, wght axis)", "variable": true },
+  "lineHeightTechnique": "Same family for both scripts, so line-height is adjusted per-language via :lang(ar) rather than per-family: Arabic roles get a taller ratio than the Latin figure shown for the same role, to give shadda/hamza marks and connected strokes room without changing size.",
+  "scale": [
+    { "role": "Display XL", "px": 56, "weightAr": 700, "weightEn": 700, "lhAr": 1.30, "lhEn": 1.15, "trackingEn": "-0.5px", "trackingAr": "0" },
+    { "role": "Display L", "px": 44, "weightAr": 700, "weightEn": 700, "lhAr": 1.30, "lhEn": 1.20, "trackingEn": "-0.3px", "trackingAr": "0" },
+    { "role": "H1", "px": 34, "weightAr": 700, "weightEn": 700, "lhAr": 1.35, "lhEn": 1.25, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "H2", "px": 26, "weightAr": 600, "weightEn": 600, "lhAr": 1.40, "lhEn": 1.30, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "H3", "px": 21, "weightAr": 600, "weightEn": 600, "lhAr": 1.45, "lhEn": 1.35, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "H4", "px": 17, "weightAr": 600, "weightEn": 600, "lhAr": 1.50, "lhEn": 1.40, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Body Large", "px": 17, "weightAr": 400, "weightEn": 400, "lhAr": 1.80, "lhEn": 1.60, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Body", "px": 15, "weightAr": 400, "weightEn": 400, "lhAr": 1.80, "lhEn": 1.60, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Body Small", "px": 13, "weightAr": 400, "weightEn": 400, "lhAr": 1.75, "lhEn": 1.55, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "UI Large", "px": 16, "weightAr": 600, "weightEn": 600, "lhAr": 1.40, "lhEn": 1.30, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "UI", "px": 14, "weightAr": 600, "weightEn": 600, "lhAr": 1.40, "lhEn": 1.30, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "UI Small", "px": 12, "weightAr": 600, "weightEn": 600, "lhAr": 1.40, "lhEn": 1.30, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Button", "px": 14, "weightAr": 700, "weightEn": 700, "lhAr": 1.0, "lhEn": 1.0, "trackingEn": "0.2px", "trackingAr": "0" },
+    { "role": "Label", "px": 12, "weightAr": 700, "weightEn": 700, "lhAr": 1.30, "lhEn": 1.30, "trackingEn": "0.3px", "trackingAr": "0" },
+    { "role": "Caption", "px": 11, "weightAr": 500, "weightEn": 500, "lhAr": 1.50, "lhEn": 1.40, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Data / Number", "px": 15, "weightAr": 600, "weightEn": 600, "lhAr": 1.30, "lhEn": 1.30, "trackingEn": "0", "trackingAr": "0", "numerals": "Western (tabular)" },
+    { "role": "Table", "px": 13, "weightAr": 400, "weightEn": 400, "lhAr": 1.55, "lhEn": 1.50, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Input", "px": 15, "weightAr": 400, "weightEn": 400, "lhAr": 1.55, "lhEn": 1.50, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Helper text", "px": 12, "weightAr": 400, "weightEn": 400, "lhAr": 1.60, "lhEn": 1.50, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "AI long-form output", "px": 15.5, "weightAr": 400, "weightEn": 400, "lhAr": 1.90, "lhEn": 1.70, "trackingEn": "0", "trackingAr": "0" }
+  ]
+}

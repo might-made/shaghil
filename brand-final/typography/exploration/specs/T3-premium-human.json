@@ -1,0 +1,30 @@
+{
+  "id": "T3",
+  "name": "Premium Human",
+  "rationale": "A four-family, two-role pairing: El Messiri + Fraunces carry personality at Display XL/L, H1 and H2 (characterful, editorial, warm); Readex Pro + Work Sans take over from H3 downward through every UI/body/data role, since a display-only characterful face becomes impractical (and less legible) at small interface sizes. This gives SHAGHIL genuine editorial warmth at the moments that set tone, while remaining a fully disciplined, usable SaaS interface everywhere else.",
+  "arabicFamily": { "name": "El Messiri (display) + Readex Pro (body/UI)", "role": "Arabic — two-family split", "source": "Google Fonts / google/fonts (OFL)", "weights": "El Messiri 400-700 (variable); Readex Pro 160-700 (variable)", "variable": true },
+  "latinFamily": { "name": "Fraunces (display) + Work Sans (body/UI)", "role": "Latin — two-family split", "source": "Google Fonts / google/fonts (OFL)", "weights": "Fraunces 100-900 (variable, opsz+wght); Work Sans 100-900 (variable)", "variable": true },
+  "lineHeightTechnique": "The most generous line-heights of the three directions throughout, reflecting a considered, editorial reading feel. Arabic still receives a distinctly taller ratio than Latin at every role, and the split point from display family to body family (at H3) is identical for both scripts so the pairing logic stays predictable.",
+  "scale": [
+    { "role": "Display XL", "px": 58, "weightAr": 700, "weightEn": 600, "lhAr": 1.28, "lhEn": 1.15, "trackingEn": "-0.3px", "trackingAr": "0", "family": "display" },
+    { "role": "Display L", "px": 46, "weightAr": 600, "weightEn": 600, "lhAr": 1.30, "lhEn": 1.20, "trackingEn": "-0.2px", "trackingAr": "0", "family": "display" },
+    { "role": "H1", "px": 36, "weightAr": 600, "weightEn": 500, "lhAr": 1.38, "lhEn": 1.25, "trackingEn": "0", "trackingAr": "0", "family": "display" },
+    { "role": "H2", "px": 27, "weightAr": 500, "weightEn": 500, "lhAr": 1.42, "lhEn": 1.30, "trackingEn": "0", "trackingAr": "0", "family": "display" },
+    { "role": "H3", "px": 21, "weightAr": 600, "weightEn": 600, "lhAr": 1.48, "lhEn": 1.35, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "H4", "px": 17, "weightAr": 600, "weightEn": 600, "lhAr": 1.52, "lhEn": 1.40, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "Body Large", "px": 17.5, "weightAr": 400, "weightEn": 400, "lhAr": 1.85, "lhEn": 1.65, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "Body", "px": 15.5, "weightAr": 400, "weightEn": 400, "lhAr": 1.85, "lhEn": 1.65, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "Body Small", "px": 13.5, "weightAr": 400, "weightEn": 400, "lhAr": 1.80, "lhEn": 1.60, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "UI Large", "px": 16, "weightAr": 500, "weightEn": 600, "lhAr": 1.40, "lhEn": 1.35, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "UI", "px": 14, "weightAr": 500, "weightEn": 600, "lhAr": 1.40, "lhEn": 1.35, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "UI Small", "px": 12.5, "weightAr": 500, "weightEn": 600, "lhAr": 1.40, "lhEn": 1.35, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "Button", "px": 14, "weightAr": 600, "weightEn": 600, "lhAr": 1.0, "lhEn": 1.0, "trackingEn": "0.1px", "trackingAr": "0", "family": "body" },
+    { "role": "Label", "px": 12, "weightAr": 600, "weightEn": 600, "lhAr": 1.30, "lhEn": 1.30, "trackingEn": "0.3px", "trackingAr": "0", "family": "body" },
+    { "role": "Caption", "px": 11.5, "weightAr": 400, "weightEn": 400, "lhAr": 1.50, "lhEn": 1.45, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "Data / Number", "px": 15, "weightAr": 500, "weightEn": 600, "lhAr": 1.30, "lhEn": 1.30, "trackingEn": "0", "trackingAr": "0", "family": "body", "numerals": "Western (tabular)" },
+    { "role": "Table", "px": 13, "weightAr": 400, "weightEn": 400, "lhAr": 1.60, "lhEn": 1.55, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "Input", "px": 15, "weightAr": 400, "weightEn": 400, "lhAr": 1.55, "lhEn": 1.50, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "Helper text", "px": 12, "weightAr": 400, "weightEn": 400, "lhAr": 1.60, "lhEn": 1.55, "trackingEn": "0", "trackingAr": "0", "family": "body" },
+    { "role": "AI long-form output", "px": 16, "weightAr": 400, "weightEn": 400, "lhAr": 1.95, "lhEn": 1.75, "trackingEn": "0", "trackingAr": "0", "family": "body" }
+  ]
+}

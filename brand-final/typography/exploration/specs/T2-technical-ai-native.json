@@ -1,0 +1,30 @@
+{
+  "id": "T2",
+  "name": "Technical / AI-Native",
+  "rationale": "Two coordinated sister families designed by the same foundry to work together: IBM Plex Sans Arabic and IBM Plex Sans. Genuinely systematic (built for interface and data use, with real tabular lining figures), sharper and more precise than T1, but avoids reading as a raw developer tool because both families carry warmth in their curves and are used at generous UI weights rather than a monospace/terminal aesthetic.",
+  "arabicFamily": { "name": "IBM Plex Sans Arabic", "role": "Arabic", "source": "Google Fonts / google/fonts (OFL)", "weights": "100, 200, 300, 400, 500, 600, 700 (static)", "variable": false },
+  "latinFamily": { "name": "IBM Plex Sans", "role": "Latin", "source": "Google Fonts / google/fonts (OFL)", "weights": "100-700 (variable, wght axis)", "variable": true },
+  "lineHeightTechnique": "Tighter overall ratios than T1/T3 (denser, information-forward product feel), but Arabic is still never mechanically given the Latin ratio — every role keeps a measurably taller Arabic line-height to protect shadda/hamza clearance at the smaller, denser sizes this direction favors.",
+  "scale": [
+    { "role": "Display XL", "px": 52, "weightAr": 600, "weightEn": 600, "lhAr": 1.25, "lhEn": 1.10, "trackingEn": "-0.4px", "trackingAr": "0" },
+    { "role": "Display L", "px": 40, "weightAr": 600, "weightEn": 600, "lhAr": 1.25, "lhEn": 1.15, "trackingEn": "-0.2px", "trackingAr": "0" },
+    { "role": "H1", "px": 30, "weightAr": 600, "weightEn": 600, "lhAr": 1.30, "lhEn": 1.20, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "H2", "px": 24, "weightAr": 600, "weightEn": 600, "lhAr": 1.35, "lhEn": 1.25, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "H3", "px": 19, "weightAr": 500, "weightEn": 500, "lhAr": 1.40, "lhEn": 1.30, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "H4", "px": 16, "weightAr": 500, "weightEn": 500, "lhAr": 1.45, "lhEn": 1.35, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Body Large", "px": 16, "weightAr": 400, "weightEn": 400, "lhAr": 1.70, "lhEn": 1.55, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Body", "px": 14, "weightAr": 400, "weightEn": 400, "lhAr": 1.70, "lhEn": 1.55, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Body Small", "px": 12.5, "weightAr": 400, "weightEn": 400, "lhAr": 1.65, "lhEn": 1.50, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "UI Large", "px": 15, "weightAr": 500, "weightEn": 500, "lhAr": 1.35, "lhEn": 1.25, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "UI", "px": 13.5, "weightAr": 500, "weightEn": 500, "lhAr": 1.35, "lhEn": 1.25, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "UI Small", "px": 12, "weightAr": 500, "weightEn": 500, "lhAr": 1.35, "lhEn": 1.25, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Button", "px": 13.5, "weightAr": 600, "weightEn": 600, "lhAr": 1.0, "lhEn": 1.0, "trackingEn": "0.1px", "trackingAr": "0" },
+    { "role": "Label", "px": 11.5, "weightAr": 600, "weightEn": 600, "lhAr": 1.25, "lhEn": 1.25, "trackingEn": "0.4px", "trackingAr": "0" },
+    { "role": "Caption", "px": 11, "weightAr": 400, "weightEn": 400, "lhAr": 1.45, "lhEn": 1.40, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Data / Number", "px": 14, "weightAr": 500, "weightEn": 500, "lhAr": 1.20, "lhEn": 1.20, "trackingEn": "0", "trackingAr": "0", "numerals": "Western (tabular lining figures)" },
+    { "role": "Table", "px": 12.5, "weightAr": 400, "weightEn": 400, "lhAr": 1.50, "lhEn": 1.45, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Input", "px": 14, "weightAr": 400, "weightEn": 400, "lhAr": 1.45, "lhEn": 1.40, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "Helper text", "px": 11.5, "weightAr": 400, "weightEn": 400, "lhAr": 1.50, "lhEn": 1.45, "trackingEn": "0", "trackingAr": "0" },
+    { "role": "AI long-form output", "px": 14.5, "weightAr": 400, "weightEn": 400, "lhAr": 1.80, "lhEn": 1.65, "trackingEn": "0", "trackingAr": "0" }
+  ]
+}
