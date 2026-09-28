@@ -56,3 +56,6 @@ execFileSync(process.execPath,['scripts/qa-v08-history-render.mjs'],{stdio:'inhe
 await import('./qa-v09-pilot-readiness.mjs');
 await import('./qa-v09-background-isolation.mjs');
 await import('./qa-product-closure-export-warning.mjs');
+
+// Orchestrates its own two child processes (two separate simulated browser origins), like qa-v08-workspace-transfer.mjs.
+execFileSync(process.execPath,['scripts/qa-v10-workspace-portability.mjs'],{stdio:'inherit'});
