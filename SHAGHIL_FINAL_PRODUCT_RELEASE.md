@@ -1,6 +1,6 @@
 # SHAGHIL — Final Product Release
 
-**Status: FOUNDER LIVE VERIFIED — READY FOR CONTROLLED PRODUCTION PROMOTION**
+**Status: SHAGHIL — PRODUCTION LIVE — FOUNDER VERIFIED — FINAL SIGN-OFF**
 
 ## Runtime identity
 
@@ -38,6 +38,23 @@
 
 `OPENAI_API_KEY` is already configured for the `production` target in this Vercel project (confirmed above) — no environment variable change is required for this promotion.
 
+## Production promotion
+
+**Automated promotion attempt (this session):** `request_promote` (Vercel's documented no-rebuild "point production traffic to a given deployment" endpoint) was called twice against `dpl_2P1qR2fU5vmhmzyoXomSTJRSpt3K` with the correct project/deployment IDs. Both attempts returned **HTTP 422 — "Resource cannot be processed."** A read-only check found a likely cause: a stale "pending" promote-alias record for `shaghil.vercel.app` left over from the project's original setup (predating this session's work, when production had last been deployed via manual `redeploy` with no Git source). No environment variable, code, or Vercel setting was modified while investigating or attempting this.
+
+**Manual promotion (Founder):** The Founder subsequently completed the promotion manually through the Vercel dashboard. **The previous automated-promotion blocker is RESOLVED** — the dashboard path succeeded where the API call did not. No runtime or product change of any kind was required to resolve it; this was purely a promotion-mechanism/dashboard-vs-API difference on Vercel's side.
+
+**Founder-verified production state (Founder-observed, not independently fetched by Claude — this session's sandbox cannot reach `*.vercel.app`, and is not required to for this documentation-only update):**
+
+| # | Check | Result |
+|---|---|---|
+| 1 | `https://shaghil.vercel.app` serves the new SHAGHIL production release | **CONFIRMED** (Founder-observed) |
+| 2 | Vercel shows the deployment as Environment: **Production**, Status: **Ready**, **Current** | **CONFIRMED** (Founder-observed) |
+| 3 | Production homepage loads successfully | **PASS** (Founder-observed) |
+| 4 | Production AI smoke test — اكتب لي, Channel: Instagram, optional instruction left blank | **PASS** (Founder-observed) — request completed successfully, returned a full generated result using the current تحميص ٢٧ (Brew 27) Business Brain context |
+
+**`OPENAI_API_KEY` Production integration:** confirmed **operational**, demonstrated directly by the successful live AI generation in the Production smoke test above (item 4) — this is stronger evidence than the earlier key/target metadata check alone, since it confirms the key actually functions against the real OpenAI API from the Production environment, not just that it is configured.
+
 ## Decision
 
-**FOUNDER LIVE VERIFIED — READY FOR CONTROLLED PRODUCTION PROMOTION.**
+**SHAGHIL — PRODUCTION LIVE — FOUNDER VERIFIED — FINAL SIGN-OFF.**
