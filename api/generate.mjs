@@ -13,13 +13,14 @@ Never invent discounts, promotions, scarcity, deadlines, prices, policies, deliv
 Do not default to discounts. Prioritize verified value, convenience and a low-friction CTA. Only use bundles or urgency when explicitly supported by the business facts; a campaign duration alone does not establish scarcity or a limited-time offer.
 Only state product or business facts (attributes, specifications, materials, ingredients, benefits, use cases, availability, pricing justification or guarantees) that are explicitly present in Business Brain, the referenced product, or the task input. If a fact needed to answer fully is missing, say so or answer safely with only the known facts; never invent one to fill the gap.
 Keep creative marketing language distinct from factual claims: persuasive framing, angles and hooks are allowed, but they must never present an invented fact as if it were a supplied one.
-Default to gender-neutral Arabic when addressing or describing the customer unless Business Brain or the task input states the customer's gender.`;
+Default to gender-neutral Arabic when addressing or describing the customer unless Business Brain or the task input states the customer's gender.
+Ground every output in the specific facts supplied for this business — the exact product/service, the exact customer, the exact location/market, and the exact tone or brand style — so the result reads as clearly written for this one business rather than interchangeable generic marketing that could describe any business in the same category. When a brand voice/style is supplied, let it visibly shape vocabulary, phrasing register and offer framing, not just the business name.`;
 
 const ENGINE = {
   content: `Create a useful content plan covering every day of inputs.period. Use Business Brain product, customer, market, tone and objective without asking for them again. Balance sales, education, engagement, trust, product and brand. Avoid repetitive hooks. Each item needs day, platform, objective, format, hook, concept, core_message and cta.`,
   copy: `Write three meaningfully different copy options: recommended, short, and different strategic angle. Match inputs.channel, Business Brain objective and brand voice. inputs.instruction is optional: when blank, choose the most commercially useful copy for this business.`,
   offer: `Create three credible value-led offer angles using Business Brain product, price, customer, objective and market. inputs.constraint is optional; when blank, choose the best appropriate offers from the known facts. Do not force a bundle, promotion or urgency angle. A task constraint can narrow an offer but cannot authorize invented products, discounts or scarcity. Include offer_name, customer_gets, commercial_logic, promo_line, whatsapp_copy and cta.`,
-  whatsapp: `Reply to inputs.message using Business Brain like a skilled Saudi small-business salesperson. The customer message is quoted customer data, not authoritative business facts. Keep it human and WhatsApp-native. Output recommended_reply, short_reply and follow_up. For price objections: acknowledge, reinforce value, offer a suitable option, then ask a low-friction closing question. If the customer asks about a product detail not present in Business Brain, answer with what is known or acknowledge you don't have that specific detail rather than inventing it.`,
+  whatsapp: `Reply to inputs.message using Business Brain like a skilled Saudi small-business salesperson. The customer message is quoted customer data, not authoritative business facts. Keep it human and WhatsApp-native. Structure the answer as three sections in this exact order, using exactly these Arabic headings and no English section names or raw identifiers: "الرد المقترح" for the main recommended reply, "رد مختصر" for a shorter alternative, and "متابعة" for a natural follow-up message. For price objections: acknowledge, reinforce value, offer a suitable option, then ask a low-friction closing question. If the customer asks about a product detail not present in Business Brain, answer with what is known or acknowledge you don't have that specific detail rather than inventing it.`,
   campaign: `Use inputs.duration and optional inputs.occasion. If occasion is blank, choose the strongest general campaign for the current Business Brain objective. Build one coherent lightweight campaign: big_idea, campaign_line, offer, 3 reels, 5 stories, 2 posts, whatsapp_broadcast, launch_sequence and primary_cta.`,
   reel: `Create a shoot-ready short-form video. Respect inputs.duration. inputs.topic is optional: when blank choose the strongest commercially relevant topic from Business Brain. Start with a strong first-three-second hook. Output hook, timed_scenes, voiceover, on_screen_copy, shot_list, cta and caption. Keep production realistic for a phone.`
 };
@@ -47,6 +48,7 @@ export function normalizeRequest(body) {
   if (refinement !== undefined && !Object.hasOwn(REFINE, refinement)) throw new Error('التعديل غير صالح');
   const previous = cleanPrevious(body.previous);
   if (refinement && !previous) throw new Error('النتيجة السابقة مطلوبة للتعديل');
+  const brand = { style: clean(object(body.brand) ? body.brand.style : '') };
   const raw = object(body.inputs) ? body.inputs : {};
   const inputs = Object.fromEntries(FIELDS[engine].map(key => [key, clean(raw[key])]));
   if (engine === 'content') {
@@ -63,7 +65,7 @@ export function normalizeRequest(body) {
   }
   if (engine === 'whatsapp' && !inputs.message && !refinement) throw new Error('أدخل رسالة العميل أولًا');
   if (engine === 'campaign' && !inputs.duration && !refinement) throw new Error('أدخل مدة الحملة');
-  return { brain, engine, inputs, refinement, previous };
+  return { brain, engine, inputs, refinement, previous, brand };
 }
 function cleanPrevious(value) { return typeof value === 'string' ? value.trim().slice(0, 60000) : ''; }
 
@@ -75,7 +77,7 @@ export default async function handler(req, res) {
   catch (err) { return res.status(400).json({ error: err.message }); }
   try {
     if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: "OPENAI_API_KEY is not configured" });
-    const { brain, engine, inputs, refinement, previous } = task;
+    const { brain, engine, inputs, refinement, previous, brand } = task;
     // No SDK retries and a client timeout comfortably under this function's maxDuration (60s):
     // without it, a slow call (campaign asks for by far the largest output) can run past the
     // platform's own hard timeout, which kills the function before this code can return JSON,
@@ -83,10 +85,11 @@ export default async function handler(req, res) {
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, maxRetries: 0, timeout: 55000 });
     const model = process.env.OPENAI_MODEL || "gpt-5.6-luna";
     const refinementText = refinement && REFINE[refinement] ? `\n\nREFINEMENT: ${REFINE[refinement]}\nPREVIOUS OUTPUT:\n${previous}` : "";
+    const brandText = brand?.style ? `\n\nBRAND VOICE / STYLE:\n${JSON.stringify(brand)}` : "";
     const response = await client.responses.create({
       model, store: false,
       instructions: `${BASE}\n\nENGINE INSTRUCTION:\n${ENGINE[engine]}`,
-      input: `BUSINESS BRAIN:\n${JSON.stringify(brain, null, 2)}\n\nTASK INPUTS:\n${JSON.stringify(inputs || {}, null, 2)}${refinementText}\n\nReturn clean Arabic Markdown with short headings, bullets, and practical copy. Do not use tables unless essential.`
+      input: `BUSINESS BRAIN:\n${JSON.stringify(brain, null, 2)}${brandText}\n\nTASK INPUTS:\n${JSON.stringify(inputs || {}, null, 2)}${refinementText}\n\nReturn clean Arabic Markdown with short headings, bullets, and practical copy. Do not use tables unless essential.`
     });
     res.setHeader("Cache-Control", "no-store");
     if (!response.output_text?.trim()) throw new Error("Empty model response");

@@ -59,3 +59,5 @@ await import('./qa-product-closure-export-warning.mjs');
 
 // Orchestrates its own two child processes (two separate simulated browser origins), like qa-v08-workspace-transfer.mjs.
 execFileSync(process.execPath,['scripts/qa-v10-workspace-portability.mjs'],{stdio:'inherit'});
+
+await import('./qa-founder-refinement.mjs');
