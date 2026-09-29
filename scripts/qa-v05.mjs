@@ -6,7 +6,7 @@ import handler, { normalizeRequest } from '../api/generate.mjs';
 import health from '../api/health.mjs';
 
 const brain = {name:'Brew 27',category:'قهوة',product:'قهوة وحلويات',customer:'موظفون',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'رجوع العملاء'};
-const cases = {content:{period:'30 يوم'},copy:{channel:'SMS',instruction:''},offer:{constraint:''},whatsapp:{message:'كم السعر؟'},campaign:{occasion:'',duration:'7 أيام'},reel:{duration:'45 ثانية',topic:''}};
+const cases = {content:{period:'30 يوم',contentObjective:'',contentObjectiveCustom:'',contentAudience:'',contentChannels:'',contentChannelsCustom:'',contentTone:'',contentCTA:'',contentInstructions:''},copy:{channel:'SMS',instruction:''},offer:{constraint:''},whatsapp:{message:'كم السعر؟'},campaign:{occasion:'',duration:'7 أيام'},reel:{duration:'45 ثانية',topic:''}};
 const response = () => ({headers:{},setHeader(k,v){this.headers[k]=v},status(n){this.code=n;return this},json(body){this.body=body;return this}});
 const originalCreate = OpenAI.Responses.prototype.create;
 const originalKey = process.env.OPENAI_API_KEY;
