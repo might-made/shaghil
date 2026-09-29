@@ -1,7 +1,10 @@
 import OpenAI, { toFile } from 'openai';
 import { randomInt } from 'node:crypto';
 
-export const FORMATS = { '1:1': '1024x1024', '4:5': '1024x1280', '9:16': '864x1536' };
+// New landscape presets (16:9, 1.91:1) reuse the already-supported 1536x864 generation size;
+// composeVisual() fits (never crops) the raw generated image into the final DIMENSIONS canvas,
+// so the exact published aspect ratio is enforced locally regardless of the raw generation size.
+export const FORMATS = { '1:1': '1024x1024', '4:5': '1024x1280', '9:16': '864x1536', '16:9': '1536x864', '1.91:1': '1536x864' };
 const MODES = ['Product Hero','Lifestyle','Premium','Minimal','Campaign','Performance Ad','Minimal Premium','Editorial'];
 const TEXT_MODES = ['none','simple','full'];
 const DIRECTIONS = [

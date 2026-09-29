@@ -24,7 +24,7 @@ try{
  }
  for(const engine of ['offer','campaign']){const r=res();await visualHandler({method:'POST',body:{...base,task:{...base.task,engine}}},r);assert.equal(r.code,200)}
  const r=res();await visualHandler({method:'POST',body:{...base,brand:{...base.brand,references:[image]}}},r);assert.equal(r.code,200);assert.equal(calls.at(-1).kind,'edit');assert.equal(calls.at(-1).p.image.length,1);
- for(const mutate of [b=>b.task.engine='whatsapp',b=>b.task.selected='not in context',b=>b.settings.format='16:9',b=>b.settings.mode='evil',b=>b.settings.textMode='html',b=>b.brand.primary='invalid',b=>b.brain={},b=>b.brand.references=[image,image,image],b=>b.brand.logo={type:'image/svg+xml',base64:png},b=>b.brand.references=[{type:'image/png',base64:'AAAA'}],b=>b.previousDirection=99,b=>{b.settings.textMode='full';b.settings.headline=''}]){
+ for(const mutate of [b=>b.task.engine='whatsapp',b=>b.task.selected='not in context',b=>b.settings.format='16:10',b=>b.settings.mode='evil',b=>b.settings.textMode='html',b=>b.brand.primary='invalid',b=>b.brain={},b=>b.brand.references=[image,image,image],b=>b.brand.logo={type:'image/svg+xml',base64:png},b=>b.brand.references=[{type:'image/png',base64:'AAAA'}],b=>b.previousDirection=99,b=>{b.settings.textMode='full';b.settings.headline=''}]){
   const body=structuredClone(base);mutate(body);const r=res(),before=calls.length;await visualHandler({method:'POST',body},r);assert.equal(r.code,400);assert.equal(calls.length,before);
  }
  const method=res();await visualHandler({method:'GET'},method);assert.equal(method.code,405);

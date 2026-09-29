@@ -87,7 +87,7 @@ textarea{min-height:100px}
 .resultTop{flex-wrap:wrap}
 .status[role=status]{line-height:var(--lh-body-ar)}
 button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
-#visualStudio summary{cursor:pointer;padding:var(--space-2xs) 0}
+#visualStudio summary,#visualResult summary{cursor:pointer;padding:var(--space-2xs) 0}
 
 /* SHAGHIL-styled file upload control — the native <input type=file> stays in the DOM, keeps
    its id/onchange/accept/multiple exactly as before, and is only visually hidden (not display:none,

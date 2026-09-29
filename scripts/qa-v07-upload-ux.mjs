@@ -13,6 +13,7 @@ const html = '<!doctype html><html><body>'
   + '<select id="productFidelity"><option value="exact" selected>exact</option><option value="creative">creative</option></select>'
   + '<div id="productPreviewWrap" class="hidden"><img id="productPreview"></div>'
   + '<button id="productSave"></button>'
+  + '<button id="productCancelEdit" class="hidden"></button>'
   + '<p id="productStatus" role="status"></p>'
   + '<div id="productList"></div>'
   + '</body></html>';

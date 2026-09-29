@@ -61,3 +61,7 @@ await import('./qa-product-closure-export-warning.mjs');
 execFileSync(process.execPath,['scripts/qa-v10-workspace-portability.mjs'],{stdio:'inherit'});
 
 await import('./qa-founder-refinement.mjs');
+
+// Runs in its own process (fresh IndexedDB): it counts exact product-store lengths, which
+// would collide with products earlier suites in this same process already saved.
+execFileSync(process.execPath,['scripts/qa-closed-pilot-ux.mjs'],{stdio:'inherit'});
