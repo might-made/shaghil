@@ -81,7 +81,16 @@ assert.equal(win.document.getElementById('contentCards').classList.contains('hid
 assert.equal(win.document.getElementById('contentCards').querySelectorAll('.btn.primary').length,7);
 await run('Visual.choose()');assert.equal(win.document.getElementById('visualTextMode').value,'none');assert.ok(win.document.getElementById('visualIdea').options.length>=2);
 assert.equal(win.document.getElementById('visualIdea').options.length,7);
-win.document.getElementById('visualIdea').value='2';await run('Visual.selectIdea()');assert.equal(win.document.getElementById('visualSource').textContent,dayBlocks[2]);
+win.document.getElementById('visualIdea').value='2';await run('Visual.selectIdea()');
+// Obsolete by the later campaign-display fix in this exact area: #visualSource now renders
+// through md() as real HTML (matching the تفاصيل fix), so .textContent concatenates each line's
+// own text without the original newlines/Markdown syntax. Nothing is lost — verified per line —
+// and the underlying source.task.selected (used for the actual /api/visual request, asserted
+// further below) remains the exact, untouched raw string; only this preview's rendering changed.
+const sourceHTML=win.document.getElementById('visualSource').innerHTML;
+const sourceText=win.document.getElementById('visualSource').textContent;
+for(const line of dayBlocks[2].split('\n').map(l=>l.replace(/^#{1,6}\s*/,'').trim()).filter(Boolean))assert.ok(sourceText.includes(line),`visualSource preview must preserve "${line}"`);
+assert.ok(!sourceHTML.includes('##'),'raw Markdown heading syntax must never remain visible in the visualSource preview');
 win.document.getElementById('visualFormat').value='4:5';await run('Visual.generate()');assert.equal(win.requests.length,1);assert.deepEqual(win.requests[0].body.brain,brain);assert.equal(win.requests[0].body.brand.style,'أسلوب محفوظ جديد');assert.ok(win.requests[0].body.task.context.includes(win.requests[0].body.task.selected));assert.equal(win.requests[0].body.settings.format,'4:5');
 const original=win.requests[0].body;await run("Visual.variant('different')");const variant=win.requests.at(-1).body;assert.deepEqual(variant.brain,original.brain);assert.deepEqual(variant.brand,original.brand);assert.deepEqual(variant.task,original.task);assert.deepEqual(variant.settings,original.settings);assert.equal(variant.previousDirection,3);
 assert.equal(original.task.selected,dayBlocks[2]);assert.equal(original.task.context,plan);

@@ -16,7 +16,11 @@ const brain={name:'نجوب',product:'منظم سفر',customer:'العائلة'
 const plan='# خطة نجوب\n\n## اليوم الأول\nالمنصة: Instagram\nالفكرة: رحلة الأسرة\n\n## اليوم الثاني\nالهدف: الوعي\nالفكرة: ترتيب الحقيبة\n\n## اليوم الثالث\nالمنصة: Instagram\nالفكرة: منظم سفر العائلة';
 vm.runInContext("current='content';renderResult("+JSON.stringify(plan)+")",ctx);
 assert.equal(win.document.querySelectorAll('#contentCards article').length,3);
-await win.document.querySelectorAll('#contentCards button')[2].onclick();assert.ok(win.document.getElementById('visualSource').textContent.startsWith('## اليوم الثالث'));
+await win.document.querySelectorAll('#contentCards button')[2].onclick();
+// Obsolete by the campaign-display fix: visualSource now renders through md() as real HTML, so
+// its rendered <h2> heading's own textContent no longer carries the "## " Markdown prefix.
+assert.ok(win.document.getElementById('visualSource').textContent.startsWith('اليوم الثالث'));
+assert.ok(!win.document.getElementById('visualSource').innerHTML.includes('##'),'raw Markdown heading syntax must never remain visible');
 assert.equal(win.document.getElementById('productFidelity').value,'exact');assert.ok(![...Array(win.localStorage.length)].some((_,i)=>win.localStorage.getItem(win.localStorage.key(i)).includes('original pixels')));
 console.log('PASS V0.7 M1: multiple product Blobs, default exact fidelity, Content cards and direct Day 3 handoff');
 

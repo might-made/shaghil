@@ -146,7 +146,13 @@ assert.equal(win.requests.length, requestsBefore, 'expanding/collapsing تفاص
 // The campaign → Design Studio handoff must still work, per specific day (not the whole plan).
 await cards[2].querySelector('.btn.primary').onclick();
 assert.equal(win.document.getElementById('visualStudio').classList.contains('hidden'), false);
-assert.equal(win.document.getElementById('visualSource').textContent, dayBlocks[1]);
+// Obsolete by the campaign-display fix in this exact area: visualSource now renders through
+// md() as real HTML (matching تفاصيل), so .textContent concatenates each line without the
+// original newlines/Markdown syntax — nothing lost, verified per line, and no raw "##" left.
+const sourceHTML = win.document.getElementById('visualSource').innerHTML;
+const sourceText = win.document.getElementById('visualSource').textContent;
+for (const line of dayBlocks[1].split('\n').map(l => l.replace(/^#{1,6}\s*/, '').trim()).filter(Boolean)) assert.ok(sourceText.includes(line), `visualSource must preserve "${line}"`);
+assert.ok(!sourceHTML.includes('##'), 'raw Markdown heading syntax must never remain visible in visualSource');
 run("current='campaign'"); run('Visual.back()');
 assert.equal(win.document.getElementById('output').classList.contains('hidden'), false, 'back navigation from the handoff must still return to the campaign result');
 

@@ -139,6 +139,9 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
    open, using the page's own scroll instead of a cramped nested one — collapsed cards keep the
    existing seven-day grid overview exactly as before. */
 .ideaCard:has(details[open]){grid-column:1/-1}
+/* The campaign overview card is always shown in full (never collapsed, unlike a day's تفاصيل),
+   so it always needs the full row width, not just conditionally while a details panel is open. */
+.campaignOverview{grid-column:1/-1}
 .ideaDetail{overflow-wrap:anywhere}
 
 /* Visual Studio form rhythm — same fields/grouping, more breathing room between label and
