@@ -104,7 +104,12 @@ const ids=['welcome','setup','brain','brandBrain','productLibrary','home','engin
 // guard's timing). Missing/stale cache just means generation proceeds without brand context,
 // never a hard failure and never fabricated content.
 function refreshBrandCache(){globalThis.Visual?.brandStyle?.().then(s=>{if(typeof s==='string')cachedBrandStyle=s}).catch(()=>{})}
-const $=x=>document.getElementById(x); const show=x=>ids.forEach(i=>$(i).classList.toggle('hidden',i!==x));
+const $=x=>document.getElementById(x);
+// Any previous screen can be scrolled arbitrarily far down; toggling .hidden alone never resets
+// scroll, so a leftover offset can land the next screen mid-page with the sticky header's band
+// sitting over its content (the exact bug previously fixed only for Visual Studio's own result
+// screen). Resetting on every screen switch, here once, covers all of them consistently.
+const show=x=>{ids.forEach(i=>$(i).classList.toggle('hidden',i!==x));scrollTo(0,0)};
 function readLocal(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
 const getBrain=()=>{const b=readLocal('brain',null);return b&&typeof b==='object'&&!Array.isArray(b)?b:null};
 function getHistory(){const h=readLocal('shaghilHistory',[]);return Array.isArray(h)?h.filter(x=>x&&typeof x.text==='string'&&x.text.trim()):[]}

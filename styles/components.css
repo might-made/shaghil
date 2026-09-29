@@ -133,7 +133,13 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 .actions.hidden,.form.hidden,.grid.hidden,.assetRow.hidden,.spin.hidden{display:none}
 .ideaCard{min-width:0}
 .ideaCard p{overflow-wrap:anywhere}
-.ideaCard details{white-space:pre-wrap;max-height:300px;overflow:auto}
+/* Expanded تفاصيل used to be squeezed into the card's own narrow grid column with a fixed
+   300px internal scrollbox. A day's full detail now reads as normal, rendered Arabic prose
+   (see md() reuse in renderCards()), and the card it belongs to spans the full row width while
+   open, using the page's own scroll instead of a cramped nested one — collapsed cards keep the
+   existing seven-day grid overview exactly as before. */
+.ideaCard:has(details[open]){grid-column:1/-1}
+.ideaDetail{overflow-wrap:anywhere}
 
 /* Visual Studio form rhythm — same fields/grouping, more breathing room between label and
    control and between sections, using only the existing locked spacing scale. */

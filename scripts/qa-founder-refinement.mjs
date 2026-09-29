@@ -129,7 +129,15 @@ for (let i = 0; i < dayBlocks.length; i++) {
   assert.ok(details, 'each day card must offer the تفاصيل expand interaction');
   assert.equal(details.hasAttribute('open'), false, 'details must be collapsed by default (scan first)');
   assert.equal(details.querySelector('summary').textContent, 'تفاصيل');
-  assert.equal(details.querySelector('div').textContent, dayBlocks[i], 'expanding تفاصيل must show the exact, complete original day content — nothing lost');
+  // Obsolete by the later display refinement (rendered Markdown, not raw text) in this exact
+  // area: تفاصيل now renders through md() as real HTML, so .textContent concatenates each
+  // line's own text without the original newlines/markdown syntax between them — content is
+  // not lost, just no longer byte-identical to the raw source. Verify every line's own text
+  // (markdown syntax stripped) still appears, and that no raw "#"/"##" syntax remains visible.
+  const detailHTML = details.querySelector('div').innerHTML;
+  const detailText = details.querySelector('div').textContent;
+  for (const line of dayBlocks[i].split('\n').map(l => l.replace(/^#{1,6}\s*/, '').trim()).filter(Boolean)) assert.ok(detailText.includes(line), `expanding تفاصيل must preserve "${line}" — nothing lost`);
+  assert.ok(!detailHTML.includes('##'), 'raw Markdown heading syntax must never remain visible in the expanded detail');
   assert.ok(card.querySelector('.btn.primary').textContent.includes('اصنع التصميم'), 'the primary action must remain easy to access on every card');
 }
 const requestsBefore = win.requests.length;

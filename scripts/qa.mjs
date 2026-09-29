@@ -67,3 +67,5 @@ await import('./qa-founder-refinement.mjs');
 execFileSync(process.execPath,['scripts/qa-closed-pilot-ux.mjs'],{stdio:'inherit'});
 
 await import('./qa-content-engine-brief.mjs');
+
+await import('./qa-content-plan-display.mjs');
