@@ -32,4 +32,51 @@ for (const [name, ok] of checks) {
 }
 
 if (failed) process.exit(1);
-console.log("\nSHAGHIL V0.3 structural QA PASS");
+console.log("\nSHAGHIL V0.7 structural QA PASS");
+
+await import("./qa-v05.mjs");
+
+await import("./qa-v06.mjs");
+
+await import('./qa-v07.mjs');
+
+await import('./qa-v07-upload-ux.mjs');
+
+const {execFileSync}=await import('node:child_process');
+// Runs in its own process (fresh IndexedDB) since it counts saved products by name/id,
+// which would collide with the products earlier suites in this same process already saved.
+execFileSync(process.execPath,['scripts/qa-v07-product-persistence.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/qa-v07-migration.mjs'],{stdio:'inherit'});
+// Orchestrates its own two child processes (two separate simulated browser origins).
+execFileSync(process.execPath,['scripts/qa-v08-workspace-transfer.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/qa-v08-import-recovery-ui.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/qa-v08-history-nav.mjs'],{stdio:'inherit'});
+execFileSync(process.execPath,['scripts/qa-v08-history-render.mjs'],{stdio:'inherit'});
+
+await import('./qa-v09-pilot-readiness.mjs');
+await import('./qa-v09-background-isolation.mjs');
+await import('./qa-product-closure-export-warning.mjs');
+
+// Orchestrates its own two child processes (two separate simulated browser origins), like qa-v08-workspace-transfer.mjs.
+execFileSync(process.execPath,['scripts/qa-v10-workspace-portability.mjs'],{stdio:'inherit'});
+
+await import('./qa-founder-refinement.mjs');
+
+// Runs in its own process (fresh IndexedDB): it counts exact product-store lengths, which
+// would collide with products earlier suites in this same process already saved.
+execFileSync(process.execPath,['scripts/qa-closed-pilot-ux.mjs'],{stdio:'inherit'});
+
+await import('./qa-content-engine-brief.mjs');
+
+await import('./qa-content-plan-display.mjs');
+
+await import('./qa-campaign-display.mjs');
+
+// Orchestrates its own three child processes (three separate simulated browser origins), like qa-v08-workspace-transfer.mjs.
+execFileSync(process.execPath,['scripts/qa-preview-persistence.mjs'],{stdio:'inherit'});
+
+await import('./qa-v11-theme-brand.mjs');
+
+await import('./qa-v12-mobile-nav.mjs');
+
+await import('./qa-v13-app-icon.mjs');

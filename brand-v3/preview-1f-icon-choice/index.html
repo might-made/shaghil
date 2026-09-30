@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SHGHIL — App Icon Choice (Phase 1F, review only)</title>
+<style>
+  :root{--bg:#EFEAD8;--card:#F6F3EA;--border:#E2DDCB;--text:#1B1D1F;--muted:#5B584F}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans Arabic','IBM Plex Sans',Tahoma,Arial,sans-serif;padding:24px}
+  h1{font-size:22px;margin:0 0 4px}
+  .note{color:var(--muted);font-size:13px;max-width:720px;line-height:1.6;margin-bottom:24px}
+  .board{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:1100px;margin:auto}
+  @media(max-width:820px){.board{grid-template-columns:1fr}}
+  .option{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+  .option h2{margin:0 0 4px;font-size:18px}
+  .option p.desc{color:var(--muted);font-size:13px;margin:0 0 16px;line-height:1.6}
+  .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+  .row .label{width:100%;font-size:12px;color:var(--muted);margin-bottom:6px}
+  /* Browser-tab favicon mockup */
+  .tabMock{display:inline-flex;align-items:center;gap:6px;background:#e4e4e4;border-radius:8px 8px 0 0;padding:6px 12px;font-size:12px;color:#333;box-shadow:0 -1px 0 #ccc inset}
+  .tabMock img{width:16px;height:16px;display:block}
+  /* iOS-style home screen mockup */
+  .phoneMock{width:150px;background:linear-gradient(160deg,#7a8cff,#b98cff);border-radius:22px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .phoneMock img{width:56px;height:56px;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+  .phoneMock span{color:#fff;font-size:10px;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+  .sizes{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+  .sizes figure{margin:0;text-align:center}
+  .sizes img{display:block;background:#1B1D1F;border-radius:20%}
+  .sizes figcaption{font-size:11px;color:var(--muted);margin-top:4px}
+</style>
+</head>
+<body>
+<h1>SHGHIL — App Icon Choice (Phase 1F)</h1>
+<p class="note">Review-only comparison — <strong>the live favicon and install icon are unchanged</strong>
+(still <code>/brand/favicon.svg</code>, <code>/brand/favicon-16.png</code>, <code>/brand/favicon-32.png</code>,
+<code>/brand/apple-touch-icon.png</code>). Both mockups below reference the exact, already-verified Phase 1B
+SVG files byte-for-byte (<code>brand-v3/icon-refinement-1b/*.svg</code>) — nothing was redrawn or reshaped for
+this page. Nothing here is wired into <code>index.html</code> or any live asset.</p>
+
+<div class="board">
+  <div class="option">
+    <h2>Option A — ش (sheen)</h2>
+    <p class="desc">The isolated ش glyph — all three dots are part of the shaped glyph itself. No simplified
+      variant is needed at any size; legible natively at 16px.</p>
+    <div class="row">
+      <div class="label">Browser tab</div>
+      <span class="tabMock"><img src="../icon-refinement-1b/option-a-sheen-dark.svg" alt="Option A favicon">شغّيل — V0.9</span>
+    </div>
+    <div class="row">
+      <div class="label">iOS / Android home screen</div>
+      <div class="phoneMock"><img src="../icon-refinement-1b/option-a-sheen-dark.svg" alt="Option A home screen icon"><span>شغّيل</span></div>
+    </div>
+    <div class="row">
+      <div class="label">Real sizes (16 / 32 / 180 / 512px) — same file at every size, no simplification</div>
+      <div class="sizes">
+        <figure><img src="../icon-refinement-1b/option-a-sheen-dark.svg" width="16" height="16"><figcaption>16</figcaption></figure>
+        <figure><img src="../icon-refinement-1b/option-a-sheen-dark.svg" width="32" height="32"><figcaption>32</figcaption></figure>
+        <figure><img src="../icon-refinement-1b/option-a-sheen-dark.svg" width="90" height="90"><figcaption>180</figcaption></figure>
+        <figure><img src="../icon-refinement-1b/option-a-sheen-dark.svg" width="180" height="180"><figcaption>512</figcaption></figure>
+      </div>
+    </div>
+  </div>
+
+  <div class="option">
+    <h2>Option B — غ + authentic shadda</h2>
+    <p class="desc">Same glyph cluster as the current live icon (غ with the authentic U+0651 shadda,
+      GPOS-positioned by the font). The shadda stays legible at 64px+; at 16/32px it breaks down, so a
+      simplified (shadda-dropped) variant is used at those two sizes only — the same tested tradeoff from
+      Phase 1B, not a new decision made here.</p>
+    <div class="row">
+      <div class="label">Browser tab (16px → simplified variant, shadda dropped)</div>
+      <span class="tabMock"><img src="../icon-refinement-1b/option-b-favicon-simplified-dark.svg" alt="Option B favicon">شغّيل — V0.9</span>
+    </div>
+    <div class="row">
+      <div class="label">iOS / Android home screen (180px+ → full variant, authentic shadda kept)</div>
+      <div class="phoneMock"><img src="../icon-refinement-1b/option-b-ghain-refined-dark.svg" alt="Option B home screen icon"><span>شغّيل</span></div>
+    </div>
+    <div class="row">
+      <div class="label">Real sizes — 16 / 32px use the simplified variant; 180 / 512px use the full variant with shadda</div>
+      <div class="sizes">
+        <figure><img src="../icon-refinement-1b/option-b-favicon-simplified-dark.svg" width="16" height="16"><figcaption>16 (simplified)</figcaption></figure>
+        <figure><img src="../icon-refinement-1b/option-b-favicon-simplified-dark.svg" width="32" height="32"><figcaption>32 (simplified)</figcaption></figure>
+        <figure><img src="../icon-refinement-1b/option-b-ghain-refined-dark.svg" width="90" height="90"><figcaption>180 (full + shadda)</figcaption></figure>
+        <figure><img src="../icon-refinement-1b/option-b-ghain-refined-dark.svg" width="180" height="180"><figcaption>512 (full + shadda)</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

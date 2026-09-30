@@ -1,0 +1,192 @@
+/* SHAGHIL Runtime Components
+   Phase 1 — every selector below existed in index.html's previous inline <style> block.
+   Selectors, specificity and cascade order are preserved as-is; only values were rewritten
+   to consume styles/foundations.css tokens instead of the old hardcoded --bg/--p/--p2/--t/--m/--l/--a
+   variables and literal hex colors, so the runtime speaks Graphite Pulse + the locked type/spacing/
+   radius scale in both light and dark mode without any change to markup, IDs or JS. */
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-primary);font-size:var(--fs-body);line-height:var(--lh-body-ar)}
+.wrap{max-width:1080px;margin:auto;padding:var(--space-md)}
+.top{position:sticky;top:var(--space-xs);z-index:5;display:flex;justify-content:space-between;align-items:center;background:var(--bg-primary);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-sm) var(--space-md)}
+/* Focus rings inside .top sit on --bg-primary (the page/nav backdrop, charcoal in A / champagne
+   in C), not a content surface, so they need their own theme-aware ring color — see --nav-focus
+   in foundations.css. */
+.top :focus-visible{outline-color:var(--nav-focus)}
+
+.brand{display:flex;align-items:center;gap:var(--space-sm)}
+.logo{display:flex;align-items:center;color:var(--logo-color)}
+.logo svg{height:26px;width:auto;display:block}
+.themeToggle{display:inline-flex;align-items:center;justify-content:center;width:var(--button-height);padding:0;color:var(--logo-color)}
+.themeToggle svg{width:18px;height:18px}
+.brand small{display:block;color:var(--logo-color);opacity:.65;font-size:var(--fs-metadata);line-height:var(--lh-metadata-ar)}
+.nav{display:flex;gap:var(--space-xs);flex-wrap:wrap;justify-content:flex-end}
+/* Mobile-only drawer controls. Hidden on desktop (>700px), where .nav stays the plain inline
+   row above; see the max-width:700px block below for the drawer itself. */
+.navToggle{display:none}
+.navScrim{position:fixed;inset:0;background:var(--scrim);z-index:25}
+
+button,input,textarea,select{font:inherit}
+.btn{height:var(--button-height);border:1px solid var(--border);background:var(--surface-elevated);color:var(--text-primary);border-radius:var(--radius-md);padding:0 var(--space-sm);font-weight:var(--fw-button);font-size:var(--fs-button);cursor:pointer;transition:background var(--transition-fast) var(--easing),border-color var(--transition-fast) var(--easing)}
+.btn:hover{border-color:var(--border-strong)}
+.btn.primary{background:var(--cta-bg);color:var(--cta-text);border:0}
+.btn.primary:hover{background:var(--cta-hover-bg)}
+.btn.primary:active{background:var(--cta-pressed-bg)}
+.btn:disabled{opacity:.45;cursor:wait}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-lg);margin-top:var(--space-md)}
+
+h1{font-size:var(--fs-display);font-weight:var(--fw-display);line-height:var(--lh-display-ar);margin:var(--space-xs) 0 var(--space-sm)}
+h2{font-size:var(--fs-h2);font-weight:var(--fw-h2);line-height:var(--lh-h2-ar);margin:0 0 var(--space-sm)}
+h3{font-size:var(--fs-h3);font-weight:var(--fw-h3);line-height:var(--lh-h3-ar);margin:0 0 var(--space-xs)}
+p{color:var(--text-secondary);line-height:var(--lh-body-ar)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-sm)}
+.engine{cursor:pointer;min-height:150px;transition:border-color var(--transition-fast) var(--easing)}
+.engine:hover{border-color:var(--border-strong)}
+.engine b{font-size:var(--fs-h3);font-weight:var(--fw-h3)}
+.engine span{display:block;color:var(--text-secondary);margin-top:var(--space-xs);line-height:var(--lh-body-ar)}
+.engine .engineIcon{display:block;width:22px;height:22px;margin-bottom:var(--space-xs);color:var(--text-secondary);transition:color var(--transition-fast) var(--easing)}
+.engine .engineIcon svg{width:100%;height:100%;display:block}
+.engine:hover .engineIcon{color:var(--signal-primary)}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm)}
+.full{grid-column:1/-1}
+label{font-size:var(--fs-label);font-weight:var(--fw-label);display:block;margin-bottom:var(--space-2xs)}
+input,textarea,select{width:100%;min-height:var(--input-height);background:var(--surface-subtle);border:1px solid var(--border);color:var(--text-primary);border-radius:var(--radius-md);padding:var(--space-sm);font-size:var(--fs-input);line-height:var(--lh-input-ar)}
+textarea{min-height:100px}
+.hidden{display:none}
+.out{background:var(--surface-subtle);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-lg);line-height:var(--lh-body-lg-ar);font-size:var(--fs-body-lg)}
+.out h1,.out h2,.out h3{margin:var(--space-lg) 0 var(--space-xs);color:var(--text-primary)}
+.out h2{font-size:var(--fs-h2)}
+.out h3{font-size:var(--fs-h3)}
+.out p{margin:var(--space-xs) 0;color:var(--text-primary)}
+.out ul{margin:var(--space-xs) 0;padding-right:22px}
+.out li{margin:5px 0}
+.out hr{border:0;border-top:1px solid var(--border);margin:var(--space-lg) 0}
+.out.outError h3{color:var(--error)}
+.resultTop{display:flex;justify-content:space-between;gap:var(--space-sm);align-items:center}
+.refine{display:flex;gap:var(--space-xs);flex-wrap:wrap;margin:var(--space-sm) 0}
+.historyItem{background:var(--surface-subtle);border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--space-sm);margin:var(--space-xs) 0;cursor:pointer}
+.historyItem small{color:var(--text-secondary)}
+.toast{position:fixed;bottom:var(--space-md);left:50%;transform:translateX(-50%);background:var(--toast-bg);color:var(--toast-text);padding:var(--space-xs) var(--space-sm);border-radius:var(--radius-md);font-weight:var(--fw-button);z-index:20;box-shadow:var(--elevation-overlay)}
+.skeleton{height:12px;border-radius:var(--radius-sm);background:linear-gradient(90deg,var(--surface-subtle),var(--border-strong),var(--surface-subtle));background-size:200% 100%;animation:sh 1.2s infinite;margin:var(--space-xs) 0}
+@keyframes sh{to{background-position:-200% 0}}
+.actions{display:flex;gap:var(--space-xs);flex-wrap:wrap;margin-top:var(--space-sm)}
+.brain{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-xs)}
+.brain div{background:var(--surface-subtle);border:1px solid var(--border);padding:var(--space-sm);border-radius:var(--radius-md)}
+.brain small{color:var(--text-secondary);display:block;font-size:var(--fs-metadata)}
+.status{font-size:var(--fs-caption);color:var(--text-secondary)}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--text-secondary);border-top-color:transparent;border-radius:50%;animation:s .7s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+
+@media(max-width:700px){
+  .grid,.form,.brain{grid-template-columns:1fr}
+  .full{grid-column:auto}
+  h1{font-size:var(--fs-h1);line-height:var(--lh-h1-ar)}
+  .brand small{display:none}
+  #home .grid{gap:var(--space-xs)}
+  .card.engine{min-height:0;padding:var(--space-sm) var(--space-md)}
+  .engine .engineIcon{margin-bottom:var(--space-2xs)}
+}
+
+.brandSection{border-top:1px solid var(--border);margin-top:var(--space-lg);padding-top:var(--space-md)}
+.assetThumb{width:90px;height:90px;object-fit:contain;background:var(--media-backing);border-radius:var(--radius-md)}
+.assetRow{display:flex;align-items:center;gap:var(--space-sm);flex-wrap:wrap}
+.visualPreview{display:block;max-width:100%;max-height:70vh;margin:var(--space-md) auto;border-radius:var(--radius-lg)}
+.visualNotice{padding:var(--space-sm);border:1px solid var(--border);border-radius:var(--radius-md)}
+.sourceExcerpt{white-space:pre-wrap;max-height:180px;overflow:auto;background:var(--surface-subtle);padding:var(--space-md);border-radius:var(--radius-md)}
+.visualHistoryList{margin-top:var(--space-lg)}
+.resultTop{flex-wrap:wrap}
+.status[role=status]{line-height:var(--lh-body-ar)}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+#visualStudio summary,#visualResult summary{cursor:pointer;padding:var(--space-2xs) 0}
+
+/* SHAGHIL-styled file upload control — the native <input type=file> stays in the DOM, keeps
+   its id/onchange/accept/multiple exactly as before, and is only visually hidden (not display:none,
+   so it stays keyboard-focusable and screen-reader visible); a <label for="same-id"> gives the
+   native "open file picker" behavior a SHAGHIL-styled trigger with no JS required for the click path.
+   A small delegated 'change' listener (see index.html's script) only updates the name display. */
+.fileUpload{display:flex;align-items:center;gap:var(--space-sm);flex-wrap:wrap}
+.fileUploadInput{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.fileUploadLabel{display:inline-flex;align-items:center;gap:var(--space-2xs);height:var(--button-height);padding:0 var(--space-sm);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface-elevated);color:var(--text-primary);font-size:var(--fs-button);font-weight:var(--fw-button);cursor:pointer;white-space:nowrap;transition:border-color var(--transition-fast) var(--easing)}
+.fileUploadLabel:hover{border-color:var(--border-strong)}
+.fileUploadLabel svg{width:16px;height:16px;flex-shrink:0}
+.fileUploadInput:focus-visible+.fileUploadLabel{outline:2px solid var(--focus);outline-offset:3px}
+.fileUploadName{color:var(--text-secondary);font-size:var(--fs-caption)}
+.fileUploadName[data-has-file]{color:var(--signal-primary)}
+
+/* SHAGHIL-styled color field — the native <input type=color> keeps its id/value/behavior exactly
+   as before; only its container and an adjacent hex readout are styled. */
+.colorField{display:inline-flex;align-items:center;gap:var(--space-sm);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface-subtle);padding:var(--space-2xs) var(--space-sm)}
+.colorField input[type=color]{height:44px;width:44px;padding:3px;border:1px solid var(--border);border-radius:var(--radius-sm);background:none}
+.colorFieldValue{font-size:var(--fs-caption);color:var(--text-secondary);direction:ltr}
+
+@media(max-width:700px){
+  .top{gap:var(--space-xs);flex-wrap:wrap;padding:var(--space-xs) var(--space-md)}
+  .top .btn{font-size:var(--fs-caption);padding:0 var(--space-xs)}
+  .logo svg{height:20px}
+  .navToggle{display:inline-flex}
+  /* Phase 3: the cramped horizontally-scrolling nav strip (every destination squeezed into one
+     unlabeled scrollable row, easy to trigger by accident while scrolling the page itself) is
+     replaced by a proper off-canvas drawer — same five destinations, same onclick handlers,
+     opened by the hamburger button in .brand and dismissed by choosing a destination, tapping
+     the scrim, or Escape. It sits on the RTL leading (right) edge, reachable with one thumb. */
+  .nav{position:fixed;top:0;right:0;height:100dvh;width:min(78vw,300px);max-width:300px;
+    background:var(--surface);border-inline-start:1px solid var(--border);
+    flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:flex-start;
+    gap:var(--space-2xs);padding:calc(var(--space-lg) + env(safe-area-inset-top,0px)) var(--space-md) var(--space-md);
+    transform:translateX(100%);transition:transform var(--transition-base) var(--easing);
+    z-index:30;overflow-y:auto;box-shadow:var(--elevation-overlay)}
+  .nav.open{transform:translateX(0)}
+  .nav .btn{width:100%;text-align:right;font-size:var(--fs-button);padding:0 var(--space-sm)}
+  .card{padding:var(--space-md)}
+  .visualPreview{max-height:60vh}
+  .assetThumb{width:70px;height:70px}
+  .welcomeLogo svg{height:64px}
+}
+
+/* Welcome is the product's splash/entry screen, not a data-entry card, so it takes the page's
+   own background (with the stacked logo sitting on it, per the founder's brief) instead of the
+   shared off-white content-surface background every other screen uses. Text/actions inside it
+   switch to --logo-color (the one color already guaranteed to contrast with --bg-primary in
+   both themes) instead of the --text-* tokens, which are tuned for the off-white surfaces. */
+#welcome{background:var(--bg-primary);border-color:transparent}
+#welcome h1,#welcome>.status{color:var(--logo-color)}
+#welcome>p{color:var(--logo-color);opacity:.8}
+.welcomeLogo{display:flex;justify-content:center;margin-bottom:var(--space-md);color:var(--logo-color)}
+.welcomeLogo svg{height:96px;width:auto;display:block}
+
+/* .hidden is the single source of truth for visibility everywhere it's used (toggled only via
+   classList), so it must win over every other class on the same element that also sets display.
+   Equal-specificity same-property rules are decided by source order in this stylesheet, so this
+   override must come after every class it needs to beat. Two of these overrides already existed
+   before Phase 2; auditing the rest found two more real instances of the same bug (the
+   unsaved-product preview box and the generation spinners stayed visible at rest whenever
+   combined with .hidden) — this is the complete, general fix for that bug class. */
+.actions.hidden,.form.hidden,.grid.hidden,.assetRow.hidden,.spin.hidden{display:none}
+.ideaCard{min-width:0}
+.ideaCard p{overflow-wrap:anywhere}
+/* Expanded تفاصيل used to be squeezed into the card's own narrow grid column with a fixed
+   300px internal scrollbox. A day's full detail now reads as normal, rendered Arabic prose
+   (see md() reuse in renderCards()), and the card it belongs to spans the full row width while
+   open, using the page's own scroll instead of a cramped nested one — collapsed cards keep the
+   existing seven-day grid overview exactly as before. */
+.ideaCard:has(details[open]){grid-column:1/-1}
+/* The campaign overview card is always shown in full (never collapsed, unlike a day's تفاصيل),
+   so it always needs the full row width, not just conditionally while a details panel is open. */
+.campaignOverview{grid-column:1/-1}
+.ideaDetail{overflow-wrap:anywhere}
+
+/* Visual Studio form rhythm — same fields/grouping, more breathing room between label and
+   control and between sections, using only the existing locked spacing scale. */
+#visualStudio .form{gap:var(--space-md)}
+#visualStudio label{margin-bottom:var(--space-xs)}
+#visualStudio .brandSection{margin-top:var(--space-xl);padding-top:var(--space-lg)}
+
+/* Engine input screens share the same Context -> task input -> primary action grammar;
+   give the form the same breathing room as Visual Studio for a consistent screen family. */
+#engine>p{margin-bottom:var(--space-md)}
+#engine .form{gap:var(--space-md)}
+#engine label{margin-bottom:var(--space-xs)}
+
+/* History empty-state density — when a dynamic list has nothing in it, its own top margin
+   should not still hold open a gap above the section that follows. */
+#visualHistoryList:empty,#campaignPacks:empty{margin-top:0}

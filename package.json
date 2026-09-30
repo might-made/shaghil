@@ -1,6 +1,6 @@
 {
-  "name": "shaghil-v0.3-vercel",
-  "version": "0.3.0",
+  "name": "shaghil",
+  "version": "0.9.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -11,5 +11,9 @@
   },
   "scripts": {
     "qa": "node scripts/qa.mjs"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.2.4",
+    "jsdom": "^26.1.0"
   }
 }
