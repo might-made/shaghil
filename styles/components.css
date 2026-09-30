@@ -8,12 +8,18 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-primary);font-size:var(--fs-body);line-height:var(--lh-body-ar)}
 .wrap{max-width:1080px;margin:auto;padding:var(--space-md)}
-.top{position:sticky;top:var(--space-xs);z-index:5;display:flex;justify-content:space-between;align-items:center;background:var(--surface-elevated);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-sm) var(--space-md)}
+.top{position:sticky;top:var(--space-xs);z-index:5;display:flex;justify-content:space-between;align-items:center;background:var(--bg-primary);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-sm) var(--space-md)}
+/* Focus rings inside .top sit on --bg-primary (the page/nav backdrop, charcoal in A / champagne
+   in C), not a content surface, so they need their own theme-aware ring color — see --nav-focus
+   in foundations.css. */
+.top :focus-visible{outline-color:var(--nav-focus)}
 
 .brand{display:flex;align-items:center;gap:var(--space-sm)}
 .logo{display:flex;align-items:center;color:var(--logo-color)}
-.logo svg{height:28px;width:auto;display:block}
-.brand small{display:block;color:var(--text-muted);font-size:var(--fs-metadata);line-height:var(--lh-metadata-ar)}
+.logo svg{height:26px;width:auto;display:block}
+.themeToggle{display:inline-flex;align-items:center;justify-content:center;width:var(--button-height);padding:0;color:var(--logo-color)}
+.themeToggle svg{width:18px;height:18px}
+.brand small{display:block;color:var(--logo-color);opacity:.65;font-size:var(--fs-metadata);line-height:var(--lh-metadata-ar)}
 .nav{display:flex;gap:var(--space-xs);flex-wrap:wrap;justify-content:flex-end}
 
 button,input,textarea,select{font:inherit}
@@ -56,7 +62,7 @@ textarea{min-height:100px}
 .refine{display:flex;gap:var(--space-xs);flex-wrap:wrap;margin:var(--space-sm) 0}
 .historyItem{background:var(--surface-subtle);border:1px solid var(--border);border-radius:var(--radius-md);padding:var(--space-sm);margin:var(--space-xs) 0;cursor:pointer}
 .historyItem small{color:var(--text-secondary)}
-.toast{position:fixed;bottom:var(--space-md);left:50%;transform:translateX(-50%);background:var(--text-primary);color:var(--bg-primary);padding:var(--space-xs) var(--space-sm);border-radius:var(--radius-md);font-weight:var(--fw-button);z-index:20;box-shadow:var(--elevation-overlay)}
+.toast{position:fixed;bottom:var(--space-md);left:50%;transform:translateX(-50%);background:var(--toast-bg);color:var(--toast-text);padding:var(--space-xs) var(--space-sm);border-radius:var(--radius-md);font-weight:var(--fw-button);z-index:20;box-shadow:var(--elevation-overlay)}
 .skeleton{height:12px;border-radius:var(--radius-sm);background:linear-gradient(90deg,var(--surface-subtle),var(--border-strong),var(--surface-subtle));background-size:200% 100%;animation:sh 1.2s infinite;margin:var(--space-xs) 0}
 @keyframes sh{to{background-position:-200% 0}}
 .actions{display:flex;gap:var(--space-xs);flex-wrap:wrap;margin-top:var(--space-sm)}
@@ -106,12 +112,13 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 /* SHAGHIL-styled color field — the native <input type=color> keeps its id/value/behavior exactly
    as before; only its container and an adjacent hex readout are styled. */
 .colorField{display:inline-flex;align-items:center;gap:var(--space-sm);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface-subtle);padding:var(--space-2xs) var(--space-sm)}
-.colorField input[type=color]{height:36px;width:44px;padding:3px;border:1px solid var(--border);border-radius:var(--radius-sm);background:none}
+.colorField input[type=color]{height:44px;width:44px;padding:3px;border:1px solid var(--border);border-radius:var(--radius-sm);background:none}
 .colorFieldValue{font-size:var(--fs-caption);color:var(--text-secondary);direction:ltr}
 
 @media(max-width:700px){
   .top{gap:var(--space-xs);flex-wrap:wrap;padding:var(--space-xs) var(--space-md)}
   .top .btn{font-size:var(--fs-caption);padding:0 var(--space-xs)}
+  .logo svg{height:20px}
   /* Keep the wordmark on its own row and give the five nav destinations a single, lightweight
      horizontally-scrolling strip instead of wrapping into extra rows — same buttons, same
      destinations, no new navigation architecture, substantially shorter header. */
@@ -121,7 +128,19 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
   .card{padding:var(--space-md)}
   .visualPreview{max-height:60vh}
   .assetThumb{width:70px;height:70px}
+  .welcomeLogo svg{height:64px}
 }
+
+/* Welcome is the product's splash/entry screen, not a data-entry card, so it takes the page's
+   own background (with the stacked logo sitting on it, per the founder's brief) instead of the
+   shared off-white content-surface background every other screen uses. Text/actions inside it
+   switch to --logo-color (the one color already guaranteed to contrast with --bg-primary in
+   both themes) instead of the --text-* tokens, which are tuned for the off-white surfaces. */
+#welcome{background:var(--bg-primary);border-color:transparent}
+#welcome h1,#welcome>.status{color:var(--logo-color)}
+#welcome>p{color:var(--logo-color);opacity:.8}
+.welcomeLogo{display:flex;justify-content:center;margin-bottom:var(--space-md);color:var(--logo-color)}
+.welcomeLogo svg{height:96px;width:auto;display:block}
 
 /* .hidden is the single source of truth for visibility everywhere it's used (toggled only via
    classList), so it must win over every other class on the same element that also sets display.

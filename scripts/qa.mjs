@@ -74,3 +74,5 @@ await import('./qa-campaign-display.mjs');
 
 // Orchestrates its own three child processes (three separate simulated browser origins), like qa-v08-workspace-transfer.mjs.
 execFileSync(process.execPath,['scripts/qa-preview-persistence.mjs'],{stdio:'inherit'});
+
+await import('./qa-v11-theme-brand.mjs');

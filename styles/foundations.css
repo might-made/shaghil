@@ -1,12 +1,19 @@
 /* SHAGHIL Runtime Foundations
-   Phase 1 — Foundation Integration. Sourced from the locked systems:
-   - Color:      shaghil-brand-final /brand-final/color/final/shaghil-color-tokens.json      @ 4ed4cae
+   Phase 1 — Foundation Integration (typography, spacing, radius, elevation, component
+   dimensions below are unchanged from the locked systems):
    - Typography: shaghil-brand-final /brand-final/typography/final/shaghil-typography-tokens.json @ 4ed4cae
    - UI tokens:  shaghil-design-system /brand-final/design-system/foundation/shaghil-ui-tokens.json @ 6df58d2
-   Values below are copied verbatim from those locked sources — never invented or adjusted here.
-   Dark is the default (matching the product's existing default appearance); light applies only
-   under prefers-color-scheme: light, so no visual behavior changes for any user unless their
-   system is explicitly set to light. */
+
+   Phase 2 — SHGHIL V3 brand implementation. Color tokens below now carry the founder-approved
+   V3 palette instead of the original "Graphite Pulse" colors, selectable at runtime via
+   `<html data-theme="A|C">` (set synchronously in index.html's <head> from localStorage, before
+   first paint, so there is no flash of the wrong theme):
+     A — Champagne on Charcoal: #1B1D1F page/nav background, #D7BC91 champagne logo/accent.
+     C — Charcoal on Champagne: #D7BC91 page/nav background, #1B1D1F charcoal logo/accent.
+   In both themes every content surface (cards, forms, results) stays a shared off-white,
+   #F6F3EA, with dark charcoal text — only the page/nav backdrop and the logo/CTA accent swap.
+   Token *names* are unchanged from Phase 1, so every existing component rule below re-themes
+   automatically; no component selector needed to change for the theme system itself. */
 
 /* ---- Typography: IBM Plex Sans Arabic (arabic-script glyphs only) + IBM Plex Sans (basic-latin
    glyphs only), so mixed Arabic/English text resolves each character to its correct locked
@@ -27,15 +34,39 @@
   --font-primary: 'IBM Plex Sans Arabic', 'IBM Plex Sans', Tahoma, Arial, sans-serif;
   --media-backing: #FFFFFF; /* neutral plate behind user-uploaded product imagery; not a themed surface */
 
-  /* Graphite Pulse — dark (default) */
-  --bg-deepest: #07080A; --bg-primary: #0A0C0D; --surface: #131619; --surface-subtle: #171B1F;
-  --surface-elevated: #1B1F23; --border: #262B2F; --border-strong: #5A6169;
-  --text-primary: #F5F7F7; --text-secondary: #A6AFB4; --text-muted: #838D92;
-  --signal-primary: #24BC99; --signal-hover: #35DEB7; --signal-pressed: #1A9377; --signal-subtle-bg: #123029;
-  --cta-bg: #24BC99; --cta-text: #071410; --cta-hover-bg: #35DEB7; --cta-pressed-bg: #1A9377;
-  --focus: #24BC99; --disabled-bg: #202427; --disabled-text: #5C6469;
-  --success: #34C25E; --warning: #FFC24B; --error: #FF6B6B; --info: #5AC8FA;
-  --logo-color: #F5F7F7; /* white on dark, per the locked logo color rule */
+  /* ---- V3 palette — theme-invariant tokens. Content surfaces (cards, inputs, results) are the
+     same warm off-white in both themes, so text and interactive-surface colors below are chosen
+     for contrast against THAT off-white family, not against the page background (which is the
+     one thing that actually swaps per theme, see [data-theme] below). */
+  --surface: #F6F3EA; --surface-subtle: #EFEAD8; --surface-elevated: #FFFFFF;
+  --border: #E2DDCB; --border-strong: #C9C0A4;
+  --text-primary: #1B1D1F; --text-secondary: #5B584F; --text-muted: #737055;
+  --disabled-bg: #E7E2D4; --disabled-text: #A39E8E;
+  /* A deep, desaturated gold used for interactive accents (engine hover, "file chosen" state) —
+     the raw brand champagne (#D7BC91) fails contrast on the off-white content surfaces above
+     (~1.6:1), so interactive accents use this darker relative instead; champagne itself is
+     reserved for the logo, which always sits on the page background, not a content surface. */
+  --signal-primary: #8A6D3F; --signal-hover: #A3854F; --signal-pressed: #6E5630; --signal-subtle-bg: #F1E9D8;
+  --focus: #1B1D1F; /* charcoal — strong contrast against the off-white surfaces nearly every focusable control sits on */
+  --success: #1A7A40; --warning: #9A6300; --error: #C4291B; --info: #1D6FB8;
+  --toast-bg: #1B1D1F; --toast-text: #F6F3EA; /* toast is a fixed dark chip regardless of theme, not tied to the page background */
+  /* Reserved per brand direction for restrained functional states only — intentionally not
+     wired into a component here: at full opacity it fails contrast against both the off-white
+     content surfaces and the champagne page background (Theme C), so forcing it in would trade
+     brand-fidelity for an accessibility bug. Kept available for a future badge/indicator that
+     pairs it with a dark foreground on a small lime-tinted chip. */
+  --lime: #E7F95B;
+
+  /* ---- V3 palette — theme-dependent tokens. Defaulted here to Theme A (the default for new
+     users); [data-theme="A"]/[data-theme="C"] below make the pair explicit and override C's. */
+  --bg-deepest: #121315; --bg-primary: #1B1D1F;
+  --cta-bg: #D7BC91; --cta-text: #1B1D1F; --cta-hover-bg: #E3CDA8; --cta-pressed-bg: #C2A87A;
+  --logo-color: #D7BC91;
+  --nav-focus: #F6F3EA; /* focus ring color specifically for controls on the .top bar, which sits on --bg-primary, not a content surface */
+
+  --elevation-subtle: 0 2px 8px rgba(27, 29, 31, 0.10);
+  --elevation-overlay: 0 12px 32px rgba(27, 29, 31, 0.22);
+  --scrim: rgba(27, 29, 31, 0.40);
 
   /* Type scale (identical Arabic/Latin size+weight per the tested optical-parity rule; only
      line-height differs by script) */
@@ -61,28 +92,24 @@
   /* Radius scale */
   --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-full: 999px;
 
-  /* Elevation (used sparingly; see components.css) */
-  --elevation-subtle: 0 2px 8px rgba(0, 0, 0, 0.32);
-  --elevation-overlay: 0 12px 32px rgba(0, 0, 0, 0.48);
-  --scrim: rgba(7, 8, 10, 0.64);
-
-  /* Component dimensions */
-  --button-height: 40px; --button-height-sm: 32px; --input-height: 40px;
+  /* Component dimensions — 44px meets the minimum touch-target size on every interactive
+     control that consumes these tokens (buttons, inputs, selects, the file-upload trigger). */
+  --button-height: 44px; --button-height-sm: 36px; --input-height: 44px;
   --transition-fast: 120ms; --transition-base: 200ms; --easing: cubic-bezier(0.2, 0, 0, 1);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-deepest: #EEF1F1; --bg-primary: #FFFFFF; --surface: #F5F7F7; --surface-subtle: #EDEFEF;
-    --surface-elevated: #FFFFFF; --border: #DEE2E3; --border-strong: #828B8E;
-    --text-primary: #101214; --text-secondary: #565F64; --text-muted: #636B6F;
-    --signal-primary: #127D64; --signal-hover: #0F6B56; --signal-pressed: #0B5645; --signal-subtle-bg: #E7F8F4;
-    --cta-bg: #127D64; --cta-text: #FFFFFF; --cta-hover-bg: #0F6B56; --cta-pressed-bg: #0B5645;
-    --focus: #127D64; --disabled-bg: #E5E8E8; --disabled-text: #9AA3A5;
-    --success: #1A7A40; --warning: #9A6300; --error: #C4291B; --info: #1D6FB8;
-    --logo-color: #101214; /* black on light, per the locked logo color rule */
-    --elevation-subtle: 0 2px 8px rgba(16, 18, 20, 0.08);
-    --elevation-overlay: 0 12px 32px rgba(16, 18, 20, 0.16);
-    --scrim: rgba(16, 18, 20, 0.32);
-  }
+/* A — Champagne on Charcoal (initial default for new users; see index.html's early theme script) */
+:root, [data-theme="A"] {
+  --bg-deepest: #121315; --bg-primary: #1B1D1F;
+  --cta-bg: #D7BC91; --cta-text: #1B1D1F; --cta-hover-bg: #E3CDA8; --cta-pressed-bg: #C2A87A;
+  --logo-color: #D7BC91;
+  --nav-focus: #F6F3EA;
+}
+
+/* C — Charcoal on Champagne */
+[data-theme="C"] {
+  --bg-deepest: #C2A87A; --bg-primary: #D7BC91;
+  --cta-bg: #1B1D1F; --cta-text: #F6F3EA; --cta-hover-bg: #2A2D30; --cta-pressed-bg: #101214;
+  --logo-color: #1B1D1F;
+  --nav-focus: #1B1D1F;
 }
