@@ -76,3 +76,5 @@ await import('./qa-campaign-display.mjs');
 execFileSync(process.execPath,['scripts/qa-preview-persistence.mjs'],{stdio:'inherit'});
 
 await import('./qa-v11-theme-brand.mjs');
+
+await import('./qa-v12-mobile-nav.mjs');

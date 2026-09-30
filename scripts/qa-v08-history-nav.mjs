@@ -77,8 +77,10 @@ assert.ok(historyButton, 'السجل must be visible on a fresh Home');
 // jsdom's runScripts:'outside-only' (needed so this file, not jsdom, controls script
 // execution) does not wire up inline onclick="..." attributes to real click() events, so
 // this evaluates the button's own onclick attribute text -- exactly what a real click fires.
+// Phase 3 additionally closes the mobile nav drawer on every destination click (a no-op on
+// desktop / when the drawer is already closed, per closeNav()'s own guard).
 const onclick = historyButton.getAttribute('onclick');
-assert.equal(onclick, 'historyScreen()', 'the button must be wired to historyScreen()');
+assert.equal(onclick, 'historyScreen();closeNav()', 'the button must be wired to historyScreen(), and Phase 3 additionally closes the mobile nav drawer on click');
 win.historyScreen();
 assert.equal(win.document.getElementById('history').classList.contains('hidden'), false, 'clicking the button must open the History screen');
 assert.equal(win.document.getElementById('home').classList.contains('hidden'), true);

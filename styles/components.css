@@ -21,6 +21,10 @@ body{margin:0;background:var(--bg-primary);color:var(--text-primary);font-family
 .themeToggle svg{width:18px;height:18px}
 .brand small{display:block;color:var(--logo-color);opacity:.65;font-size:var(--fs-metadata);line-height:var(--lh-metadata-ar)}
 .nav{display:flex;gap:var(--space-xs);flex-wrap:wrap;justify-content:flex-end}
+/* Mobile-only drawer controls. Hidden on desktop (>700px), where .nav stays the plain inline
+   row above; see the max-width:700px block below for the drawer itself. */
+.navToggle{display:none}
+.navScrim{position:fixed;inset:0;background:var(--scrim);z-index:25}
 
 button,input,textarea,select{font:inherit}
 .btn{height:var(--button-height);border:1px solid var(--border);background:var(--surface-elevated);color:var(--text-primary);border-radius:var(--radius-md);padding:0 var(--space-sm);font-weight:var(--fw-button);font-size:var(--fs-button);cursor:pointer;transition:background var(--transition-fast) var(--easing),border-color var(--transition-fast) var(--easing)}
@@ -119,12 +123,20 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
   .top{gap:var(--space-xs);flex-wrap:wrap;padding:var(--space-xs) var(--space-md)}
   .top .btn{font-size:var(--fs-caption);padding:0 var(--space-xs)}
   .logo svg{height:20px}
-  /* Keep the wordmark on its own row and give the five nav destinations a single, lightweight
-     horizontally-scrolling strip instead of wrapping into extra rows — same buttons, same
-     destinations, no new navigation architecture, substantially shorter header. */
-  .nav{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;width:100%;max-width:100%}
-  .nav::-webkit-scrollbar{display:none}
-  .nav .btn{flex-shrink:0}
+  .navToggle{display:inline-flex}
+  /* Phase 3: the cramped horizontally-scrolling nav strip (every destination squeezed into one
+     unlabeled scrollable row, easy to trigger by accident while scrolling the page itself) is
+     replaced by a proper off-canvas drawer — same five destinations, same onclick handlers,
+     opened by the hamburger button in .brand and dismissed by choosing a destination, tapping
+     the scrim, or Escape. It sits on the RTL leading (right) edge, reachable with one thumb. */
+  .nav{position:fixed;top:0;right:0;height:100dvh;width:min(78vw,300px);max-width:300px;
+    background:var(--surface);border-inline-start:1px solid var(--border);
+    flex-direction:column;flex-wrap:nowrap;align-items:stretch;justify-content:flex-start;
+    gap:var(--space-2xs);padding:calc(var(--space-lg) + env(safe-area-inset-top,0px)) var(--space-md) var(--space-md);
+    transform:translateX(100%);transition:transform var(--transition-base) var(--easing);
+    z-index:30;overflow-y:auto;box-shadow:var(--elevation-overlay)}
+  .nav.open{transform:translateX(0)}
+  .nav .btn{width:100%;text-align:right;font-size:var(--fs-button);padding:0 var(--space-sm)}
   .card{padding:var(--space-md)}
   .visualPreview{max-height:60vh}
   .assetThumb{width:70px;height:70px}
