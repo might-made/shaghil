@@ -78,3 +78,5 @@ execFileSync(process.execPath,['scripts/qa-preview-persistence.mjs'],{stdio:'inh
 await import('./qa-v11-theme-brand.mjs');
 
 await import('./qa-v12-mobile-nav.mjs');
+
+await import('./qa-v13-app-icon.mjs');

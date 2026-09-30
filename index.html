@@ -4,10 +4,16 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>شغّل — V0.9</title>
 <script id="themeInit">(function(){try{var t=localStorage.getItem('shaghilTheme');document.documentElement.dataset.theme=(t==='A'||t==='C')?t:'A'}catch(e){document.documentElement.dataset.theme='A'}})();</script>
-<link rel="icon" href="/brand/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="/brand/favicon-32.png" sizes="32x32" type="image/png">
-<link rel="icon" href="/brand/favicon-16.png" sizes="16x16" type="image/png">
-<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<!-- ?v=b1 (Option B, v1) is a deliberate cache-buster: these are the same filenames as before,
+     and browsers/OSes cache favicons very aggressively (some effectively indefinitely,
+     independent of any Cache-Control header), so simply overwriting the file content is not
+     reliable for anyone who already visited on an older icon. The query string forces every
+     browser to treat this as a new resource. It cannot reach an iOS "Add to Home Screen" icon
+     already installed before this change — see the release notes for that limitation. -->
+<link rel="icon" href="/brand/favicon.svg?v=b1" type="image/svg+xml">
+<link rel="icon" href="/brand/favicon-32.png?v=b1" sizes="32x32" type="image/png">
+<link rel="icon" href="/brand/favicon-16.png?v=b1" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="/brand/apple-touch-icon.png?v=b1">
 <link rel="stylesheet" href="/styles/foundations.css">
 <link rel="stylesheet" href="/styles/components.css">
 </head>
