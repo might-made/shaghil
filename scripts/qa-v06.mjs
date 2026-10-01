@@ -14,22 +14,24 @@ const base={brain,brand:{primary:'#aa7733',secondary:'#111111',accent:'',style:'
 const res=()=>({status(n){this.code=n;return this},json(body){this.body=body;return this},setHeader(){}});
 const oldKey=process.env.OPENAI_API_KEY,generate=OpenAI.Images.prototype.generate,edit=OpenAI.Images.prototype.edit;
 const calls=[];process.env.OPENAI_API_KEY='qa-image-placeholder';
+process.env.PILOT_ACCESS_KEY ||= 'qa-pilot-key';
+const AUTH_HEADERS = { 'x-pilot-key': process.env.PILOT_ACCESS_KEY };
 OpenAI.Images.prototype.generate=async function(p){calls.push({kind:'generate',p,client:this._client});return {data:[{b64_json:'/9j/2Q=='}]}};
 OpenAI.Images.prototype.edit=async function(p){calls.push({kind:'edit',p,client:this._client});return {data:[{b64_json:'/9j/2Q=='}]}};
 try{
  for(const format of Object.keys(FORMATS))for(const mode of ['Product Hero','Lifestyle','Premium','Minimal','Campaign'])for(const textMode of ['none','simple','full']){
   const r=res(),body=structuredClone(base);body.settings={...body.settings,format,mode,textMode};body.previousDirection=2;
-  await visualHandler({method:'POST',body},r);assert.equal(r.code,200);assert.notEqual(r.body.direction,2);
+  await visualHandler({method:'POST',headers:AUTH_HEADERS,body},r);assert.equal(r.code,200);assert.notEqual(r.body.direction,2);
   const call=calls.at(-1);assert.equal(call.p.n,1);assert.equal(call.p.size,FORMATS[format]);assert.equal(call.p.quality,'medium');assert.equal(call.client.maxRetries,0);assert.equal(call.p.output_format,'jpeg');assert.ok(call.p.prompt.includes(brain.product));assert.ok(call.p.prompt.includes(body.brand.style));assert.ok(call.p.prompt.includes(body.task.selected));assert.ok(!call.p.prompt.includes(png));
  }
- for(const engine of ['offer','campaign']){const r=res();await visualHandler({method:'POST',body:{...base,task:{...base.task,engine}}},r);assert.equal(r.code,200)}
- const r=res();await visualHandler({method:'POST',body:{...base,brand:{...base.brand,references:[image]}}},r);assert.equal(r.code,200);assert.equal(calls.at(-1).kind,'edit');assert.equal(calls.at(-1).p.image.length,1);
+ for(const engine of ['offer','campaign']){const r=res();await visualHandler({method:'POST',headers:AUTH_HEADERS,body:{...base,task:{...base.task,engine}}},r);assert.equal(r.code,200)}
+ const r=res();await visualHandler({method:'POST',headers:AUTH_HEADERS,body:{...base,brand:{...base.brand,references:[image]}}},r);assert.equal(r.code,200);assert.equal(calls.at(-1).kind,'edit');assert.equal(calls.at(-1).p.image.length,1);
  for(const mutate of [b=>b.task.engine='whatsapp',b=>b.task.selected='not in context',b=>b.settings.format='16:10',b=>b.settings.mode='evil',b=>b.settings.textMode='html',b=>b.brand.primary='invalid',b=>b.brain={},b=>b.brand.references=[image,image,image],b=>b.brand.logo={type:'image/svg+xml',base64:png},b=>b.brand.references=[{type:'image/png',base64:'AAAA'}],b=>b.previousDirection=99,b=>{b.settings.textMode='full';b.settings.headline=''}]){
-  const body=structuredClone(base);mutate(body);const r=res(),before=calls.length;await visualHandler({method:'POST',body},r);assert.equal(r.code,400);assert.equal(calls.length,before);
+  const body=structuredClone(base);mutate(body);const r=res(),before=calls.length;await visualHandler({method:'POST',headers:AUTH_HEADERS,body},r);assert.equal(r.code,400);assert.equal(calls.length,before);
  }
  const method=res();await visualHandler({method:'GET'},method);assert.equal(method.code,405);
- delete process.env.OPENAI_API_KEY;const missing=res();await visualHandler({method:'POST',body:base},missing);assert.equal(missing.code,503);
- process.env.OPENAI_API_KEY='qa-image-placeholder';let failures=0;OpenAI.Images.prototype.generate=async()=>{failures++;throw new Error('private upstream details')};const failed=res();await visualHandler({method:'POST',body:base},failed);assert.equal(failed.code,502);assert.equal(failures,1);assert.ok(!JSON.stringify(failed.body).includes('private'));
+ delete process.env.OPENAI_API_KEY;const missing=res();await visualHandler({method:'POST',headers:AUTH_HEADERS,body:base},missing);assert.equal(missing.code,503);
+ process.env.OPENAI_API_KEY='qa-image-placeholder';let failures=0;OpenAI.Images.prototype.generate=async()=>{failures++;throw new Error('private upstream details')};const failed=res();await visualHandler({method:'POST',headers:AUTH_HEADERS,body:base},failed);assert.equal(failed.code,502);assert.equal(failures,1);assert.ok(!JSON.stringify(failed.body).includes('private'));
  const prompt=makePrompt(normalizeVisual(base),0);for(const policy of ['Never invent','No text','no exact','not proof'])assert.ok(prompt.toLowerCase().includes(policy.toLowerCase()));
 }finally{OpenAI.Images.prototype.generate=generate;OpenAI.Images.prototype.edit=edit;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey}
 console.log('PASS: 45 format/mode/text combinations; source engines, references, logo exclusion, server validation, one image, no retries, error handling');

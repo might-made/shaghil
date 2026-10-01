@@ -1,4 +1,6 @@
 import OpenAI from "openai";
+import { checkPilotAuth } from "../lib/pilot-auth.mjs";
+import { checkRateLimit } from "../lib/rate-limit.mjs";
 
 const BASE = `You are SHAGHIL, an execution engine for Saudi small businesses.
 Use the supplied Business Brain as authoritative business context.
@@ -70,9 +72,24 @@ export function normalizeRequest(body) {
 }
 function cleanPrevious(value) { return typeof value === 'string' ? value.trim().slice(0, 60000) : ''; }
 
+// The largest legitimate field is `previous` (refinement context), truncated to 60,000 chars by
+// cleanPrevious below; this ceiling leaves headroom for that plus every other field and JSON
+// overhead, while still rejecting a payload orders of magnitude larger than any real request
+// before it is ever normalized or sent anywhere.
+const MAX_BODY_BYTES = 80_000;
+
 export default async function handler(req, res) {
   if (req.method !== "POST") { res.setHeader("Allow", "POST"); return res.status(405).json({ error: "Method not allowed" }); }
   res.setHeader("Cache-Control", "no-store");
+  const auth = checkPilotAuth(req);
+  if (!auth.ok) return res.status(auth.status).json({ error: auth.error });
+  const limit = checkRateLimit(req, {
+    bucketName: "generate",
+    perMinute: Number(process.env.RATE_LIMIT_GENERATE_PER_MIN) || 10,
+    perDay: Number(process.env.RATE_LIMIT_GENERATE_PER_DAY) || 150
+  });
+  if (!limit.allowed) { res.setHeader("Retry-After", String(limit.retryAfterSeconds)); return res.status(429).json({ error: "عدد كبير من الطلبات، حاول بعد قليل" }); }
+  if (Buffer.byteLength(JSON.stringify(req.body ?? {})) > MAX_BODY_BYTES) return res.status(413).json({ error: "حجم الطلب كبير جدًا" });
   let task;
   try { task = normalizeRequest(req.body); }
   catch (err) { return res.status(400).json({ error: err.message }); }

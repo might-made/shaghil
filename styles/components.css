@@ -190,3 +190,14 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 /* History empty-state density — when a dynamic list has nothing in it, its own top margin
    should not still hold open a gap above the section that follows. */
 #visualHistoryList:empty,#campaignPacks:empty{margin-top:0}
+
+/* Pilot access gate — a full-viewport overlay shown until a pilot access code is entered.
+   This is a UX convenience only; the real enforcement is server-side (see lib/pilot-auth.mjs),
+   so this overlay being bypassed in devtools grants no actual access to the AI endpoints. */
+.pilotGate{position:fixed;inset:0;z-index:50;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:var(--space-md)}
+/* .pilotGate sets its own display:flex, same specificity as the global .hidden{display:none} —
+   this exact bug class (a same-specificity display rule beating .hidden by source order) is
+   already documented and fixed for other elements further up this file; .pilotGate needs the
+   same two-class override to actually hide when .hidden is toggled on. */
+.pilotGate.hidden{display:none}
+.pilotGateBox{max-width:360px;width:100%;margin:0}

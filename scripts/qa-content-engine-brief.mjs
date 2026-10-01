@@ -21,13 +21,15 @@ const res = () => ({ headers: {}, setHeader(k, v) { this.headers[k] = v }, statu
 // ---------------------------------------------------------------------------
 const originalKey = process.env.OPENAI_API_KEY;
 process.env.OPENAI_API_KEY = 'qa-placeholder';
+process.env.PILOT_ACCESS_KEY ||= 'qa-pilot-key';
+const AUTH_HEADERS = { 'x-pilot-key': process.env.PILOT_ACCESS_KEY };
 const calls = [];
 OpenAI.Responses.prototype.create = async function (payload) { calls.push(payload); return { output_text: '## نتيجة\nنص تجريبي' } };
 try {
   // Every optional field blank must still succeed — only "period" has a default/validation.
   assert.doesNotThrow(() => normalizeRequest({ brain, engine: 'content', inputs: {} }));
   const rBlank = res();
-  await handler({ method: 'POST', body: { brain, engine: 'content', inputs: {} } }, rBlank);
+  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'content', inputs: {} } }, rBlank);
   assert.equal(rBlank.code, 200, 'blank optional fields must never block generation');
 
   const fullInputs = {
@@ -42,7 +44,7 @@ try {
     contentInstructions: 'ركّز على نتائج ملموسة بدون أرقام أو وعود مضمونة.'
   };
   const rFull = res();
-  await handler({ method: 'POST', body: { brain, engine: 'content', inputs: fullInputs } }, rFull);
+  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'content', inputs: fullInputs } }, rFull);
   assert.equal(rFull.code, 200);
   const sentInput = calls.at(-1).input;
   for (const value of Object.values(fullInputs)) if (value) assert.ok(sentInput.includes(value), `expected "${value}" to reach the prompt`);
