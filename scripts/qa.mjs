@@ -93,3 +93,5 @@ await import('./qa-v12-mobile-nav.mjs');
 await import('./qa-v13-app-icon.mjs');
 
 await import('./qa-v14-security.mjs');
+
+await import('./qa-v15-pilot-gate.mjs');
