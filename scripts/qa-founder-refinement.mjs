@@ -23,6 +23,8 @@ const res = () => ({ headers: {}, setHeader(k, v) { this.headers[k] = v }, statu
 // ---------------------------------------------------------------------------
 const originalKey = process.env.OPENAI_API_KEY;
 process.env.OPENAI_API_KEY = 'qa-placeholder';
+process.env.PILOT_ACCESS_KEY ||= 'qa-pilot-key';
+const AUTH_HEADERS = { 'x-pilot-key': process.env.PILOT_ACCESS_KEY };
 const calls = [];
 OpenAI.Responses.prototype.create = async function (payload) { calls.push(payload); return { output_text: '## نتيجة\nنص تجريبي' } };
 try {
@@ -30,14 +32,14 @@ try {
   // must still succeed, and must not inject an empty/misleading BRAND section into the prompt.
   assert.doesNotThrow(() => normalizeRequest({ brain, engine: 'copy', inputs: {} }));
   const r1 = res();
-  await handler({ method: 'POST', body: { brain, engine: 'copy', inputs: { channel: 'SMS', instruction: '' } } }, r1);
+  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'copy', inputs: { channel: 'SMS', instruction: '' } } }, r1);
   assert.equal(r1.code, 200);
   assert.ok(!calls.at(-1).input.includes('BRAND VOICE'), 'no brand supplied must not fabricate a brand section');
   assert.deepEqual(Object.keys(r1.body).sort(), ['model', 'text'], 'the {text,model} response contract must stay unchanged');
 
   // A real Brand Brain style must reach the prompt input verbatim, for any business (not hard-coded).
   const r2 = res();
-  await handler({ method: 'POST', body: { brain, engine: 'copy', inputs: { channel: 'SMS', instruction: '' }, brand: { style: 'فاخر وهادئ، بدون مبالغة' } } }, r2);
+  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'copy', inputs: { channel: 'SMS', instruction: '' }, brand: { style: 'فاخر وهادئ، بدون مبالغة' } } }, r2);
   assert.equal(r2.code, 200);
   assert.ok(calls.at(-1).input.includes('فاخر وهادئ، بدون مبالغة'), 'a supplied Brand Brain style must reach the generation prompt');
   assert.ok(calls.at(-1).input.includes('BRAND VOICE / STYLE'));
@@ -46,13 +48,13 @@ try {
   // plumbing, not special-cased for any one test account.
   const otherBrain = { ...brain, name: 'بيت التمر', product: 'تمر سكري فاخر' };
   const r3 = res();
-  await handler({ method: 'POST', body: { brain: otherBrain, engine: 'offer', inputs: { constraint: '' }, brand: { style: 'دافئ وعائلي' } } }, r3);
+  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain: otherBrain, engine: 'offer', inputs: { constraint: '' }, brand: { style: 'دافئ وعائلي' } } }, r3);
   assert.equal(r3.code, 200);
   assert.ok(calls.at(-1).input.includes('بيت التمر') && calls.at(-1).input.includes('دافئ وعائلي'), 'brand grounding must work for any business, not a hard-coded one');
 
   // Whitespace-only/missing style must degrade to no brand section, never inventing content.
   const r4 = res();
-  await handler({ method: 'POST', body: { brain, engine: 'reel', inputs: {}, brand: { style: '   ' } } }, r4);
+  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'reel', inputs: {}, brand: { style: '   ' } } }, r4);
   assert.equal(r4.code, 200);
   assert.ok(!calls.at(-1).input.includes('BRAND VOICE'), 'a blank brand style must not be sent as a fabricated section');
 
@@ -60,7 +62,7 @@ try {
   // cause of the "generic output" finding), and this instruction is generic across all engines.
   for (const engine of ['content', 'copy', 'offer', 'whatsapp', 'campaign', 'reel']) {
     const r = res();
-    await handler({ method: 'POST', body: { brain, engine, inputs: {}, ...(engine === 'whatsapp' ? { inputs: { message: 'كم السعر؟' } } : {}), ...(engine === 'campaign' ? { inputs: { duration: '7 أيام' } } : {}) } }, r);
+    await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine, inputs: {}, ...(engine === 'whatsapp' ? { inputs: { message: 'كم السعر؟' } } : {}), ...(engine === 'campaign' ? { inputs: { duration: '7 أيام' } } : {}) } }, r);
     assert.equal(r.code, 200, engine);
     assert.ok(calls.at(-1).instructions.includes('Ground every output in the specific facts supplied'), engine);
   }
@@ -68,7 +70,7 @@ try {
   // FINDING 03 (server side) — the whatsapp engine instruction must ask for Arabic labels, never
   // the raw English identifiers, and the exact acknowledge-missing-detail guardrail is preserved.
   const rw = res();
-  await handler({ method: 'POST', body: { brain, engine: 'whatsapp', inputs: { message: 'كم السعر؟' } } }, rw);
+  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'whatsapp', inputs: { message: 'كم السعر؟' } } }, rw);
   assert.equal(rw.code, 200);
   const whatsappInstructions = calls.at(-1).instructions;
   assert.ok(whatsappInstructions.includes('الرد المقترح') && whatsappInstructions.includes('رد مختصر') && whatsappInstructions.includes('متابعة'));

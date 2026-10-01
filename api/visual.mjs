@@ -1,5 +1,7 @@
 import OpenAI, { toFile } from 'openai';
 import { randomInt } from 'node:crypto';
+import { checkPilotAuth } from '../lib/pilot-auth.mjs';
+import { checkRateLimit } from '../lib/rate-limit.mjs';
 
 // New landscape presets (16:9, 1.91:1) reuse the already-supported 1536x864 generation size;
 // composeVisual() fits (never crops) the raw generated image into the final DIMENSIONS canvas,
@@ -77,6 +79,11 @@ APPROVED TEXT FOR CONTEXT ONLY (DO NOT RENDER): ${JSON.stringify({headline:task.
 export default async function handler(req,res) {
   res.setHeader('Cache-Control','no-store');
   if(req.method!=='POST'){res.setHeader('Allow','POST');return res.status(405).json({error:'Method not allowed'})}
+  const auth=checkPilotAuth(req);
+  if(!auth.ok)return res.status(auth.status).json({error:auth.error});
+  // Stricter than /api/generate: image generation is the more expensive call per request.
+  const limit=checkRateLimit(req,{bucketName:'visual',perMinute:Number(process.env.RATE_LIMIT_VISUAL_PER_MIN)||5,perDay:Number(process.env.RATE_LIMIT_VISUAL_PER_DAY)||40});
+  if(!limit.allowed){res.setHeader('Retry-After',String(limit.retryAfterSeconds));return res.status(429).json({error:'عدد كبير من طلبات التصميم، حاول بعد قليل'})}
   let task;
   try{task=normalizeVisual(req.body)}catch(e){return res.status(400).json({error:e.message})}
   if(!process.env.OPENAI_API_KEY)return res.status(503).json({error:'توليد الصور غير مفعّل حاليًا'});

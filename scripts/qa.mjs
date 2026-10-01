@@ -1,5 +1,16 @@
 import fs from "fs";
 
+// Security hardening: rate limits on /api/generate and /api/visual are real, and tested
+// explicitly and precisely in qa-v14-security.mjs with their own tight values and a freshly
+// reset limiter. Every other QA file below fires many legitimate requests in quick succession
+// (from the same unidentified test "IP") to test application behavior, not the limiter itself —
+// give them headroom far above anything a single file could plausibly need, so the limiter
+// never incidentally throttles a functional-correctness test.
+process.env.RATE_LIMIT_GENERATE_PER_MIN ||= "1000";
+process.env.RATE_LIMIT_GENERATE_PER_DAY ||= "100000";
+process.env.RATE_LIMIT_VISUAL_PER_MIN ||= "1000";
+process.env.RATE_LIMIT_VISUAL_PER_DAY ||= "100000";
+
 const mustExist = [
   "index.html",
   "api/generate.mjs",
@@ -80,3 +91,5 @@ await import('./qa-v11-theme-brand.mjs');
 await import('./qa-v12-mobile-nav.mjs');
 
 await import('./qa-v13-app-icon.mjs');
+
+await import('./qa-v14-security.mjs');

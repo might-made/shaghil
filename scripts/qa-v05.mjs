@@ -12,11 +12,16 @@ const originalCreate = OpenAI.Responses.prototype.create;
 const originalKey = process.env.OPENAI_API_KEY;
 const calls=[];
 process.env.OPENAI_API_KEY='qa-placeholder';
+// Phase: security hardening — every real request to these handlers must now carry the pilot
+// access key (lib/pilot-auth.mjs rejects anything else before it ever reaches OpenAI). Set once
+// here so every handler() call below simulates an authorized pilot tester.
+process.env.PILOT_ACCESS_KEY ||= 'qa-pilot-key';
+const AUTH_HEADERS = { 'x-pilot-key': process.env.PILOT_ACCESS_KEY };
 OpenAI.Responses.prototype.create=async function(payload){calls.push(payload);return {output_text:'## نتيجة\nنص تجريبي'}};
 try {
   for (const [engine,inputs] of Object.entries(cases)) {
     const res=response();
-    await handler({method:'POST',body:{brain,engine,inputs:{...inputs,product:'IGNORED',objective:'IGNORED'}}},res);
+    await handler({method:'POST',headers:AUTH_HEADERS,body:{brain,engine,inputs:{...inputs,product:'IGNORED',objective:'IGNORED'}}},res);
     assert.equal(res.code,200,engine);
     assert.equal(res.headers['Cache-Control'],'no-store');
     const request=calls.at(-1);
@@ -33,7 +38,7 @@ try {
   }
   for(const engine of ['copy','offer','reel','content']) assert.doesNotThrow(()=>normalizeRequest({brain,engine,inputs:{}}));
   for(const type of ['shorter','stronger','saudi','premium']) {
-    const res=response();await handler({method:'POST',body:{brain,engine:'copy',inputs:cases.copy,refinement:type,previous:'السابق'}},res);
+    const res=response();await handler({method:'POST',headers:AUTH_HEADERS,body:{brain,engine:'copy',inputs:cases.copy,refinement:type,previous:'السابق'}},res);
     assert.equal(res.code,200);assert.ok(calls.at(-1).input.includes('السابق'));
   }
   for(const body of [
@@ -41,10 +46,10 @@ try {
     {brain,engine:'toString'}, {brain,engine:'copy',refinement:'toString'}, {brain:{},engine:'offer'},
     {brain,engine:'reel',inputs:{duration:'90 ثانية'}}, {brain,engine:'content',inputs:{period:'99 يوم'}},
     {brain,engine:'copy',inputs:{channel:'unknown'}}, {brain,engine:'offer',refinement:'shorter'}
-  ]) {const res=response();await handler({method:'POST',body},res);assert.equal(res.code,400)}
+  ]) {const res=response();await handler({method:'POST',headers:AUTH_HEADERS,body},res);assert.equal(res.code,400)}
   const method=response();await handler({method:'GET'},method);assert.equal(method.code,405);
   OpenAI.Responses.prototype.create=async()=>({output_text:''});
-  const empty=response();await handler({method:'POST',body:{brain,engine:'offer'}},empty);assert.equal(empty.code,500);assert.ok(!empty.body.detail);
+  const empty=response();await handler({method:'POST',headers:AUTH_HEADERS,body:{brain,engine:'offer'}},empty);assert.equal(empty.code,500);assert.ok(!empty.body.detail);
   const h=response();health({},h);assert.equal(h.body.version,JSON.parse(fs.readFileSync('package.json','utf8')).version);
 } finally {OpenAI.Responses.prototype.create=originalCreate;if(originalKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=originalKey}
 console.log('PASS: six server engines, authoritative context, optional defaults, validation, refinements, empty output and health');
