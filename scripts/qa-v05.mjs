@@ -6,6 +6,10 @@ import handler, { normalizeRequest } from '../api/generate.mjs';
 import health from '../api/health.mjs';
 
 const brain = {name:'Brew 27',category:'قهوة',product:'قهوة وحلويات',customer:'موظفون',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'رجوع العملاء'};
+// V4 Batch 1 adds businessId/schemaVersion to every stored/sent brain object (lazily stamped by
+// getBrain()/saveBrain()). Strip them before comparing against these pre-V4 fixtures, which only
+// describe the legacy 8 fields; existing assertions keep testing exactly what they always tested.
+const withoutBusinessMeta=b=>{const{businessId,schemaVersion,...rest}=b;return rest};
 const cases = {content:{period:'30 يوم',contentObjective:'',contentObjectiveCustom:'',contentAudience:'',contentChannels:'',contentChannelsCustom:'',contentTone:'',contentCTA:'',contentInstructions:''},copy:{channel:'SMS',instruction:''},offer:{constraint:''},whatsapp:{message:'كم السعر؟'},campaign:{occasion:'',duration:'7 أيام'},reel:{duration:'45 ثانية',topic:''}};
 const response = () => ({headers:{},setHeader(k,v){this.headers[k]=v},status(n){this.code=n;return this},json(body){this.body=body;return this}});
 const originalCreate = OpenAI.Responses.prototype.create;
@@ -68,7 +72,7 @@ function app(){
 }
 let ui=app();ui.run('setup()');
 for(const [k,v]of Object.entries(brain))ui.nodes.get(k).value=v;
-ui.run('saveBrain()');assert.equal(ui.nodes.get('home').hidden,false);assert.deepEqual(JSON.parse(storage.get('brain')),brain);
+ui.run('saveBrain()');assert.equal(ui.nodes.get('home').hidden,false);assert.deepEqual(withoutBusinessMeta(JSON.parse(storage.get('brain'))),brain);
 ui=app();assert.equal(ui.nodes.get('home').hidden,false);
 for(const [engine,inputs]of Object.entries(cases)){
   ui.run(`openEngine('${engine}')`);
@@ -77,7 +81,7 @@ for(const [engine,inputs]of Object.entries(cases)){
   assert.equal([...form.matchAll(/<(?:input|textarea|select)\b/g)].length,expected.length);
   for(const [k,v]of Object.entries(inputs))ui.nodes.get(k).value=v;
   await ui.run('run()');assert.equal(ui.nodes.get('output').hidden,false);
-  assert.deepEqual(requests.at(-1).brain,brain);assert.deepEqual(requests.at(-1).inputs,inputs);
+  assert.deepEqual(withoutBusinessMeta(requests.at(-1).brain),brain);assert.deepEqual(requests.at(-1).inputs,inputs);
   // A fresh generation must never be silently auto-saved: the Save button starts enabled
   // and the status line must say so, until the Founder explicitly saves it.
   assert.equal(ui.nodes.get('saveResultBtn').disabled,false);
@@ -126,7 +130,7 @@ await ui.run('run()');
 assert.equal(ui.nodes.get('output').hidden,false);
 assert.equal(requests.at(-1).engine,'campaign');
 assert.deepEqual(requests.at(-1).inputs,{occasion:'',duration:'7 أيام'});
-assert.deepEqual(requests.at(-1).brain,najoob);
+assert.deepEqual(withoutBusinessMeta(requests.at(-1).brain),najoob);
 assert.ok(ui.nodes.get('out').innerHTML.includes('campaign'));
 console.log('PASS: campaign engine (سوّ حملة) succeeds for the Najoob Business Brain with a blank occasion and 7-day duration');
 

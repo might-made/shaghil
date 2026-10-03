@@ -10,6 +10,10 @@ import * as storage from '../lib/visual-storage.mjs';
 const png='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==';
 const image={type:'image/png',base64:png};
 const brain={name:'قهوة الاختبار',category:'قهوة',product:'قهوة مختصة',customer:'موظفون',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'زيادة الطلبات'};
+// V4 Batch 1 adds businessId/schemaVersion to every stored/sent brain object (lazily stamped by
+// getBrain()/saveBrain()). Strip them before comparing against this pre-V4 fixture, which only
+// describes the legacy 8 fields; existing assertions keep testing exactly what they always tested.
+const withoutBusinessMeta=b=>{const{businessId,schemaVersion,...rest}=b;return rest};
 const base={brain,brand:{primary:'#aa7733',secondary:'#111111',accent:'',style:'إضاءة طبيعية',logo:image,references:[]},task:{engine:'content',selected:'اليوم الأول: قهوة الصباح',context:'اليوم الأول: قهوة الصباح\nCTA: ابدأ يومك بقهوة'},settings:{format:'1:1',mode:'Product Hero',textMode:'none',headline:'قهوة الصباح',cta:'تواصل معنا'}};
 const res=()=>({status(n){this.code=n;return this},json(body){this.body=body;return this},setHeader(){}});
 const oldKey=process.env.OPENAI_API_KEY,generate=OpenAI.Images.prototype.generate,edit=OpenAI.Images.prototype.edit;
@@ -74,7 +78,7 @@ const run=code=>vm.runInContext(code,ctx);
 win.localStorage.setItem('brain',JSON.stringify(brain));await run('Visual.setupBrand()');assert.equal(win.document.getElementById('brandPrimary').value,brand.primary);
 // Real save via the integrated setup preserves both sets of fields.
 for(const [k,v]of Object.entries(brain))win.document.getElementById(k).value=v;
-win.document.getElementById('brandStyle').value='أسلوب محفوظ جديد';await run('Visual.saveProject()');assert.equal((await storage.loadBrand()).style,'أسلوب محفوظ جديد');assert.deepEqual(JSON.parse(win.localStorage.getItem('brain')),brain);
+win.document.getElementById('brandStyle').value='أسلوب محفوظ جديد';await run('Visual.saveProject()');assert.equal((await storage.loadBrand()).style,'أسلوب محفوظ جديد');assert.deepEqual(withoutBusinessMeta(JSON.parse(win.localStorage.getItem('brain'))),brain);
 run("current='content';lastInputs={period:'7 أيام'};renderResult("+JSON.stringify(plan)+")");
 // A 7-day plan renders one per-idea "اصنع التصميم" card each (Phase 3 P1-01 fix), so the
 // generic bottom CTA is now suppressed to avoid three competing buttons on screen at once.
@@ -93,7 +97,7 @@ const sourceHTML=win.document.getElementById('visualSource').innerHTML;
 const sourceText=win.document.getElementById('visualSource').textContent;
 for(const line of dayBlocks[2].split('\n').map(l=>l.replace(/^#{1,6}\s*/,'').trim()).filter(Boolean))assert.ok(sourceText.includes(line),`visualSource preview must preserve "${line}"`);
 assert.ok(!sourceHTML.includes('##'),'raw Markdown heading syntax must never remain visible in the visualSource preview');
-win.document.getElementById('visualFormat').value='4:5';await run('Visual.generate()');assert.equal(win.requests.length,1);assert.deepEqual(win.requests[0].body.brain,brain);assert.equal(win.requests[0].body.brand.style,'أسلوب محفوظ جديد');assert.ok(win.requests[0].body.task.context.includes(win.requests[0].body.task.selected));assert.equal(win.requests[0].body.settings.format,'4:5');
+win.document.getElementById('visualFormat').value='4:5';await run('Visual.generate()');assert.equal(win.requests.length,1);assert.deepEqual(withoutBusinessMeta(win.requests[0].body.brain),brain);assert.equal(win.requests[0].body.brand.style,'أسلوب محفوظ جديد');assert.ok(win.requests[0].body.task.context.includes(win.requests[0].body.task.selected));assert.equal(win.requests[0].body.settings.format,'4:5');
 const original=win.requests[0].body;await run("Visual.variant('different')");const variant=win.requests.at(-1).body;assert.deepEqual(variant.brain,original.brain);assert.deepEqual(variant.brand,original.brand);assert.deepEqual(variant.task,original.task);assert.deepEqual(variant.settings,original.settings);assert.equal(variant.previousDirection,3);
 assert.equal(original.task.selected,dayBlocks[2]);assert.equal(original.task.context,plan);
 const selectedPrompt=makePrompt(normalizeVisual(original),0);assert.ok(selectedPrompt.includes('PRIMARY CREATIVE IDEA (visualize this selected item, not the overall plan title): '+JSON.stringify(dayBlocks[2])));
@@ -101,7 +105,7 @@ assert.ok(selectedPrompt.includes('SECONDARY SOURCE CONTEXT'));assert.ok(selecte
 const count=win.requests.length;await run('Visual.noText()');run('Visual.editOverlay()');win.document.getElementById('editFormat').value='9:16';win.document.getElementById('editTextMode').value='simple';win.document.getElementById('editHeadline').value='قهوة الصباح';await run('Visual.applyOverlay()');assert.equal(win.requests.length,count);assert.equal(win.composeCalls.at(-1).settings.format,'9:16');
 await run('Visual.history()');assert.ok(win.document.getElementById('visualHistoryList').children.length>0);run('Visual.back()');assert.ok(!win.document.getElementById('output').classList.contains('hidden'));
 assert.equal(run('lastText'),plan);
-for(const engine of ['campaign','offer']){run(`current='${engine}';renderResult('## الفكرة الرئيسية\\nقهوة لجمعات الأصدقاء\\nCTA: اكتشف المنتج')`);await run('Visual.choose()');await run('Visual.generate()');const request=win.requests.at(-1).body;assert.equal(request.task.engine,engine);assert.ok(request.task.selected.includes('قهوة لجمعات الأصدقاء'));assert.deepEqual(request.brain,brain);assert.equal(request.brand.style,'أسلوب محفوظ جديد')}
+for(const engine of ['campaign','offer']){run(`current='${engine}';renderResult('## الفكرة الرئيسية\\nقهوة لجمعات الأصدقاء\\nCTA: اكتشف المنتج')`);await run('Visual.choose()');await run('Visual.generate()');const request=win.requests.at(-1).body;assert.equal(request.task.engine,engine);assert.ok(request.task.selected.includes('قهوة لجمعات الأصدقاء'));assert.deepEqual(withoutBusinessMeta(request.brain),brain);assert.equal(request.brand.style,'أسلوب محفوظ جديد')}
 for(const engine of ['copy','whatsapp','reel']){run(`current='${engine}';Visual.resultEntry()`);assert.ok(win.document.getElementById('visualEntry').classList.contains('hidden'));assert.equal(win.getComputedStyle(win.document.getElementById('visualEntry')).display,'none')}
 run("current='offer'");await run('Visual.choose()');delayed=true;const inFlight=run('Visual.generate()');for(let i=0;i<10&&!release;i++)await new Promise(r=>setTimeout(r,0));const before=win.requests.length;await run('Visual.generate()');assert.equal(win.requests.length,before);run('home()');release();await inFlight;assert.ok(!win.document.getElementById('home').classList.contains('hidden'));delayed=false;
 for(let i=0;i<win.localStorage.length;i++){const value=win.localStorage.getItem(win.localStorage.key(i));assert.ok(!value.includes(png));assert.ok(!value.includes('data:image'))}

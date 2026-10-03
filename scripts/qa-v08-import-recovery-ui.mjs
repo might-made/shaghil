@@ -26,6 +26,11 @@ const visualStudioSrc = stripImports(fs.readFileSync('lib/visual-studio.mjs', 'u
 // isolated localStorage even for the same url, which would falsely fail the reload check.
 const localMap = new Map();
 const sharedLocalStorage = { getItem: k => localMap.get(k) ?? null, setItem: (k, v) => localMap.set(k, v), removeItem: k => localMap.delete(k) };
+// V4 Batch 1's getBrain() lazily stamps businessId/schemaVersion onto any brain it reads, and
+// a successful import calls home() (which calls getBrain()) — so the stored brain gains these
+// fields as a side effect of import/reload. Strip them before comparing against the pre-V4
+// `najoob` fixture, which only describes the legacy 8 fields.
+const withoutBusinessMeta = b => { const { businessId, schemaVersion, ...rest } = b; return rest };
 
 function mountPage() {
   const dom = new JSDOM(html, { url: 'http://localhost', runScripts: 'outside-only' });
@@ -94,7 +99,7 @@ const file = new win.File([JSON.stringify(bundle)], 'shaghil-workspace-najoob.js
 await win.Workspace.import(file);
 await waitForRender(win, '#home', 1); // home() navigation after a successful import is async-adjacent
 
-assert.deepEqual(JSON.parse(sharedLocalStorage.getItem('brain')), najoob, 'Business Brain must be restored exactly');
+assert.deepEqual(withoutBusinessMeta(JSON.parse(sharedLocalStorage.getItem('brain'))), najoob, 'Business Brain must be restored exactly');
 assert.equal(win.document.getElementById('home').classList.contains('hidden'), false, 'a restored Business Brain must land the Founder on Home, not leave them on the empty form');
 assert.ok(win.document.getElementById('hello').textContent.includes('نجوب'), 'Home must reflect the restored business name');
 
@@ -117,7 +122,7 @@ dom.window.close();
 
 // --- 5. Reload: a brand-new page mount (same underlying origin storage) still has everything. ---
 ({ dom, win } = mountPage());
-assert.deepEqual(JSON.parse(sharedLocalStorage.getItem('brain')), najoob, 'Business Brain must still be present after a reload');
+assert.deepEqual(withoutBusinessMeta(JSON.parse(sharedLocalStorage.getItem('brain'))), najoob, 'Business Brain must still be present after a reload');
 assert.equal(win.document.getElementById('home').classList.contains('hidden'), false, 'reloading a populated origin must land on Home, not welcome');
 win.setup();
 await waitForRender(win, '#productList .card', 2);
