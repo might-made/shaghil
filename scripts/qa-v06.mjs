@@ -10,10 +10,13 @@ import * as storage from '../lib/visual-storage.mjs';
 const png='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==';
 const image={type:'image/png',base64:png};
 const brain={name:'قهوة الاختبار',category:'قهوة',product:'قهوة مختصة',customer:'موظفون',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'زيادة الطلبات'};
-// V4 Batch 1 adds businessId/schemaVersion to every stored/sent brain object (lazily stamped by
-// getBrain()/saveBrain()). Strip them before comparing against this pre-V4 fixture, which only
-// describes the legacy 8 fields; existing assertions keep testing exactly what they always tested.
-const withoutBusinessMeta=b=>{const{businessId,schemaVersion,...rest}=b;return rest};
+// V4 (Batches 1 and 3) adds businessId/schemaVersion and safe-default Business Memory fields to
+// every stored/sent brain object (lazily stamped by getBrain()/saveBrain()). Keep only the
+// legacy 8 fields before comparing against this pre-V4 fixture, which describes nothing else;
+// existing assertions keep testing exactly what they always tested, regardless of how many more
+// V4 fields a later batch adds.
+const LEGACY_BRAIN_FIELDS=['name','category','product','customer','location','price','tone','objective'];
+const withoutBusinessMeta=b=>Object.fromEntries(LEGACY_BRAIN_FIELDS.map(k=>[k,b[k]]));
 const base={brain,brand:{primary:'#aa7733',secondary:'#111111',accent:'',style:'إضاءة طبيعية',logo:image,references:[]},task:{engine:'content',selected:'اليوم الأول: قهوة الصباح',context:'اليوم الأول: قهوة الصباح\nCTA: ابدأ يومك بقهوة'},settings:{format:'1:1',mode:'Product Hero',textMode:'none',headline:'قهوة الصباح',cta:'تواصل معنا'}};
 const res=()=>({status(n){this.code=n;return this},json(body){this.body=body;return this},setHeader(){}});
 const oldKey=process.env.OPENAI_API_KEY,generate=OpenAI.Images.prototype.generate,edit=OpenAI.Images.prototype.edit;

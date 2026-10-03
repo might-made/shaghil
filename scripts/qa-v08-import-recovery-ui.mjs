@@ -26,11 +26,13 @@ const visualStudioSrc = stripImports(fs.readFileSync('lib/visual-studio.mjs', 'u
 // isolated localStorage even for the same url, which would falsely fail the reload check.
 const localMap = new Map();
 const sharedLocalStorage = { getItem: k => localMap.get(k) ?? null, setItem: (k, v) => localMap.set(k, v), removeItem: k => localMap.delete(k) };
-// V4 Batch 1's getBrain() lazily stamps businessId/schemaVersion onto any brain it reads, and
-// a successful import calls home() (which calls getBrain()) — so the stored brain gains these
-// fields as a side effect of import/reload. Strip them before comparing against the pre-V4
-// `najoob` fixture, which only describes the legacy 8 fields.
-const withoutBusinessMeta = b => { const { businessId, schemaVersion, ...rest } = b; return rest };
+// V4 (Batches 1 and 3) getBrain() lazily stamps businessId/schemaVersion and safe-default
+// Business Memory fields onto any brain it reads, and a successful import calls home() (which
+// calls getBrain()) — so the stored brain gains these fields as a side effect of import/reload.
+// Keep only the legacy 8 fields before comparing against the pre-V4 `najoob` fixture, which
+// describes nothing else, regardless of how many more V4 fields a later batch adds.
+const LEGACY_BRAIN_FIELDS = ['name', 'category', 'product', 'customer', 'location', 'price', 'tone', 'objective'];
+const withoutBusinessMeta = b => Object.fromEntries(LEGACY_BRAIN_FIELDS.map(k => [k, b[k]]));
 
 function mountPage() {
   const dom = new JSDOM(html, { url: 'http://localhost', runScripts: 'outside-only' });

@@ -147,15 +147,25 @@ const $=x=>document.getElementById(x);
 // screen). Resetting on every screen switch, here once, covers all of them consistently.
 const show=x=>{ids.forEach(i=>$(i).classList.toggle('hidden',i!==x));scrollTo(0,0)};
 function readLocal(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
+// V4 Batch 3: Business Facts + Commercial Context fields, storage-schema only. Safe empty
+// defaults (strings '', arrays []); no UI reads/writes these yet, no engine receives them.
+const BRAIN_V4_DEFAULTS={businessModel:'',secondaryObjectives:[],currentPriority:'',currentOffer:'',importantSeason:'',campaignContext:'',temporaryAudienceEmphasis:'',commercialConstraints:''};
 const getBrain=()=>{
   const b=readLocal('brain',null);
   if(!b||typeof b!=='object'||Array.isArray(b))return null;
-  // V4 Batch 1: lazy, idempotent stable-ID + schema-version migration. Generates businessId
-  // once and persists immediately; a record that already has both is returned unchanged, so
-  // reload/repeat calls never regenerate it. No existing field is altered or removed.
-  if(b.schemaVersion===1&&b.businessId)return b;
-  const migrated={...b,schemaVersion:1,businessId:b.businessId||crypto.randomUUID()};
-  try{localStorage.setItem('brain',JSON.stringify(migrated))}catch{}
+  // Lazy, idempotent migration: each field is checked independently (not gated on schemaVersion
+  // alone) so a record already migrated by an earlier batch still picks up fields a later batch
+  // adds, exactly once, without ever touching a field it already has. A fresh [] is created per
+  // field per call (never a reference into BRAIN_V4_DEFAULTS) so array defaults are never shared
+  // across records. No existing field is altered, renamed or removed.
+  let changed=false;
+  const migrated={...b};
+  if(!migrated.schemaVersion){migrated.schemaVersion=1;changed=true}
+  if(!migrated.businessId){migrated.businessId=crypto.randomUUID();changed=true}
+  for(const key in BRAIN_V4_DEFAULTS){
+    if(!(key in migrated)){migrated[key]=Array.isArray(BRAIN_V4_DEFAULTS[key])?[]:BRAIN_V4_DEFAULTS[key];changed=true}
+  }
+  if(changed){try{localStorage.setItem('brain',JSON.stringify(migrated))}catch{}}
   return migrated;
 };
 function getHistory(){const h=readLocal('shaghilHistory',[]);return Array.isArray(h)?h.filter(x=>x&&typeof x.text==='string'&&x.text.trim()):[]}
@@ -165,12 +175,12 @@ function setup(){cancelPending();loadBusinessFields();$('localDataNotice').class
 function brandBrainScreen(){cancelPending();loadBusinessFields();show('brandBrain');globalThis.Visual?.setupBrand()}
 function productLibraryScreen(){cancelPending();globalThis.Products?.refresh();show('productLibrary')}
 function dismissLocalDataNotice(){try{localStorage.setItem('localDataNoticeDismissed','1')}catch{}$('localDataNotice').classList.add('hidden')}
-function saveBrain(){let b={};['name','category','product','customer','location','price','tone','objective'].forEach(k=>b[k]=$(k).value.trim());if(!b.name||!b.product||!b.customer)return toast('أكمل اسم المشروع والمنتج والعميل');const existing=readLocal('brain',null);b.schemaVersion=1;b.businessId=(existing&&existing.businessId)||crypto.randomUUID();try{localStorage.setItem('brain',JSON.stringify(b))}catch{return toast('تعذّر حفظ بيانات المشروع على هذا الجهاز')}home()}
+function saveBrain(){let form={};['name','category','product','customer','location','price','tone','objective'].forEach(k=>form[k]=$(k).value.trim());if(!form.name||!form.product||!form.customer)return toast('أكمل اسم المشروع والمنتج والعميل');const existing=readLocal('brain',null);const b={...(existing||{}),...form};b.schemaVersion=1;b.businessId=(existing&&existing.businessId)||crypto.randomUUID();try{localStorage.setItem('brain',JSON.stringify(b))}catch{return toast('تعذّر حفظ بيانات المشروع على هذا الجهاز')}home()}
 const brainLabels={name:'اسم المشروع',category:'القطاع',product:'وش تبيع',customer:'مين عميلك',location:'المدينة/السوق',price:'متوسط السعر',tone:'النبرة',objective:'الهدف الحالي'};
 function brainScreen(){cancelPending();let b=getBrain();if(!b)return setup();$('brainGrid').innerHTML=Object.keys(brainLabels).map(k=>`<div><small>${esc(brainLabels[k])}</small><b>${esc(b[k])||'—'}</b></div>`).join('');show('brain');globalThis.Visual?.brandSummary()}
 function home(){cancelPending();let b=getBrain();if(!b)return show('welcome');refreshBrandCache();$('hello').textContent=`${b.name||'مشروعك'} — وش تبغى تنجز اليوم؟`;$('firstValueHint').classList.toggle('hidden',localStorage.getItem('firstValueHintDismissed')==='1');show('home')}
 function dismissFirstValueHint(){try{localStorage.setItem('firstValueHintDismissed','1')}catch{}$('firstValueHint').classList.add('hidden')}
-function demo(){const existing=readLocal('brain',null);localStorage.setItem('brain',JSON.stringify({name:'تحميص ٢٧',category:'قهوة مختصة',product:'قهوة مختصة وحلويات مع توصيل داخل جدة',customer:'موظفون وطلاب 20–35',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'رجوع العملاء',schemaVersion:1,businessId:(existing&&existing.businessId)||crypto.randomUUID()}));home()}
+function demo(){const existing=readLocal('brain',null);const b={...(existing||{}),name:'تحميص ٢٧',category:'قهوة مختصة',product:'قهوة مختصة وحلويات مع توصيل داخل جدة',customer:'موظفون وطلاب 20–35',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'رجوع العملاء'};b.schemaVersion=1;b.businessId=(existing&&existing.businessId)||crypto.randomUUID();localStorage.setItem('brain',JSON.stringify(b));home()}
 const titles={content:'سوّ محتوى',copy:'اكتب لي',offer:'ابنِ عرض',whatsapp:'رد على عميل',campaign:'سوّ حملة',reel:'اكتب ريل'};
 const fields={content:['period','contentObjective','contentObjectiveCustom','contentAudience','contentChannels','contentChannelsCustom','contentTone','contentCTA','contentInstructions'],copy:['channel','instruction'],offer:['constraint'],whatsapp:['message'],campaign:['occasion','duration'],reel:['duration','topic']};
 const fieldValue=k=>{const el=$(k);if(!el)return'';return el.multiple?[...el.selectedOptions].map(o=>o.value).join('، '):el.value.trim()};

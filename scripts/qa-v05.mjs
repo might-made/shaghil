@@ -6,10 +6,13 @@ import handler, { normalizeRequest } from '../api/generate.mjs';
 import health from '../api/health.mjs';
 
 const brain = {name:'Brew 27',category:'قهوة',product:'قهوة وحلويات',customer:'موظفون',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'رجوع العملاء'};
-// V4 Batch 1 adds businessId/schemaVersion to every stored/sent brain object (lazily stamped by
-// getBrain()/saveBrain()). Strip them before comparing against these pre-V4 fixtures, which only
-// describe the legacy 8 fields; existing assertions keep testing exactly what they always tested.
-const withoutBusinessMeta=b=>{const{businessId,schemaVersion,...rest}=b;return rest};
+// V4 (Batches 1 and 3) adds businessId/schemaVersion and safe-default Business Memory fields to
+// every stored/sent brain object (lazily stamped by getBrain()/saveBrain()). Keep only the
+// legacy 8 fields before comparing against these pre-V4 fixtures, which describe nothing else;
+// existing assertions keep testing exactly what they always tested, regardless of how many more
+// V4 fields a later batch adds.
+const LEGACY_BRAIN_FIELDS=['name','category','product','customer','location','price','tone','objective'];
+const withoutBusinessMeta=b=>Object.fromEntries(LEGACY_BRAIN_FIELDS.map(k=>[k,b[k]]));
 const cases = {content:{period:'30 يوم',contentObjective:'',contentObjectiveCustom:'',contentAudience:'',contentChannels:'',contentChannelsCustom:'',contentTone:'',contentCTA:'',contentInstructions:''},copy:{channel:'SMS',instruction:''},offer:{constraint:''},whatsapp:{message:'كم السعر؟'},campaign:{occasion:'',duration:'7 أيام'},reel:{duration:'45 ثانية',topic:''}};
 const response = () => ({headers:{},setHeader(k,v){this.headers[k]=v},status(n){this.code=n;return this},json(body){this.body=body;return this}});
 const originalCreate = OpenAI.Responses.prototype.create;

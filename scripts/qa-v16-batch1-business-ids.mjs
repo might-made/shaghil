@@ -10,7 +10,11 @@ import { indexedDB } from 'fake-indexeddb';
 globalThis.indexedDB = globalThis.indexedDB || indexedDB;
 
 const preV4Brain = { name: 'تحميص ٢٧', category: 'قهوة مختصة', product: 'قهوة مختصة وحلويات', customer: 'موظفون وطلاب', location: 'جدة', price: '50–100 SAR', tone: 'سعودي طبيعي', objective: 'رجوع العملاء' };
-const withoutBusinessMeta = b => { const { businessId, schemaVersion, ...rest } = b; return rest };
+// Batch 3 added further safe-default Business Memory fields on top of Batch 1's businessId/
+// schemaVersion; keep only the legacy 8 fields so this file keeps testing exactly what it always
+// tested, regardless of how many more V4 fields a later batch adds.
+const LEGACY_BRAIN_FIELDS = ['name', 'category', 'product', 'customer', 'location', 'price', 'tone', 'objective'];
+const withoutBusinessMeta = b => Object.fromEntries(LEGACY_BRAIN_FIELDS.map(k => [k, b[k]]));
 
 // --- Minimal VM harness for index.html's inline script, enough to exercise getBrain()/saveBrain(). ---
 const html = fs.readFileSync('index.html', 'utf8');
