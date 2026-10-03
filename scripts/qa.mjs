@@ -103,3 +103,5 @@ await import('./qa-v18-batch3-business-memory-schema.mjs');
 await import('./qa-v19-batch4-voice-ssot.mjs');
 
 await import('./qa-v20-batch5-context-matrix.mjs');
+
+await import('./qa-v21-batch6-text-context-wiring.mjs');

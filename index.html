@@ -111,7 +111,7 @@
 </section>
 </div>
 <script>
-const ids=['welcome','setup','brain','brandBrain','productLibrary','home','engine','output','history','visualStudio','visualResult']; let current=null; let lastInputs=null; let lastText=''; let busy=false; let requestId=0; let savedNow=false; let cachedBrandStyle='';
+const ids=['welcome','setup','brain','brandBrain','productLibrary','home','engine','output','history','visualStudio','visualResult']; let current=null; let lastInputs=null; let lastText=''; let busy=false; let requestId=0; let savedNow=false; let cachedBrandContext={};
 // Theme is a UI-chrome preference only — a dedicated key outside 'brain'/'shaghilHistory' so
 // Workspace.export()/import() (lib/workspace-transfer.mjs) never reads, exports or overwrites it,
 // and entirely separate from Brand Brain's own brandPrimary/brandSecondary customer colors.
@@ -143,7 +143,7 @@ globalThis.PilotAuth={headers:()=>({'X-Pilot-Key':getPilotKey()}),handleUnauthor
 // synchronously (no added await before the request fires, preserving the busy/duplicate-request
 // guard's timing). Missing/stale cache just means generation proceeds without brand context,
 // never a hard failure and never fabricated content.
-function refreshBrandCache(){globalThis.Visual?.brandStyle?.().then(s=>{if(typeof s==='string')cachedBrandStyle=s}).catch(()=>{})}
+function refreshBrandCache(){globalThis.Visual?.brandContext?.().then(c=>{if(c&&typeof c==='object')cachedBrandContext=c}).catch(()=>{})}
 const $=x=>document.getElementById(x);
 // Any previous screen can be scrolled arbitrarily far down; toggling .hidden alone never resets
 // scroll, so a leftover offset can land the next screen mid-page with the sticky header's band
@@ -212,7 +212,7 @@ const rawKeyLabels={recommended_reply:'الرد المقترح',short_reply:'ر�
 function translateRawKeys(text){return text.replace(/^([#\s>*-]*)(recommended_reply|short_reply|follow_up)([\s:：*]*)$/gim,(m,pre,key)=>pre+rawKeyLabels[key.toLowerCase()])}
 function renderResult(text,saved=false){text=translateRawKeys(text);lastText=text;$('out').classList.remove('outError');$('out').innerHTML=md(text);savedNow=saved;updateSaveStatus();show('output');globalThis.Visual?.resultEntry()}
 function loading(){globalThis.Visual?.hideEntry();show('output');$('out').classList.remove('outError');$('out').innerHTML='<div class="skeleton"></div><div class="skeleton" style="width:82%"></div><div class="skeleton" style="width:68%"></div><div class="skeleton"></div>'}
-async function generate(payload){if(busy)return;busy=true;const id=++requestId;lastText='';loading();try{payload={...payload,brand:{toneOfVoice:cachedBrandStyle}};let r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json',...PilotAuth.headers()},body:JSON.stringify(payload)});let raw=await r.text();let j;try{j=JSON.parse(raw)}catch{console.error('SHAGHIL non-JSON response',r.status,raw.slice(0,300));throw new Error('تعذّر الاتصال بالخادم، جرّب مرة ثانية')}if(id!==requestId)return;if(r.status===401)PilotAuth.handleUnauthorized();if(!r.ok)throw new Error(j.error||'تعذّر الاتصال');if(typeof j.text!=='string'||!j.text.trim())throw new Error('لم تصل نتيجة، جرّب مرة ثانية');renderResult(j.text)}catch(e){if(id!==requestId)return;$('out').classList.add('outError');$('out').innerHTML='<h3>ما قدرنا نكمل المهمة</h3><p>'+esc(e.message)+'</p><p>جرّب نسخة ثانية، وإذا استمرت المشكلة راجع إعدادات الاتصال.</p>'}finally{if(id===requestId)busy=false}}
+async function generate(payload){if(busy)return;busy=true;const id=++requestId;lastText='';loading();try{payload={...payload,brand:cachedBrandContext};let r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json',...PilotAuth.headers()},body:JSON.stringify(payload)});let raw=await r.text();let j;try{j=JSON.parse(raw)}catch{console.error('SHAGHIL non-JSON response',r.status,raw.slice(0,300));throw new Error('تعذّر الاتصال بالخادم، جرّب مرة ثانية')}if(id!==requestId)return;if(r.status===401)PilotAuth.handleUnauthorized();if(!r.ok)throw new Error(j.error||'تعذّر الاتصال');if(typeof j.text!=='string'||!j.text.trim())throw new Error('لم تصل نتيجة، جرّب مرة ثانية');renderResult(j.text)}catch(e){if(id!==requestId)return;$('out').classList.add('outError');$('out').innerHTML='<h3>ما قدرنا نكمل المهمة</h3><p>'+esc(e.message)+'</p><p>جرّب نسخة ثانية، وإذا استمرت المشكلة راجع إعدادات الاتصال.</p>'}finally{if(id===requestId)busy=false}}
 async function run(again=false){if(busy)return;let b=getBrain();if(!b||!['name','product','customer'].every(k=>typeof b[k]==='string'&&b[k].trim())){toast('أكمل بيانات مشروعك في هوية النشاط');return setup()}if(!Object.hasOwn(fields,current))return home();if(!again){lastInputs=Object.fromEntries(fields[current].map(k=>[k,fieldValue(k)]))}else if(!lastInputs){toast('حدّد تفاصيل المهمة لإنشاء نسخة جديدة');return openEngine(current)}
 if(current==='whatsapp'&&!lastInputs.message){toast('أدخل رسالة العميل أولًا');$('message')?.focus();return}
 if(current==='campaign'&&!lastInputs.duration){toast('أدخل مدة الحملة');$('duration')?.focus();return}

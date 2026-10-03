@@ -99,13 +99,14 @@ assert.notDeepEqual([...visualFlat].sort(), [...everyField].sort(), '9. even Vis
 
 console.log('PASS: no consumer\'s resolved context is an unintended "all fields" wildcard — every consumer, including Visual, receives a strict, deliberately selective subset');
 
-// --- 10. Existing runtime generation behavior remains unchanged: the contract is not wired into
-// either API endpoint in this batch. ---
-const generateSource = fs.readFileSync('api/generate.mjs', 'utf8');
+// --- 10. At the time this batch shipped, the contract was not wired into either API endpoint.
+// Batch 6 has since authorized wiring it into api/generate.mjs (see
+// scripts/qa-v21-batch6-text-context-wiring.mjs for that wiring's own verification) — the
+// invariant this file still enforces is that api/visual.mjs remains unwired, exactly as the
+// Batch 6 "Visual boundary" requires. ---
 const visualApiSource = fs.readFileSync('api/visual.mjs', 'utf8');
-assert.ok(!generateSource.includes('context-matrix'), '10. api/generate.mjs does not import or reference context-matrix.mjs — no engine wiring in this batch');
-assert.ok(!visualApiSource.includes('context-matrix'), '10. api/visual.mjs does not import or reference context-matrix.mjs — no engine wiring in this batch');
+assert.ok(!visualApiSource.includes('context-matrix') && !visualApiSource.includes('context-assembly'), '10. api/visual.mjs still does not import or reference context-matrix.mjs or context-assembly.mjs — Visual wiring remains out of scope until its own authorized batch');
 
-console.log('PASS: neither api/generate.mjs nor api/visual.mjs references context-matrix.mjs — the contract exists standalone, with no runtime engine wiring in this batch, so existing generation behavior is provably unchanged');
+console.log('PASS: api/visual.mjs still does not reference context-matrix.mjs/context-assembly.mjs — Visual remains unwired (api/generate.mjs\'s wiring as of Batch 6 is verified separately in qa-v21-batch6-text-context-wiring.mjs)');
 
-console.log('\nPASS V4 BATCH 5 (P0-C.1): the shared context-selection contract (lib/context-matrix.mjs) declares exactly the seven approved consumers, makes Business Facts/Audience/Commercial Goal/Positioning/Value Proposition/Differentiators available everywhere, builds Brand Voice on toneOfVoice alone with no reference anywhere to brand.style or brain.tone, defines a Product Memory policy ready for a future selector without implementing one, gives Visual its exact founder-approved allowlist while excluding vocabulary/textual do-dont fields, hands no consumer an unintended "all fields" wildcard, and is not wired into either API endpoint — existing runtime generation behavior is unchanged');
+console.log('\nPASS V4 BATCH 5 (P0-C.1): the shared context-selection contract (lib/context-matrix.mjs) declares exactly the seven approved consumers, makes Business Facts/Audience/Commercial Goal/Positioning/Value Proposition/Differentiators available everywhere, builds Brand Voice on toneOfVoice alone with no reference anywhere to brand.style or brain.tone, defines a Product Memory policy ready for a future selector without implementing one, gives Visual its exact founder-approved allowlist while excluding vocabulary/textual do-dont fields, and hands no consumer an unintended "all fields" wildcard (api/generate.mjs was wired to this contract in Batch 6; api/visual.mjs remains unwired)');
