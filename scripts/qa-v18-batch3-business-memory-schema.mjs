@@ -1,8 +1,10 @@
 // SHGHIL V4 Batch 3 (P0-B.1) regression suite.
-// Scope: safe-default Business Facts/Commercial Context fields on brain (localStorage) and
-// Brand Intelligence fields on brand (IndexedDB) — storage/schema only. No UI reads or writes
-// any of these fields, no engine receives them, brand.style is NOT migrated into toneOfVoice
-// (that is Batch 4), and brain.tone is not surfaced as a suggestion anywhere in this batch.
+// Scope AT THE TIME this batch shipped: safe-default Business Facts/Commercial Context fields on
+// brain (localStorage) and Brand Intelligence fields on brand (IndexedDB) — storage/schema only;
+// no UI, no engine use, no brand.style->toneOfVoice migration, no brain.tone suggestion.
+// Batch 4 has since added the style->toneOfVoice seed and the brain.tone suggestion UI — this
+// file's toneOfVoice-specific assertions were updated accordingly (see the inline notes below);
+// everything else here still tests exactly what Batch 3 itself guarantees.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
@@ -93,17 +95,19 @@ const preV4Brand = { primary: '#1a1a1a', secondary: '#f5f5f5', accent: '#ff5500'
 await store.saveBrand({ ...preV4Brand }); // simulates a pre-V4 saved record: none of the new fields exist at all
 
 // --- 2 & 3. A pre-V4 brand loads with safe defaults for every new field, every legacy value unchanged. ---
+// toneOfVoice is excluded from the blanket-default loop below: as of Batch 4, a record whose
+// style is already non-empty (as this fixture's is) gets toneOfVoice seeded from it on load —
+// see scripts/qa-v19-batch4-voice-ssot.mjs for the dedicated seeding/precedence test suite.
 const loadedBrand = await store.loadBrand();
 for (const [key, def] of Object.entries(BRAND_V4_FIELDS)) {
+  if (key === 'toneOfVoice') continue;
   assert.deepEqual(loadedBrand[key], def, `2. brand.${key} gets its safe default (${JSON.stringify(def)}) on a pre-V4 record`);
 }
 for (const key of Object.keys(preV4Brand)) assert.deepEqual(loadedBrand[key], preV4Brand[key], `3. brand.${key} is unchanged from its pre-V4 value`);
 assert.equal(loadedBrand.schemaVersion, 1, '3. schemaVersion is still stamped alongside the new fields');
-// Explicit confirmation this batch does NOT perform the brand.style -> toneOfVoice migration.
-assert.equal(loadedBrand.toneOfVoice, '', 'toneOfVoice is NOT populated from brand.style in Batch 3 — that reconciliation is Batch 4');
 assert.equal(loadedBrand.style, 'أسلوب شبابي جريء', 'brand.style itself is left completely untouched');
 
-console.log('PASS: a pre-V4 Brand Brain record loads with safe empty defaults for every new Brand Intelligence field, every legacy visual-identity value unchanged, and toneOfVoice is explicitly NOT populated from brand.style in this batch');
+console.log('PASS: a pre-V4 Brand Brain record loads with safe empty defaults for every new Brand Intelligence field (toneOfVoice\'s Batch-4 seeding behavior is tested separately), with every legacy visual-identity value unchanged');
 
 // --- 4. New fields round-trip correctly through save/load for Brand Intelligence too. ---
 const loadedBrandAgain = await store.loadBrand();
@@ -154,4 +158,4 @@ assert.deepEqual(importedBrand.differentiators, ['توصيل خلال ساعة',
 
 console.log('PASS: Workspace Export/Import preserves populated new Business Memory fields exactly, since they travel inside the existing brain/brand objects with no new top-level bundle key required');
 
-console.log('\nPASS V4 BATCH 3 (P0-B.1): safe empty defaults for every approved Business Facts, Commercial Context and Brand Intelligence field are stamped lazily and idempotently on pre-V4 records, every legacy value and the Batch 1/2 stable-ID work survive unchanged, array defaults are never shared by reference, and populated fields round-trip through export/import — with zero UI, prompt, context-assembly, Product Memory, or brand.style->toneOfVoice migration work included in this batch');
+console.log('\nPASS V4 BATCH 3 (P0-B.1): safe empty defaults for every approved Business Facts, Commercial Context and Brand Intelligence field are stamped lazily and idempotently on pre-V4 records, every legacy value and the Batch 1/2 stable-ID work survive unchanged, array defaults are never shared by reference, and populated fields round-trip through export/import — with zero UI, prompt, context-assembly, or Product Memory work included in this batch (toneOfVoice\'s Batch-4 seeding/suggestion behavior is covered in scripts/qa-v19-batch4-voice-ssot.mjs)');

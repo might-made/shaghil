@@ -52,6 +52,13 @@ export function normalizeRequest(body) {
   const previous = cleanPrevious(body.previous);
   if (refinement && !previous) throw new Error('النتيجة السابقة مطلوبة للتعديل');
   const brand = { style: clean(object(body.brand) ? body.brand.style : '') };
+  // V4 Batch 4: once an active brand voice exists (brand.style now carries the resolved
+  // toneOfVoice-or-legacy-style value from the client — see lib/visual-studio.mjs brandStyle()),
+  // brain.tone must stop competing with it as a second, unlabeled voice signal. There is no
+  // active voice yet (brand.style is empty) when nothing has been migrated or entered, in which
+  // case brain.tone is left exactly as before — nothing changes for a founder who hasn't touched
+  // Brand Brain at all.
+  if (brand.style) delete brain.tone;
   const raw = object(body.inputs) ? body.inputs : {};
   const inputs = Object.fromEntries(FIELDS[engine].map(key => [key, clean(raw[key])]));
   if (engine === 'content') {

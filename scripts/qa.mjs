@@ -99,3 +99,5 @@ await import('./qa-v16-batch1-business-ids.mjs');
 await import('./qa-v17-batch2-campaign-pack-ids.mjs');
 
 await import('./qa-v18-batch3-business-memory-schema.mjs');
+
+await import('./qa-v19-batch4-voice-ssot.mjs');
