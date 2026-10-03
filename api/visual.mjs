@@ -36,12 +36,14 @@ export function normalizeVisual(body) {
     if(value && !/^#[0-9a-f]{6}$/i.test(value)) throw new Error('لون العلامة غير صالح');
     brand[key]=value;
   }
-  // V4 Batch 4: toneOfVoice is the sole active voice source once populated; it replaces style
-  // in this same wire slot (no new field added to the normalized shape — that broader Visual
-  // context expansion is a later batch). brain.tone stops competing with it the same way
-  // api/generate.mjs retires it, once an active voice exists.
-  brand.style=text(body.brand.toneOfVoice||body.brand.style,1600);
-  if(brand.style)delete brain.tone;
+  // V4 Batch 4 (SSOT correction): toneOfVoice is the sole active voice field in the normalized
+  // output. The input boundary still accepts legacy body.brand.style as a fallback (old
+  // workspaces/callers that haven't resolved toneOfVoice client-side yet), but the normalized
+  // shape below exposes only `toneOfVoice` — never a `style` key — so nothing downstream can
+  // mistake a legacy value for the active one. brain.tone stops competing with it once an
+  // active voice exists, exactly as api/generate.mjs retires it.
+  brand.toneOfVoice=text(body.brand.toneOfVoice||body.brand.style,1600);
+  if(brand.toneOfVoice)delete brain.tone;
   const task={engine:text(body.task.engine,20),selected:text(body.task.selected,12000),context:text(body.task.context,60000)};
   if(!['content','campaign','offer'].includes(task.engine)||!task.selected||!task.context||!task.context.includes(task.selected)) throw new Error('اختر فكرة من النتيجة الأصلية');
   const settings={format:body.settings.format,mode:body.settings.mode,textMode:body.settings.textMode,headline:text(body.settings.headline,120),cta:text(body.settings.cta,60)};

@@ -109,21 +109,27 @@ console.log('PASS: an old workspace that only ever had brand.style produces byte
 const { normalizeRequest } = await import('../api/generate.mjs');
 const brainWithTone = { name: 'ثريد', category: 'أزياء', product: 'ملابس جاهزة', customer: 'شباب', location: 'الرياض', price: '100-400 SAR', tone: 'جريء ومباشر', objective: 'زيادة المبيعات' };
 
-// Active voice present (client already resolved toneOfVoice-or-style into brand.style): brain.tone
-// must be completely absent from the assembled context, not merely unlabeled.
-const withActiveVoice = normalizeRequest({ brain: brainWithTone, engine: 'copy', inputs: { channel: 'Instagram', instruction: '' }, brand: { style: 'نبرة الصوت الفعلية المعتمدة' } });
-assert.equal(withActiveVoice.brand.style, 'نبرة الصوت الفعلية المعتمدة', '8. the assembled context carries the active voice text as brand.style');
-assert.ok(!Object.hasOwn(withActiveVoice.brain, 'tone'), '8. the assembled business-brain context has brain.tone completely removed once an active voice exists — not sent as a competing instruction');
+// --- SSOT correction, points 1-3: the text-engine normalized context must expose toneOfVoice
+// directly (not remapped onto a `style` key), must never expose active voice as `style`, and
+// must drop brain.tone once resolved. The client sends the already-resolved value under
+// brand.toneOfVoice (see lib/visual-studio.mjs brandStyle() / index.html generate()); legacy
+// body.brand.style is not read at all for text engines (no compatibility fallback here — the
+// client wire format itself changed as part of this same correction).
+const withActiveVoice = normalizeRequest({ brain: brainWithTone, engine: 'copy', inputs: { channel: 'Instagram', instruction: '' }, brand: { toneOfVoice: 'نبرة الصوت الفعلية المعتمدة' } });
+assert.equal(withActiveVoice.brand.toneOfVoice, 'نبرة الصوت الفعلية المعتمدة', '1. the text normalized context contains toneOfVoice with the resolved active-voice text');
+assert.ok(!Object.hasOwn(withActiveVoice.brand, 'style'), '2. the text normalized context does not expose active voice as a `style` key at all');
+assert.ok(!Object.hasOwn(withActiveVoice.brain, 'tone'), '3. the text normalized context has brain.tone completely removed once toneOfVoice is resolved — not sent as a competing instruction');
 
 // No active voice at all (nothing migrated, nothing entered): brain.tone is untouched, exactly as
 // pre-Batch-4 behavior — "All empty -> remain empty".
-const withoutActiveVoice = normalizeRequest({ brain: brainWithTone, engine: 'copy', inputs: { channel: 'Instagram', instruction: '' }, brand: { style: '' } });
-assert.equal(withoutActiveVoice.brain.tone, 'جريء ومباشر', '8. with no active voice at all, brain.tone is sent exactly as before — nothing is retired when there is nothing to replace it with');
+const withoutActiveVoice = normalizeRequest({ brain: brainWithTone, engine: 'copy', inputs: { channel: 'Instagram', instruction: '' }, brand: { toneOfVoice: '' } });
+assert.equal(withoutActiveVoice.brain.tone, 'جريء ومباشر', 'with no active voice at all, brain.tone is sent exactly as before — nothing is retired when there is nothing to replace it with');
 
-console.log('PASS: the assembled text-engine context (inspected directly, not generated output) carries toneOfVoice as the sole active voice and drops brain.tone entirely once one exists, while leaving brain.tone untouched when no active voice exists at all');
+console.log('PASS: the assembled text-engine context (inspected directly, not generated output) exposes toneOfVoice directly — never remapped onto a `style` key — and drops brain.tone entirely once resolved, while leaving brain.tone untouched when no active voice exists at all');
 
 // ============================================================================
-// 9: inspect the assembled Visual Studio context directly; confirm no broader expansion.
+// 4, 5, 6, 7: inspect the assembled Visual Studio context directly; confirm no broader
+// expansion, and prove the legacy-style compatibility boundary.
 // ============================================================================
 const { normalizeVisual } = await import('../api/visual.mjs');
 const visualBody = {
@@ -133,16 +139,30 @@ const visualBody = {
   settings: { format: '1:1', mode: 'Product Hero', textMode: 'none' }
 };
 const normalizedVisual = normalizeVisual(visualBody);
-assert.equal(normalizedVisual.brand.style, 'نبرة الصوت الفعلية للتصميم', '9. Visual Studio\'s assembled context prefers toneOfVoice over legacy style, same SSOT precedence as text engines');
-assert.ok(!Object.hasOwn(normalizedVisual.brain, 'tone'), '9. Visual Studio\'s assembled business-brain context also drops brain.tone once an active voice exists');
-assert.deepEqual(Object.keys(normalizedVisual.brand).sort(), ['accent', 'primary', 'secondary', 'style'], '9. Visual Studio\'s normalized brand shape is still exactly {primary,secondary,accent,style} — no personality/visualDirectionNotes/doList/etc. fields added (that broader context expansion is a later batch)');
+assert.equal(normalizedVisual.brand.toneOfVoice, 'نبرة الصوت الفعلية للتصميم', '4. the Visual normalized context contains toneOfVoice with the resolved active-voice text');
+assert.ok(!Object.hasOwn(normalizedVisual.brand, 'style'), '5. the Visual normalized context does not expose active voice as a `style` key at all');
+assert.ok(!Object.hasOwn(normalizedVisual.brain, 'tone'), 'the Visual normalized business-brain context also drops brain.tone once an active voice exists');
+assert.deepEqual(Object.keys(normalizedVisual.brand).sort(), ['accent', 'primary', 'secondary', 'toneOfVoice'], 'Visual Studio\'s normalized brand shape is exactly {primary,secondary,accent,toneOfVoice} — no personality/visualDirectionNotes/doList/etc. fields added (that broader context expansion is a later batch)');
+
+// 7. Existing toneOfVoice takes precedence over legacy style at the compatibility boundary
+// (same record as above: both toneOfVoice and style are populated with different text).
+assert.notEqual(normalizedVisual.brand.toneOfVoice, 'نمط بصري قديم لن يُستخدم', '7. a populated toneOfVoice wins over a populated legacy style at the input compatibility boundary');
+
+// 6. Legacy input carrying ONLY style (no toneOfVoice at all — an old workspace/caller that
+// never resolved toneOfVoice) must still resolve correctly to an active voice via the explicitly
+// authorized compatibility fallback, with the normalized output still named toneOfVoice.
+const legacyOnlyBody = { ...visualBody, brand: { primary: '#e7f95b', secondary: '#181b1f', accent: '', style: 'أسلوب قديم فقط، بلا toneOfVoice إطلاقًا', logo: null, references: [] } };
+const normalizedLegacyOnly = normalizeVisual(legacyOnlyBody);
+assert.equal(normalizedLegacyOnly.brand.toneOfVoice, 'أسلوب قديم فقط، بلا toneOfVoice إطلاقًا', '6. legacy input carrying only `style` still resolves correctly to toneOfVoice at the compatibility boundary');
+assert.ok(!Object.hasOwn(normalizedLegacyOnly.brand, 'style'), '6. even via the legacy-style compatibility path, the normalized output is still named toneOfVoice, never `style`');
+assert.ok(!Object.hasOwn(normalizedLegacyOnly.brain, 'tone'), '6. the legacy-style compatibility path still correctly retires brain.tone once it resolves an active voice');
 
 // No active voice: brain.tone untouched for Visual Studio too.
 const visualBodyNoVoice = { ...visualBody, brand: { ...visualBody.brand, style: '', toneOfVoice: '' } };
 const normalizedVisualNoVoice = normalizeVisual(visualBodyNoVoice);
-assert.equal(normalizedVisualNoVoice.brain.tone, 'جريء ومباشر', '9. with no active voice, Visual Studio also leaves brain.tone untouched exactly as before');
+assert.equal(normalizedVisualNoVoice.brain.tone, 'جريء ومباشر', 'with no active voice, Visual Studio also leaves brain.tone untouched exactly as before');
 
-console.log('PASS: Visual Studio\'s assembled context (inspected directly) follows the identical Batch-4 SSOT precedence without any broader context-field expansion');
+console.log('PASS: the assembled Visual Studio context (inspected directly) exposes toneOfVoice directly — never a `style` key — drops brain.tone once resolved, still accepts legacy style-only input at the compatibility boundary with toneOfVoice winning when both are present, and adds no broader context fields');
 
 // ============================================================================
 // 7: the brain.tone suggestion requires explicit founder action (real UI harness).

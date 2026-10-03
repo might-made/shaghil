@@ -51,14 +51,14 @@ export function normalizeRequest(body) {
   if (refinement !== undefined && !Object.hasOwn(REFINE, refinement)) throw new Error('التعديل غير صالح');
   const previous = cleanPrevious(body.previous);
   if (refinement && !previous) throw new Error('النتيجة السابقة مطلوبة للتعديل');
-  const brand = { style: clean(object(body.brand) ? body.brand.style : '') };
-  // V4 Batch 4: once an active brand voice exists (brand.style now carries the resolved
-  // toneOfVoice-or-legacy-style value from the client — see lib/visual-studio.mjs brandStyle()),
-  // brain.tone must stop competing with it as a second, unlabeled voice signal. There is no
-  // active voice yet (brand.style is empty) when nothing has been migrated or entered, in which
-  // case brain.tone is left exactly as before — nothing changes for a founder who hasn't touched
-  // Brand Brain at all.
-  if (brand.style) delete brain.tone;
+  // V4 Batch 4 (SSOT correction): toneOfVoice is the sole active voice field, read and returned
+  // directly under its own name — never remapped onto the legacy `style` key. The client sends
+  // the already-resolved toneOfVoice-or-legacy-style value (see lib/visual-studio.mjs
+  // brandStyle()) under brand.toneOfVoice; legacy brand.style is not read here at all for text
+  // engines. brain.tone stops competing with it once an active voice exists; with none at all
+  // (nothing migrated or entered), brain.tone is left exactly as before.
+  const brand = { toneOfVoice: clean(object(body.brand) ? body.brand.toneOfVoice : '') };
+  if (brand.toneOfVoice) delete brain.tone;
   const raw = object(body.inputs) ? body.inputs : {};
   const inputs = Object.fromEntries(FIELDS[engine].map(key => [key, clean(raw[key])]));
   if (engine === 'content') {
@@ -110,7 +110,7 @@ export default async function handler(req, res) {
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, maxRetries: 0, timeout: 55000 });
     const model = process.env.OPENAI_MODEL || "gpt-5.6-luna";
     const refinementText = refinement && REFINE[refinement] ? `\n\nREFINEMENT: ${REFINE[refinement]}\nPREVIOUS OUTPUT:\n${previous}` : "";
-    const brandText = brand?.style ? `\n\nBRAND VOICE / STYLE:\n${JSON.stringify(brand)}` : "";
+    const brandText = brand?.toneOfVoice ? `\n\nBRAND VOICE / STYLE:\n${JSON.stringify(brand)}` : "";
     const response = await client.responses.create({
       model, store: false,
       instructions: `${BASE}\n\nENGINE INSTRUCTION:\n${ENGINE[engine]}`,
