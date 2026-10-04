@@ -56,6 +56,13 @@ const COMMERCIAL_CONTEXT_SHORT_FIELDS = { currentPriority: 200, currentOffer: 20
 const COMMERCIAL_CONTEXT_LIST_FIELDS = { secondaryObjectives: [3, 100] };
 const BRAND_PREFERENCE_SHORT_FIELDS = { positioning: 250, valueProposition: 250, personality: 200 };
 const BRAND_PREFERENCE_LIST_FIELDS = { differentiators: [5, 100], doList: [8, 60], dontList: [8, 60], preferredVocabulary: [8, 60], prohibitedVocabulary: [8, 60] };
+// V4 Batch 8: the selected product's fields, sanitized the same disciplined way, independent of
+// and re-validated regardless of whatever cap the Product Library's own storage layer already
+// applies at write time — this endpoint never trusts client input without its own limits.
+// `offers` reuses the exact same boundary (5 entries, 150 chars
+// each) Batch 7 established at the storage layer, applied again here at the request boundary.
+const PRODUCT_SHORT_FIELDS = { id: 100, name: 200, category: 100, description: 600, price: 100, audienceRelevance: 300 };
+const PRODUCT_LIST_FIELDS = { specifications: [8, 150], features: [8, 150], benefits: [8, 150], useCases: [8, 150], offers: [5, 150] };
 
 function cleanShortFields(source, spec) {
   const out = {};
@@ -99,7 +106,13 @@ export function normalizeRequest(body) {
   // deliberate instruction.
   const commercialContextRaw = { ...cleanShortFields(body.brain, COMMERCIAL_CONTEXT_SHORT_FIELDS), ...cleanListFields(body.brain, COMMERCIAL_CONTEXT_LIST_FIELDS) };
   const brandPreferencesRaw = { ...brand, ...cleanShortFields(body.brand, BRAND_PREFERENCE_SHORT_FIELDS), ...cleanListFields(body.brand, BRAND_PREFERENCE_LIST_FIELDS) };
-  const context = assembleTextContext(engine, commercialContextRaw, brandPreferencesRaw);
+  // V4 Batch 8: body.product is an explicit selection the client already resolved by stable id
+  // (see lib/visual-studio.mjs productContext()) — never guessed here. A request with no
+  // product selected simply omits body.product (or sends one without an id), and
+  // assembleTextContext's own gate on productSource.id leaves selectedProduct empty — no
+  // Product Memory is sent, and nothing here infers one from brain.product, names, or task text.
+  const productRaw = { ...cleanShortFields(body.product, PRODUCT_SHORT_FIELDS), ...cleanListFields(body.product, PRODUCT_LIST_FIELDS) };
+  const context = assembleTextContext(engine, commercialContextRaw, brandPreferencesRaw, productRaw);
   const raw = object(body.inputs) ? body.inputs : {};
   const inputs = Object.fromEntries(FIELDS[engine].map(key => [key, clean(raw[key])]));
   if (engine === 'content') {
@@ -163,10 +176,17 @@ export default async function handler(req, res) {
     const brandPreferencesText = Object.keys(context.brandPreferences).length
       ? `\n\nBRAND PREFERENCES (desired positioning, differentiators and voice guidance — creative/strategic direction, not verified product or business facts):\n${JSON.stringify(context.brandPreferences)}`
       : "";
+    // V4 Batch 8: present only when the founder explicitly selected a product (never guessed).
+    // Explicitly stated as authoritative for THIS product's own facts, and scoped to this one
+    // product only — Business Brain's own `product` field above remains the general business
+    // offering description and is never overridden by this section.
+    const selectedProductText = Object.keys(context.selectedProduct).length
+      ? `\n\nSELECTED PRODUCT CONTEXT (the one specific product the founder explicitly selected for this task — authoritative for this product's own facts such as its category/price/specifications/features/benefits/use cases/offers; Business Brain's "product" field above remains the general business offering description and must not override these selected fields; never apply these facts to any other product):\n${JSON.stringify(context.selectedProduct)}`
+      : "";
     const response = await client.responses.create({
       model, store: false,
       instructions: `${BASE}\n\nENGINE INSTRUCTION:\n${ENGINE[engine]}`,
-      input: `BUSINESS BRAIN:\n${JSON.stringify(brain, null, 2)}${commercialContextText}${brandPreferencesText}\n\nTASK INPUTS:\n${JSON.stringify(inputs || {}, null, 2)}${refinementText}\n\nReturn clean Arabic Markdown with short headings, bullets, and practical copy. Do not use tables unless essential.`
+      input: `BUSINESS BRAIN:\n${JSON.stringify(brain, null, 2)}${selectedProductText}${commercialContextText}${brandPreferencesText}\n\nTASK INPUTS:\n${JSON.stringify(inputs || {}, null, 2)}${refinementText}\n\nReturn clean Arabic Markdown with short headings, bullets, and practical copy. Do not use tables unless essential.`
     });
     res.setHeader("Cache-Control", "no-store");
     if (!response.output_text?.trim()) throw new Error("Empty model response");

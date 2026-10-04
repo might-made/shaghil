@@ -13,7 +13,10 @@ const brain = {name:'Brew 27',category:'قهوة',product:'قهوة وحلويا
 // V4 fields a later batch adds.
 const LEGACY_BRAIN_FIELDS=['name','category','product','customer','location','price','tone','objective'];
 const withoutBusinessMeta=b=>Object.fromEntries(LEGACY_BRAIN_FIELDS.map(k=>[k,b[k]]));
-const cases = {content:{period:'30 يوم',contentObjective:'',contentObjectiveCustom:'',contentAudience:'',contentChannels:'',contentChannelsCustom:'',contentTone:'',contentCTA:'',contentInstructions:''},copy:{channel:'SMS',instruction:''},offer:{constraint:''},whatsapp:{message:'كم السعر؟'},campaign:{occasion:'',duration:'7 أيام'},reel:{duration:'45 ثانية',topic:''}};
+// V4 Batch 8 adds a shared, optional 'productId' field to every engine's form (an optional
+// product selector) — included here with an empty value so the DOM-driven assertions below
+// (form element count, exact `inputs` round-trip) reflect the real, current form shape.
+const cases = {content:{period:'30 يوم',contentObjective:'',contentObjectiveCustom:'',contentAudience:'',contentChannels:'',contentChannelsCustom:'',contentTone:'',contentCTA:'',contentInstructions:'',productId:''},copy:{channel:'SMS',instruction:'',productId:''},offer:{constraint:'',productId:''},whatsapp:{message:'كم السعر؟',productId:''},campaign:{occasion:'',duration:'7 أيام',productId:''},reel:{duration:'45 ثانية',topic:'',productId:''}};
 const response = () => ({headers:{},setHeader(k,v){this.headers[k]=v},status(n){this.code=n;return this},json(body){this.body=body;return this}});
 const originalCreate = OpenAI.Responses.prototype.create;
 const originalKey = process.env.OPENAI_API_KEY;
@@ -114,7 +117,14 @@ confirmResult=true;ui.run('deleteResult(0)');assert.equal(JSON.parse(storage.get
 storage.set('shaghilHistory',JSON.stringify([{engine:'whatsapp',text:'رد قديم',ts:0}]));ui.run('openHistory(0)');await ui.run("refine('shorter')");assert.equal(requests.at(-1).engine,'whatsapp');
 ui.run('openHistory(1)');const oldCount=requests.length;await ui.run('run(true)');assert.equal(requests.length,oldCount);assert.equal(ui.nodes.get('engine').hidden,false);
 // A response arriving after navigation must not replace the new screen.
-let resolve;pending=new Promise(r=>{resolve=r});ui.run("openEngine('offer')");const running=ui.run('run()');const inFlight=requests.length;await ui.run('run()');assert.equal(requests.length,inFlight);ui.run('home()');resolve({ok:true,status:200,text:async()=>JSON.stringify({text:'late'})});await running;pending=null;assert.equal(ui.nodes.get('home').hidden,false);
+let resolve;pending=new Promise(r=>{resolve=r});ui.run("openEngine('offer')");const beforeRun=requests.length;const running=ui.run('run()');
+// V4 Batch 8's optional product lookup makes run() genuinely async before it ever reaches
+// fetch (even with no product selected) — unlike every other field, this one is resolved via a
+// real (here, immediately-resolved) promise. Wait for the first call's request to actually land
+// before testing the duplicate-click guard, rather than assuming it is synchronous with run().
+for(let i=0;i<20&&requests.length===beforeRun;i++)await null;
+const inFlight=requests.length;assert.equal(inFlight,beforeRun+1,'the first run() must have issued exactly one request by the time it is in flight');
+await ui.run('run()');assert.equal(requests.length,inFlight,'a second run() while the first is still in flight must not issue another request');ui.run('home()');resolve({ok:true,status:200,text:async()=>JSON.stringify({text:'late'})});await running;pending=null;assert.equal(ui.nodes.get('home').hidden,false);
 storage.set('brain','{broken');ui=app();assert.equal(ui.nodes.get('welcome').hidden,false);
 storage.set('brain',JSON.stringify({...brain,name:'<img src=x onerror=alert(1)>'}));ui.run('brainScreen()');assert.ok(!ui.nodes.get('brainGrid').innerHTML.includes('<img'));
 console.log('PASS: save → reload → all six engines → generate → copy → refinements → second version → home; history restoration, legacy history, duplicate requests, navigation races, malformed storage and escaped Brain');
@@ -132,7 +142,7 @@ ui.nodes.get('occasion').value='';ui.nodes.get('duration').value='7 أيام';
 await ui.run('run()');
 assert.equal(ui.nodes.get('output').hidden,false);
 assert.equal(requests.at(-1).engine,'campaign');
-assert.deepEqual(requests.at(-1).inputs,{occasion:'',duration:'7 أيام'});
+assert.deepEqual(requests.at(-1).inputs,{occasion:'',duration:'7 أيام',productId:''});
 assert.deepEqual(withoutBusinessMeta(requests.at(-1).brain),najoob);
 assert.ok(ui.nodes.get('out').innerHTML.includes('campaign'));
 console.log('PASS: campaign engine (سوّ حملة) succeeds for the Najoob Business Brain with a blank occasion and 7-day duration');

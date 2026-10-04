@@ -119,11 +119,15 @@ assert.ok(!overflowProduct.offers.includes('عرض 6 يجب أن يُستثنى'
 
 console.log('PASS: `offers` enforces a maximum of 5 entries and 150 characters per entry at the storage write boundary (saveProduct), regardless of how many or how long the caller supplies');
 
-// --- 9. brain.currentOffer and product.offers remain structurally separate. ---
+// --- 9. brain.currentOffer and product.offers remain structurally separate. At the time this
+// batch shipped, neither api/generate.mjs nor lib/context-assembly.mjs referenced `offers` at
+// all (no product wiring existed yet). Batch 8 has since authorized wiring an explicitly
+// selected product's `offers` into both files alongside brain.currentOffer — the invariant this
+// file still enforces is that the two remain distinct keys in distinct sections, never merged
+// into one field (verified below on real assembled data, the strongest form of this check). ---
 const generateSource = fs.readFileSync('api/generate.mjs', 'utf8');
 const contextAssemblySource = fs.readFileSync('lib/context-assembly.mjs', 'utf8');
 assert.ok(generateSource.includes('currentOffer'), "9. brain.currentOffer (Commercial Context, Batch 6) still exists in api/generate.mjs, untouched by this batch");
-assert.ok(!generateSource.includes('product.offers') && !generateSource.includes('productOffers') && !contextAssemblySource.includes('offers'), '9. api/generate.mjs and lib/context-assembly.mjs contain no reference to product.offers — the two concepts are never merged');
 // A real brain object carrying currentOffer must never leak into a product record, and a real
 // product carrying offers must never leak into brain — proving the separation holds on actual
 // data, not just by source-scanning for the field names.
@@ -163,25 +167,18 @@ console.log('PASS: Workspace export/import preserves the expanded Product Memory
 
 console.log('PASS: campaign export manifests continue carrying both product name and stable productId, exactly as Batch 2 established — untouched by this batch\'s schema expansion');
 
-// --- 12. No automatic product selection or prompt wiring has been introduced. ---
-// Checked as code-identifier patterns (e.g. `.audienceRelevance`, `'offers'`), not plain
-// substrings — "specifications" and "use cases" are ordinary English words that legitimately
-// already appear in the pre-existing BASE system prompt prose, unrelated to this schema field.
-const productFieldAsCode = (source, field) => new RegExp(`[.'"\`]${field}[.'"\`:]`).test(source);
-assert.ok(!/function\s+select\w*[Pp]roduct/.test(generateSource), '12. api/generate.mjs contains no product-selector implementation');
-// 'category' is excluded here: brain.category (Business Facts) already legitimately exists in
-// api/generate.mjs as a pre-existing, unrelated field — a name collision with product.category,
-// not evidence of this batch's field being wired in.
-for (const field of ['specifications', 'audienceRelevance', 'useCases', 'benefits']) {
-  assert.ok(!productFieldAsCode(generateSource, field), `12. api/generate.mjs contains no code reference to the new Product Memory field ${field} — no prompt wiring was introduced`);
-}
-const visualStudioSource = fs.readFileSync('lib/visual-studio.mjs', 'utf8');
-for (const field of ['specifications', 'audienceRelevance', 'useCases']) {
-  assert.ok(!productFieldAsCode(visualStudioSource, field), `12. lib/visual-studio.mjs contains no code reference to the new Product Memory field ${field}`);
-}
+// --- 12. At the time this batch shipped, no product selector or Product Memory prompt wiring
+// existed anywhere. Batch 8 has since authorized exactly that: an explicitly selected product's
+// fields (including specifications/audienceRelevance/useCases/benefits) are now referenced in
+// both api/generate.mjs and lib/visual-studio.mjs (see
+// scripts/qa-v23-batch8-product-selection.mjs for that wiring's own verification). The
+// invariant this file still enforces is narrower but still real and still true: no AUTOMATIC or
+// guessed selector exists anywhere (selection stays explicit and client-driven, by stable id
+// only), and api/visual.mjs remains unwired from the context contract. ---
+assert.ok(!/function\s+select\w*[Pp]roduct/.test(generateSource), '12. api/generate.mjs contains no automatic/guessing product-selector implementation (selection is explicit and client-driven, authorized in Batch 8)');
 const visualApiSource = fs.readFileSync('api/visual.mjs', 'utf8');
 assert.ok(!visualApiSource.includes('context-matrix') && !visualApiSource.includes('context-assembly'), '12. api/visual.mjs remains unwired from the context contract, exactly as every prior batch left it');
 
-console.log('PASS: no automatic product selection or Product Memory prompt wiring was introduced in this batch — api/generate.mjs, lib/visual-studio.mjs and api/visual.mjs contain no reference to any new Product Memory field');
+console.log('PASS: at the time of this batch, no product selector or Product Memory prompt wiring existed anywhere; Batch 8 has since authorized explicit, selection-based wiring (verified separately in qa-v23-batch8-product-selection.mjs), and this file continues to enforce that no automatic/guessing selector exists anywhere and api/visual.mjs remains unwired');
 
-console.log('\nPASS V4 BATCH 7: the Product Library migrates additively and idempotently to the approved V4 Product Memory schema (category, price, specifications, features, benefits, useCases, audienceRelevance, offers) — every existing id/name/description/fidelity/image/reference value survives byte-identical, array defaults are never shared by reference, populated fields and the existing edit/save flow both preserve the new data, `offers` is capped at 5 entries/150 characters at the storage boundary, brain.currentOffer and product.offers stay structurally separate, Workspace export/import and campaign export both continue working exactly as before, and zero product selector/prompt/Visual wiring was introduced');
+console.log('\nPASS V4 BATCH 7: the Product Library migrates additively and idempotently to the approved V4 Product Memory schema (category, price, specifications, features, benefits, useCases, audienceRelevance, offers) — every existing id/name/description/fidelity/image/reference value survives byte-identical, array defaults are never shared by reference, populated fields and the existing edit/save flow both preserve the new data, `offers` is capped at 5 entries/150 characters at the storage boundary, brain.currentOffer and product.offers stay structurally separate, Workspace export/import and campaign export both continue working exactly as before, and zero product selector/prompt/Visual wiring was introduced in this batch (Batch 8 has since authorized explicit, selection-based prompt wiring — see qa-v23-batch8-product-selection.mjs; api/visual.mjs remains unwired)');

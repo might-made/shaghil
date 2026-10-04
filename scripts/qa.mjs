@@ -107,3 +107,8 @@ await import('./qa-v20-batch5-context-matrix.mjs');
 await import('./qa-v21-batch6-text-context-wiring.mjs');
 
 await import('./qa-v22-batch7-product-memory-schema.mjs');
+
+// Runs in its own process (fresh IndexedDB), like qa-v07-product-persistence.mjs: its
+// zero/one/multiple-product assertions require an empty Product Library to start, which the
+// shared in-process store no longer is by this point (qa-v17/qa-v22 above both leave products in it).
+execFileSync(process.execPath,['scripts/qa-v23-batch8-product-selection.mjs'],{stdio:'inherit'});

@@ -83,13 +83,17 @@ for (const engine of TEXT_ENGINES) {
 
 console.log('PASS: no text consumer receives Visual Identity or Visual Direction content, even when a request body supplies it — these fields are structurally never read by the text-engine code path');
 
-// --- 8. Product Memory is not guessed or newly wired ahead of its authorized implementation. ---
+// --- 8. At the time this batch shipped, Product Memory was not guessed or wired at all. Batch 8
+// has since authorized explicit, selection-based Product Memory wiring into api/generate.mjs
+// (see scripts/qa-v23-batch8-product-selection.mjs for that wiring's own verification) — the
+// invariant this file still enforces is Batch 6's own and still true today: a product supplied
+// WITHOUT an explicit selection (no id) must never surface, exactly as "no guessing" requires in
+// every batch since. ---
 const generateSource = fs.readFileSync('api/generate.mjs', 'utf8');
-assert.ok(!/body\.product\b/.test(generateSource) && !/\bproductMemory\b/.test(generateSource), '8. api/generate.mjs contains no reference to body.product or productMemory — Product Memory is not wired in this batch');
-const taskWithProduct = normalizeRequest({ brain: fullBrain, engine: 'offer', inputs: DEFAULT_INPUTS.offer, brand: fullBrand, product: { id: 'p1', name: 'PRODUCT-SHOULD-BE-IGNORED', price: '999' } });
-assert.ok(!JSON.stringify(taskWithProduct).includes('PRODUCT-SHOULD-BE-IGNORED'), '8. a supplied body.product is silently ignored, never guessed into the context, never surfacing in the normalized task');
+const taskWithUnselectedProduct = normalizeRequest({ brain: fullBrain, engine: 'offer', inputs: DEFAULT_INPUTS.offer, brand: fullBrand, product: { name: 'PRODUCT-SHOULD-BE-IGNORED', price: '999' } });
+assert.ok(!JSON.stringify(taskWithUnselectedProduct).includes('PRODUCT-SHOULD-BE-IGNORED'), "8. a supplied product with no id (i.e. nothing explicitly selected) is still silently ignored, never guessed into the context — true in Batch 6 and unchanged by Batch 8's explicit-selection wiring");
 
-console.log('PASS: Product Memory is neither guessed nor newly wired in this batch — a supplied product field is silently ignored, and the source contains no Product Memory reference');
+console.log('PASS: at the time of this batch, Product Memory was neither guessed nor wired at all; Batch 8 has since authorized explicit, selection-based wiring (verified separately in qa-v23-batch8-product-selection.mjs), and this file continues to enforce that a product with no id (nothing explicitly selected) is still never guessed into context');
 
 // --- 9. Existing legacy text-generation behavior still works end to end (no brand/V4 fields
 // supplied at all — every pre-existing caller/test shape). ---

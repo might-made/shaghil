@@ -186,7 +186,18 @@ function home(){cancelPending();let b=getBrain();if(!b)return show('welcome');re
 function dismissFirstValueHint(){try{localStorage.setItem('firstValueHintDismissed','1')}catch{}$('firstValueHint').classList.add('hidden')}
 function demo(){const existing=readLocal('brain',null);const b={...(existing||{}),name:'تحميص ٢٧',category:'قهوة مختصة',product:'قهوة مختصة وحلويات مع توصيل داخل جدة',customer:'موظفون وطلاب 20–35',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'رجوع العملاء'};b.schemaVersion=1;b.businessId=(existing&&existing.businessId)||crypto.randomUUID();localStorage.setItem('brain',JSON.stringify(b));home()}
 const titles={content:'سوّ محتوى',copy:'اكتب لي',offer:'ابنِ عرض',whatsapp:'رد على عميل',campaign:'سوّ حملة',reel:'اكتب ريل'};
-const fields={content:['period','contentObjective','contentObjectiveCustom','contentAudience','contentChannels','contentChannelsCustom','contentTone','contentCTA','contentInstructions'],copy:['channel','instruction'],offer:['constraint'],whatsapp:['message'],campaign:['occasion','duration'],reel:['duration','topic']};
+// V4 Batch 8: every engine gets 'productId' appended to its own field list — the optional
+// product selector is shared UI, never engine-specific, and its value is always the stable
+// product id (never the mutable name), read generically like every other field via fieldValue().
+const fields={content:['period','contentObjective','contentObjectiveCustom','contentAudience','contentChannels','contentChannelsCustom','contentTone','contentCTA','contentInstructions','productId'],copy:['channel','instruction','productId'],offer:['constraint','productId'],whatsapp:['message','productId'],campaign:['occasion','duration','productId'],reel:['duration','topic','productId']};
+let productOptionsCount=0;
+// Soft nudge only for offer/campaign, only when Product Memory exists and nothing is selected
+// yet — never a hard block, and never shown for the other four engines.
+function toggleProductNudge(){const nudge=$('productNudge');if(!nudge)return;const show=['offer','campaign'].includes(current)&&productOptionsCount>0&&!$('productId')?.value;nudge.classList.toggle('hidden',!show);if(show)nudge.textContent='عندك منتجات محفوظة في المكتبة — اختيار منتج معيّن يجعل هذا العرض/الحملة أكثر دقة لهذا المنتج تحديدًا (اختياري).'}
+// Populates the shared selector from Product Memory, by stable id — never guesses or infers a
+// product from task text. Exactly one product: a deterministic, visible preselection the founder
+// can still change or clear. More than one: no auto-selection, the founder must choose explicitly.
+async function populateProductSelect(){const sel=$('productId'),wrap=$('productSelectorWrap');if(!sel||!wrap)return;let products=[];try{products=await globalThis.Products?.list?.()||[]}catch{}productOptionsCount=products.length;wrap.classList.toggle('hidden',products.length===0);sel.innerHTML='<option value="">بدون منتج محدد</option>'+products.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');if(products.length===1)sel.value=products[0].id;toggleProductNudge()}
 const fieldValue=k=>{const el=$(k);if(!el)return'';return el.multiple?[...el.selectedOptions].map(o=>o.value).join('، '):el.value.trim()};
 function openEngine(e){cancelPending();if(!getBrain())return setup();if(!Object.hasOwn(titles,e))return;refreshBrandCache();current=e;lastInputs=null;lastText='';$('engineTitle').textContent=titles[e];let h='';
 if(e==='content'){const b=getBrain()||{};h=`<div><label for="period">الفترة</label><select id="period"><option>7 أيام</option><option>14 يوم</option><option>30 يوم</option></select></div>
@@ -202,7 +213,10 @@ if(e==='offer')h=`<div class="full"><label for="constraint">قيد أو مناس
 if(e==='whatsapp')h=`<div class="full"><label for="message">رسالة العميل</label><textarea id="message" required placeholder="الصق رسالة العميل هنا"></textarea></div>`;
 if(e==='campaign')h=`<div><label for="occasion">المناسبة (اختياري)</label><input id="occasion" placeholder="اتركها فارغة لحملة تخدم هدف مشروعك"></div><div><label for="duration">المدة</label><input id="duration" value="7 أيام" required></div>`;
 if(e==='reel')h=`<div><label for="duration">المدة</label><select id="duration"><option>15 ثانية</option><option>30 ثانية</option><option>45 ثانية</option></select></div><div><label for="topic">موضوع محدد (اختياري)</label><input id="topic" placeholder="اتركه فارغًا ونختار الموضوع الأنسب"></div>`;
-$('engineForm').innerHTML='<div class="form">'+h+'</div>';show('engine')}
+// V4 Batch 8: shared across all six engines — options are populated asynchronously below
+// (never blocking this screen's render), and the selection never interrupts or blocks "شغّل".
+h+=`<div class="full hidden" id="productSelectorWrap"><label for="productId">منتج محدد من مكتبة المنتجات (اختياري)</label><select id="productId" onchange="toggleProductNudge()"><option value="">بدون منتج محدد</option></select><p id="productNudge" class="status hidden"></p></div>`;
+$('engineForm').innerHTML='<div class="form">'+h+'</div>';show('engine');populateProductSelect()}
 function esc(x){return String(x||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
 function md(x){let z=esc(x);z=z.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>').replace(/^---$/gm,'<hr>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');let lines=z.split('\n'),out='',ul=false;for(let line of lines){if(/^[-•] /.test(line)){if(!ul){out+='<ul>';ul=true}out+='<li>'+line.replace(/^[-•] /,'')+'</li>'}else{if(ul){out+='</ul>';ul=false}if(line.trim()&&!/^<(h|hr)/.test(line))out+='<p>'+line+'</p>';else out+=line}}if(ul)out+='</ul>';return out}
 function updateSaveStatus(){const btn=$('saveResultBtn');if(btn)btn.disabled=savedNow;$('saveResultStatus').textContent=savedNow?'تم الحفظ في السجل ✓':'لم يُحفظ بعد — اضغط "حفظ في السجل" للاحتفاظ بهذه النتيجة'}
@@ -213,11 +227,16 @@ function translateRawKeys(text){return text.replace(/^([#\s>*-]*)(recommended_re
 function renderResult(text,saved=false){text=translateRawKeys(text);lastText=text;$('out').classList.remove('outError');$('out').innerHTML=md(text);savedNow=saved;updateSaveStatus();show('output');globalThis.Visual?.resultEntry()}
 function loading(){globalThis.Visual?.hideEntry();show('output');$('out').classList.remove('outError');$('out').innerHTML='<div class="skeleton"></div><div class="skeleton" style="width:82%"></div><div class="skeleton" style="width:68%"></div><div class="skeleton"></div>'}
 async function generate(payload){if(busy)return;busy=true;const id=++requestId;lastText='';loading();try{payload={...payload,brand:cachedBrandContext};let r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json',...PilotAuth.headers()},body:JSON.stringify(payload)});let raw=await r.text();let j;try{j=JSON.parse(raw)}catch{console.error('SHAGHIL non-JSON response',r.status,raw.slice(0,300));throw new Error('تعذّر الاتصال بالخادم، جرّب مرة ثانية')}if(id!==requestId)return;if(r.status===401)PilotAuth.handleUnauthorized();if(!r.ok)throw new Error(j.error||'تعذّر الاتصال');if(typeof j.text!=='string'||!j.text.trim())throw new Error('لم تصل نتيجة، جرّب مرة ثانية');renderResult(j.text)}catch(e){if(id!==requestId)return;$('out').classList.add('outError');$('out').innerHTML='<h3>ما قدرنا نكمل المهمة</h3><p>'+esc(e.message)+'</p><p>جرّب نسخة ثانية، وإذا استمرت المشكلة راجع إعدادات الاتصال.</p>'}finally{if(id===requestId)busy=false}}
+// V4 Batch 8: resolves the explicitly selected productId (if any) to its approved Product
+// Memory allowlist via the real stable id — never by name, never guessed. No selection means no
+// lookup at all and no product key in the generate() payload.
+async function resolveSelectedProduct(inputs){const id=inputs?.productId;if(!id)return null;try{return await globalThis.Visual?.productContext?.(id)}catch{return null}}
 async function run(again=false){if(busy)return;let b=getBrain();if(!b||!['name','product','customer'].every(k=>typeof b[k]==='string'&&b[k].trim())){toast('أكمل بيانات مشروعك في هوية النشاط');return setup()}if(!Object.hasOwn(fields,current))return home();if(!again){lastInputs=Object.fromEntries(fields[current].map(k=>[k,fieldValue(k)]))}else if(!lastInputs){toast('حدّد تفاصيل المهمة لإنشاء نسخة جديدة');return openEngine(current)}
 if(current==='whatsapp'&&!lastInputs.message){toast('أدخل رسالة العميل أولًا');$('message')?.focus();return}
 if(current==='campaign'&&!lastInputs.duration){toast('أدخل مدة الحملة');$('duration')?.focus();return}
-return generate({brain:b,engine:current,inputs:lastInputs})}
-async function refine(type){if(busy||!lastText)return;return generate({brain:getBrain(),engine:current,inputs:lastInputs||{},refinement:type,previous:lastText})}
+const product=await resolveSelectedProduct(lastInputs);
+return generate({brain:b,engine:current,inputs:lastInputs,...(product?{product}:{})})}
+async function refine(type){if(busy||!lastText)return;const product=await resolveSelectedProduct(lastInputs);return generate({brain:getBrain(),engine:current,inputs:lastInputs||{},refinement:type,previous:lastText,...(product?{product}:{})})}
 async function copyOut(){if(busy||!lastText)return;try{await navigator.clipboard.writeText(lastText);toast('تم النسخ')}catch{toast('تعذّر النسخ، حدّد النص وانسخه يدويًا')}}
 function toast(t){let d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1400)}
 function historyScreen(){cancelPending();let h=getHistory();$('historyList').innerHTML=h.length?h.map((x,i)=>`<div class="historyItem"><div onclick="openHistory(${i})"><b>${esc(x.title||titles[x.engine]||x.engine||'نتيجة')}</b>${x.project?' · <b>'+esc(x.project)+'</b>':''}<small>${new Date(x.ts).toLocaleString('ar-SA')}</small><p>${esc(x.text.slice(0,120))}...</p></div><button class="btn" onclick="deleteResult(${i})">حذف</button></div>`).join(''):'<p>ما فيه نتائج محفوظة حتى الآن.</p>';show('history');globalThis.Visual?.history()}
