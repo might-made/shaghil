@@ -94,6 +94,8 @@ await import('./qa-v13-app-icon.mjs');
 
 await import('./qa-v14-security.mjs');
 
+await import('./qa-v15-pilot-gate.mjs');
+
 await import('./qa-v16-batch1-business-ids.mjs');
 
 await import('./qa-v17-batch2-campaign-pack-ids.mjs');
