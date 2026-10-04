@@ -114,3 +114,7 @@ await import('./qa-v22-batch7-product-memory-schema.mjs');
 execFileSync(process.execPath,['scripts/qa-v23-batch8-product-selection.mjs'],{stdio:'inherit'});
 
 await import('./qa-v24-batch9-visual-context-wiring.mjs');
+
+// Orchestrates its own two child processes (a fresh IndexedDB for the import phase), like
+// qa-v08-workspace-transfer.mjs — it is itself the top-level entry point for both phases.
+execFileSync(process.execPath,['scripts/qa-v25-batch10-progressive-hardening.mjs'],{stdio:'inherit'});
