@@ -118,3 +118,9 @@ await import('./qa-v24-batch9-visual-context-wiring.mjs');
 // Orchestrates its own two child processes (a fresh IndexedDB for the import phase), like
 // qa-v08-workspace-transfer.mjs — it is itself the top-level entry point for both phases.
 execFileSync(process.execPath,['scripts/qa-v25-batch10-progressive-hardening.mjs'],{stdio:'inherit'});
+
+// Founder QA follow-up: real persistence -> real engine selector -> real request -> real
+// normalized-context proof for the product selector, on a brand-new product (not a pre-seeded
+// one). Runs in its own process (fresh IndexedDB), like qa-v07-product-persistence.mjs, since it
+// requires a genuinely empty Product Library to start.
+execFileSync(process.execPath,['scripts/qa-v26-product-selector-e2e.mjs'],{stdio:'inherit'});
