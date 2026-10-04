@@ -78,7 +78,11 @@ for (const engine of TEXT_ENGINES) {
   for (const marker of ['LOGO-SHOULD-NEVER-LEAK', 'REF-SHOULD-NEVER-LEAK', 'VISUALNOTE-SHOULD-NEVER-LEAK', 'VISUALDO-LEAK', 'VISUALDONT-LEAK', '#111111', '#eeeeee', '#ff00ff']) {
     assert.ok(!serialized.includes(marker), `7. ${engine}'s normalized context never includes Visual Identity/Direction content (${marker} absent)`);
   }
-  assert.ok(!Object.hasOwn(task.context, 'visualIdentity') && !Object.hasOwn(task.context, 'visualDirection'), `7. ${engine}'s context object has no visualIdentity/visualDirection keys at all`);
+  // V4 Batch 9 adds an always-present `visualDirection` key to the shared assembly output (now
+  // reused by api/visual.mjs too) — for every text engine it is always empty, since the matrix's
+  // visualDirection policy is 'no' for all six; `visualIdentity` was never added as a key at all.
+  assert.ok(!Object.hasOwn(task.context, 'visualIdentity'), `7. ${engine}'s context object has no visualIdentity key at all`);
+  assert.deepEqual(task.context.visualDirection, {}, `7. ${engine}'s visualDirection section is always empty — this engine's matrix policy for it is 'no'`);
 }
 
 console.log('PASS: no text consumer receives Visual Identity or Visual Direction content, even when a request body supplies it — these fields are structurally never read by the text-engine code path');
@@ -189,10 +193,13 @@ try {
   if (originalKey === undefined) delete process.env.OPENAI_API_KEY; else process.env.OPENAI_API_KEY = originalKey;
 }
 
-// --- 12. api/visual.mjs remains outside Batch-6 wiring. ---
+// --- 12. api/visual.mjs was outside this batch's own wiring work — at the time this batch
+// shipped, it did not reference context-matrix.mjs/context-assembly.mjs at all. Batch 9 has
+// since authorized wiring it in (see scripts/qa-v24-batch9-visual-context-wiring.mjs for that
+// wiring's own verification); nothing in this file depends on it remaining unwired. ---
 const visualApiSource = fs.readFileSync('api/visual.mjs', 'utf8');
-assert.ok(!visualApiSource.includes('context-matrix') && !visualApiSource.includes('context-assembly'), '12. api/visual.mjs does not reference context-matrix.mjs or context-assembly.mjs — Visual wiring remains out of scope for this batch');
+assert.ok(visualApiSource.includes('context-assembly'), "12. api/visual.mjs now references context-assembly.mjs, exactly as Batch 9 authorized — see qa-v24-batch9-visual-context-wiring.mjs");
 
-console.log('PASS: api/visual.mjs remains completely outside this batch\'s wiring');
+console.log('PASS: api/visual.mjs was outside this batch\'s own wiring; Batch 9 has since wired it too (verified separately in qa-v24-batch9-visual-context-wiring.mjs)');
 
-console.log('\nPASS V4 BATCH 6 (P0-C.2): all six text engines are wired to the Batch-5 context contract via the new lib/context-assembly.mjs helper — each receives exactly its authorized Business Facts/Audience/Commercial Context/Positioning/Value Proposition/Differentiators/Brand Voice slice, with empty fields omitted rather than fabricated, toneOfVoice as the sole active voice source (style and brain.tone correctly absent/retired), zero Visual Identity/Direction leakage, zero Product Memory guessing, unchanged legacy behavior and response contract, no mechanism to write output back into memory, measured payload/prompt sizes safely under the unchanged request ceiling, and api/visual.mjs left completely unwired');
+console.log('\nPASS V4 BATCH 6 (P0-C.2): all six text engines are wired to the Batch-5 context contract via the new lib/context-assembly.mjs helper — each receives exactly its authorized Business Facts/Audience/Commercial Context/Positioning/Value Proposition/Differentiators/Brand Voice slice, with empty fields omitted rather than fabricated, toneOfVoice as the sole active voice source (style and brain.tone correctly absent/retired), zero Visual Identity/Direction leakage, zero Product Memory guessing, unchanged legacy behavior and response contract, no mechanism to write output back into memory, measured payload/prompt sizes safely under the unchanged request ceiling, and api/visual.mjs left outside this batch\'s own wiring (wired separately in Batch 9)');

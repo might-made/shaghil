@@ -112,3 +112,5 @@ await import('./qa-v22-batch7-product-memory-schema.mjs');
 // zero/one/multiple-product assertions require an empty Product Library to start, which the
 // shared in-process store no longer is by this point (qa-v17/qa-v22 above both leave products in it).
 execFileSync(process.execPath,['scripts/qa-v23-batch8-product-selection.mjs'],{stdio:'inherit'});
+
+await import('./qa-v24-batch9-visual-context-wiring.mjs');

@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 import { checkPilotAuth } from "../lib/pilot-auth.mjs";
 import { checkRateLimit } from "../lib/rate-limit.mjs";
-import { assembleTextContext } from "../lib/context-assembly.mjs";
+import { assembleContext } from "../lib/context-assembly.mjs";
 
 const BASE = `You are SHAGHIL, an execution engine for Saudi small businesses.
 Use the supplied Business Brain as authoritative business context.
@@ -102,17 +102,17 @@ export function normalizeRequest(body) {
   // lib/context-assembly.mjs select/organize exactly what this engine is authorized to see per
   // lib/context-matrix.mjs. A founder who hasn't touched any of these fields sends (and the
   // model sees) nothing extra at all — cleanShortFields/cleanListFields omit empty fields, and
-  // assembleTextContext omits empty groups, so no blank field is ever presented as if it were a
+  // assembleContext omits empty groups, so no blank field is ever presented as if it were a
   // deliberate instruction.
   const commercialContextRaw = { ...cleanShortFields(body.brain, COMMERCIAL_CONTEXT_SHORT_FIELDS), ...cleanListFields(body.brain, COMMERCIAL_CONTEXT_LIST_FIELDS) };
   const brandPreferencesRaw = { ...brand, ...cleanShortFields(body.brand, BRAND_PREFERENCE_SHORT_FIELDS), ...cleanListFields(body.brand, BRAND_PREFERENCE_LIST_FIELDS) };
   // V4 Batch 8: body.product is an explicit selection the client already resolved by stable id
   // (see lib/visual-studio.mjs productContext()) — never guessed here. A request with no
   // product selected simply omits body.product (or sends one without an id), and
-  // assembleTextContext's own gate on productSource.id leaves selectedProduct empty — no
+  // assembleContext's own gate on productSource.id leaves selectedProduct empty — no
   // Product Memory is sent, and nothing here infers one from brain.product, names, or task text.
   const productRaw = { ...cleanShortFields(body.product, PRODUCT_SHORT_FIELDS), ...cleanListFields(body.product, PRODUCT_LIST_FIELDS) };
-  const context = assembleTextContext(engine, commercialContextRaw, brandPreferencesRaw, productRaw);
+  const context = assembleContext(engine, commercialContextRaw, brandPreferencesRaw, productRaw);
   const raw = object(body.inputs) ? body.inputs : {};
   const inputs = Object.fromEntries(FIELDS[engine].map(key => [key, clean(raw[key])]));
   if (engine === 'content') {

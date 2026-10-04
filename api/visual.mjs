@@ -2,6 +2,7 @@ import OpenAI, { toFile } from 'openai';
 import { randomInt } from 'node:crypto';
 import { checkPilotAuth } from '../lib/pilot-auth.mjs';
 import { checkRateLimit } from '../lib/rate-limit.mjs';
+import { assembleContext } from '../lib/context-assembly.mjs';
 
 // New landscape presets (16:9, 1.91:1) reuse the already-supported 1536x864 generation size;
 // composeVisual() fits (never crops) the raw generated image into the final DIMENSIONS canvas,
@@ -18,6 +19,34 @@ const DIRECTIONS = [
 ];
 const obj = x => x && typeof x === 'object' && !Array.isArray(x);
 function text(value,max=4000) { return typeof value==='string' ? value.trim().slice(0,max) : ''; }
+function textList(value,maxItems,maxItemLength) { return Array.isArray(value) ? value.filter(v=>typeof v==='string'&&v.trim()).slice(0,maxItems).map(v=>v.trim().slice(0,maxItemLength)) : []; }
+// V4 Batch 9: Visual's own, local sanitization caps for the new V4 context fields — independent
+// of api/generate.mjs's identical-in-spirit caps (each endpoint validates locally, per the
+// Batch 5 architecture rule) and independent of whatever cap lib/visual-storage.mjs's own
+// saveProduct already applies at write time for `offers` — this endpoint never trusts client
+// input without its own limits either.
+const COMMERCIAL_CONTEXT_SHORT_FIELDS = { currentPriority: 200, currentOffer: 200, importantSeason: 200, campaignContext: 200, commercialConstraints: 200, temporaryAudienceEmphasis: 200 };
+const COMMERCIAL_CONTEXT_LIST_FIELDS = { secondaryObjectives: [3, 100] };
+const BRAND_PREFERENCE_SHORT_FIELDS = { positioning: 250, valueProposition: 250, personality: 200 };
+const BRAND_PREFERENCE_LIST_FIELDS = { differentiators: [5, 100] };
+// visualDirectionNotes/visualDo/visualDont are Brand Brain fields too (same raw source object as
+// the Brand Preference fields above), but are a distinct matrix group (visualDirection) — kept
+// in their own spec so lib/context-assembly.mjs's assembleContext() picks them into their own,
+// separate output section rather than folding them into brandPreferences.
+const VISUAL_DIRECTION_SHORT_FIELDS = { visualDirectionNotes: 400 };
+const VISUAL_DIRECTION_LIST_FIELDS = { visualDo: [8, 100], visualDont: [8, 100] };
+const PRODUCT_SHORT_FIELDS = { id: 100, name: 200, category: 100, description: 600, price: 100, audienceRelevance: 300 };
+const PRODUCT_LIST_FIELDS = { specifications: [8, 150], features: [8, 150], benefits: [8, 150], useCases: [8, 150], offers: [5, 150] };
+function shortFields(source, spec) {
+  const out = {};
+  for (const [key, max] of Object.entries(spec)) { const value = text(obj(source) ? source[key] : '', max); if (value) out[key] = value; }
+  return out;
+}
+function listFields(source, spec) {
+  const out = {};
+  for (const [key, [maxItems, maxLen]] of Object.entries(spec)) { const value = textList(obj(source) ? source[key] : undefined, maxItems, maxLen); if (value.length) out[key] = value; }
+  return out;
+}
 function raster(value) {
   if (!obj(value) || !['image/png','image/jpeg','image/webp'].includes(value.type) || typeof value.base64 !== 'string' || value.base64.length > 960000 || !/^[A-Za-z0-9+/]+={0,2}$/.test(value.base64)) throw new Error('ملف الصورة غير صالح أو كبير جدًا');
   const bytes = Buffer.from(value.base64,'base64');
@@ -28,7 +57,11 @@ function raster(value) {
 export function normalizeVisual(body) {
   if (!obj(body)||!obj(body.brain)||!obj(body.brand)||!obj(body.task)||!obj(body.settings)) throw new Error('بيانات التصميم غير مكتملة');
   if(Buffer.byteLength(JSON.stringify(body))>3000000) throw new Error('حجم الطلب كبير جدًا');
-  const brain=Object.fromEntries(['name','category','product','customer','location','price','tone','objective'].map(k=>[k,text(body.brain[k])]));
+  // V4 Batch 9: businessModel joins the existing Business Facts fields, matching the Batch 6
+  // precedent in api/generate.mjs. This flat block stays otherwise unchanged in shape — it is
+  // Business Facts (+ the legacy, not-yet-retired tone) + Audience(customer) + Commercial
+  // Goal(objective), exactly as it always was.
+  const brain=Object.fromEntries(['name','category','product','customer','location','price','tone','objective','businessModel'].map(k=>[k,text(body.brain[k])]));
   if(!brain.name||!brain.product||!brain.customer) throw new Error('أكمل Business Brain أولًا');
   const brand={};
   for(const key of ['primary','secondary','accent']) {
@@ -44,6 +77,18 @@ export function normalizeVisual(body) {
   // active voice exists, exactly as api/generate.mjs retires it.
   brand.toneOfVoice=text(body.brand.toneOfVoice||body.brand.style,1600);
   if(brand.toneOfVoice)delete brain.tone;
+  // V4 Batch 9: Commercial Context (brain.*) and the Visual-allowed slice of Brand
+  // Preferences/Visual Direction (brand.*) are sanitized the same disciplined way as every
+  // existing field, then lib/context-assembly.mjs selects/organizes exactly what Visual is
+  // authorized to see per lib/context-matrix.mjs — the exact same shared function
+  // api/generate.mjs uses for the six text engines, parameterized by consumer ('visual' here).
+  // Visual's own new, separate `body.productMemory` carries the textual Product Memory
+  // allowlist for an explicitly selected product (never image/reference — those stay in the
+  // existing, unchanged `body.product`/`images` compositing path below).
+  const commercialContextRaw={...shortFields(body.brain,COMMERCIAL_CONTEXT_SHORT_FIELDS),...listFields(body.brain,COMMERCIAL_CONTEXT_LIST_FIELDS)};
+  const brandPreferencesRaw={toneOfVoice:brand.toneOfVoice,...shortFields(body.brand,BRAND_PREFERENCE_SHORT_FIELDS),...listFields(body.brand,BRAND_PREFERENCE_LIST_FIELDS),...shortFields(body.brand,VISUAL_DIRECTION_SHORT_FIELDS),...listFields(body.brand,VISUAL_DIRECTION_LIST_FIELDS)};
+  const productMemoryRaw={...shortFields(body.productMemory,PRODUCT_SHORT_FIELDS),...listFields(body.productMemory,PRODUCT_LIST_FIELDS)};
+  const context=assembleContext('visual',commercialContextRaw,brandPreferencesRaw,productMemoryRaw);
   const task={engine:text(body.task.engine,20),selected:text(body.task.selected,12000),context:text(body.task.context,60000)};
   if(!['content','campaign','offer'].includes(task.engine)||!task.selected||!task.context||!task.context.includes(task.selected)) throw new Error('اختر فكرة من النتيجة الأصلية');
   const settings={format:body.settings.format,mode:body.settings.mode,textMode:body.settings.textMode,headline:text(body.settings.headline,120),cta:text(body.settings.cta,60)};
@@ -66,7 +111,7 @@ export function normalizeVisual(body) {
   const logo=body.brand.logo ? raster(body.brand.logo) : null;
   const previousDirection=Number.isInteger(body.previousDirection)?body.previousDirection:-1;
   if(previousDirection < -1 || previousDirection>=DIRECTIONS.length) throw new Error('اتجاه التصميم غير صالح');
-  return {brain,brand,task,settings,product,images,hasLogo:Boolean(logo),previousDirection};
+  return {brain,brand,task,settings,product,images,hasLogo:Boolean(logo),previousDirection,context};
 }
 export function makePrompt(task,direction) {
   return `Create ONE finished marketing background/product visual for a Saudi small business.
@@ -78,7 +123,19 @@ ${task.product?.fidelity==='exact'?'Leave the scene empty of products; the produ
 Creative direction: ${DIRECTIONS[direction]} This direction must be visibly distinct from the prior direction when provided. Prior direction: ${task.previousDirection>=0?DIRECTIONS[task.previousDirection]:'none'}.
 Visual mode: ${task.settings.mode}. Target format: ${task.settings.format}. ${task.hasLogo&&task.settings.logoVisible?'Reserve space for the original logo at '+task.settings.logoPosition+'.':''}
 BUSINESS BRAIN: ${JSON.stringify(task.brain)}
-BRAND BRAIN: ${JSON.stringify(task.brand)}
+BRAND BRAIN: ${JSON.stringify(task.brand)}${
+  Object.keys(task.context.commercialContext).length ? `
+COMMERCIAL CONTEXT (current, time-bound priorities — not permanent business facts): ${JSON.stringify(task.context.commercialContext)}` : ''
+}${
+  Object.keys(task.context.brandPreferences).length ? `
+BRAND PREFERENCES (desired positioning, differentiators and voice guidance — creative/strategic direction, not verified product or business facts): ${JSON.stringify(task.context.brandPreferences)}` : ''
+}${
+  Object.keys(task.context.visualDirection).length ? `
+VISUAL DIRECTION (do/don't guidance and notes for this image specifically — creative direction, not verified fact): ${JSON.stringify(task.context.visualDirection)}` : ''
+}${
+  Object.keys(task.context.selectedProduct).length ? `
+SELECTED PRODUCT CONTEXT (the one specific product explicitly selected for this task — authoritative for this product's own facts such as its category/price/specifications/features/benefits/use cases/offers; Business Brain's "product" field above remains the general business offering description and must not override these selected fields; never apply these facts to any other product): ${JSON.stringify(task.context.selectedProduct)}` : ''
+}
 PRIMARY CREATIVE IDEA (visualize this selected item, not the overall plan title): ${JSON.stringify(task.task.selected)}
 SECONDARY SOURCE CONTEXT (background only; do not combine other days/items into the selected idea): ${JSON.stringify({engine:task.task.engine,context:task.task.context})}
 APPROVED TEXT FOR CONTEXT ONLY (DO NOT RENDER): ${JSON.stringify({headline:task.settings.headline,cta:task.settings.cta,textMode:task.settings.textMode})}`;

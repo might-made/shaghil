@@ -98,11 +98,13 @@ assert.ok(!generateSource.includes('saveProduct') && !generateSource.includes('l
 
 console.log('PASS: no AI output can write back into Product Memory — api/generate.mjs has no reference to the Product Library\'s storage functions at all');
 
-// --- 19. api/visual.mjs remains outside this batch's wiring. ---
+// --- 19. api/visual.mjs was outside this batch's own wiring work. At the time this batch
+// shipped, it referenced neither context-matrix.mjs nor context-assembly.mjs. Batch 9 has since
+// authorized wiring Visual too (see scripts/qa-v24-batch9-visual-context-wiring.mjs). ---
 const visualApiSource = fs.readFileSync('api/visual.mjs', 'utf8');
-assert.ok(!visualApiSource.includes('context-matrix') && !visualApiSource.includes('context-assembly'), '19. api/visual.mjs still does not reference context-matrix.mjs or context-assembly.mjs');
+assert.ok(visualApiSource.includes('context-assembly'), '19. api/visual.mjs now references context-assembly.mjs, exactly as Batch 9 authorized — see qa-v24-batch9-visual-context-wiring.mjs');
 
-console.log('PASS: api/visual.mjs remains completely outside this batch\'s wiring');
+console.log('PASS: api/visual.mjs was outside this batch\'s own wiring; Batch 9 has since wired it too (verified separately in qa-v24-batch9-visual-context-wiring.mjs)');
 
 // --- 18. Payload/prompt size measurement for a representative selected-product request. ---
 const originalKey = process.env.OPENAI_API_KEY;
@@ -281,4 +283,4 @@ console.log('PASS: offer/campaign show a soft, non-blocking nudge when Product M
 }
 console.log('PASS: the stable product id flows correctly from UI selection, through the request, to the context-assembly lookup, and a product rename after selection does not break it — the id, never the mutable name, is authoritative throughout');
 
-console.log('\nPASS V4 BATCH 8: Product Memory is wired into the six text engines exactly as the Batch-5 matrix authorizes — selection is always explicit, deterministic and by stable id (never guessed from task text, history or keywords), the optional selector appears only when Product Memory exists and is deterministically preselected for exactly one product while never auto-selecting among several, offer/campaign nudge softly without ever hard-blocking generation, a selected product\'s approved allowlist (never image/reference, never an unrelated product) is assembled through the existing shared context-assembly architecture with brain.product and brain.currentOffer left untouched and coexisting correctly alongside it, no AI output can write back into Product Memory, payload sizes remain safely under the unchanged request ceiling, and api/visual.mjs remains completely outside this batch\'s wiring');
+console.log('\nPASS V4 BATCH 8: Product Memory is wired into the six text engines exactly as the Batch-5 matrix authorizes — selection is always explicit, deterministic and by stable id (never guessed from task text, history or keywords), the optional selector appears only when Product Memory exists and is deterministically preselected for exactly one product while never auto-selecting among several, offer/campaign nudge softly without ever hard-blocking generation, a selected product\'s approved allowlist (never image/reference, never an unrelated product) is assembled through the existing shared context-assembly architecture with brain.product and brain.currentOffer left untouched and coexisting correctly alongside it, no AI output can write back into Product Memory, payload sizes remain safely under the unchanged request ceiling, and api/visual.mjs was outside this batch\'s own wiring (wired separately in Batch 9)');
