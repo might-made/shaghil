@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { checkPilotAuth } from "../lib/pilot-auth.mjs";
 import { checkRateLimit } from "../lib/rate-limit.mjs";
+import { assembleContext } from "../lib/context-assembly.mjs";
 
 const BASE = `You are SHAGHIL, an execution engine for Saudi small businesses.
 Use the supplied Business Brain as authoritative business context.
@@ -39,9 +40,46 @@ const FIELDS = {
   copy: ['channel', 'instruction'], offer: ['constraint'],
   whatsapp: ['message'], campaign: ['occasion', 'duration'], reel: ['duration', 'topic']
 };
-const BRAIN_FIELDS = ['name', 'category', 'product', 'customer', 'location', 'price', 'tone', 'objective'];
+// V4 Batch 6: businessModel joins the existing Business Facts fields in the unchanged BUSINESS
+// BRAIN block. Business Facts stays the one legacy block, untouched in shape otherwise.
+const BRAIN_FIELDS = ['name', 'category', 'product', 'customer', 'location', 'price', 'tone', 'objective', 'businessModel'];
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
 const clean = value => typeof value === 'string' ? value.trim().slice(0, 4000) : '';
+const cleanMax = (value, max) => typeof value === 'string' ? value.trim().slice(0, max) : '';
+const cleanList = (value, maxItems, maxItemLength) => Array.isArray(value) ? value.filter(v => typeof v === 'string' && v.trim()).slice(0, maxItems).map(v => v.trim().slice(0, maxItemLength)) : [];
+
+// V4 Batch 6: Commercial Context (brain.*) and Brand Preferences (brand.*) field caps — short,
+// deliberately conservative (never the legacy 4000) so even a fully-populated request leaves
+// comfortable headroom under MAX_BODY_BYTES alongside the existing 60,000-char refinement
+// `previous` field. See the Batch 6 report for measured worst-case sizes against these caps.
+const COMMERCIAL_CONTEXT_SHORT_FIELDS = { currentPriority: 200, currentOffer: 200, importantSeason: 200, campaignContext: 200, commercialConstraints: 200, temporaryAudienceEmphasis: 200 };
+const COMMERCIAL_CONTEXT_LIST_FIELDS = { secondaryObjectives: [3, 100] };
+const BRAND_PREFERENCE_SHORT_FIELDS = { positioning: 250, valueProposition: 250, personality: 200 };
+const BRAND_PREFERENCE_LIST_FIELDS = { differentiators: [5, 100], doList: [8, 60], dontList: [8, 60], preferredVocabulary: [8, 60], prohibitedVocabulary: [8, 60] };
+// V4 Batch 8: the selected product's fields, sanitized the same disciplined way, independent of
+// and re-validated regardless of whatever cap the Product Library's own storage layer already
+// applies at write time — this endpoint never trusts client input without its own limits.
+// `offers` reuses the exact same boundary (5 entries, 150 chars
+// each) Batch 7 established at the storage layer, applied again here at the request boundary.
+const PRODUCT_SHORT_FIELDS = { id: 100, name: 200, category: 100, description: 600, price: 100, audienceRelevance: 300 };
+const PRODUCT_LIST_FIELDS = { specifications: [8, 150], features: [8, 150], benefits: [8, 150], useCases: [8, 150], offers: [5, 150] };
+
+function cleanShortFields(source, spec) {
+  const out = {};
+  for (const [key, max] of Object.entries(spec)) {
+    const value = cleanMax(object(source) ? source[key] : '', max);
+    if (value) out[key] = value;
+  }
+  return out;
+}
+function cleanListFields(source, spec) {
+  const out = {};
+  for (const [key, [maxItems, maxItemLength]] of Object.entries(spec)) {
+    const value = cleanList(object(source) ? source[key] : undefined, maxItems, maxItemLength);
+    if (value.length) out[key] = value;
+  }
+  return out;
+}
 
 export function normalizeRequest(body) {
   if (!object(body) || !object(body.brain) || !Object.hasOwn(ENGINE, body.engine)) throw new Error('بيانات المهمة غير صالحة');
@@ -51,7 +89,30 @@ export function normalizeRequest(body) {
   if (refinement !== undefined && !Object.hasOwn(REFINE, refinement)) throw new Error('التعديل غير صالح');
   const previous = cleanPrevious(body.previous);
   if (refinement && !previous) throw new Error('النتيجة السابقة مطلوبة للتعديل');
-  const brand = { style: clean(object(body.brand) ? body.brand.style : '') };
+  // V4 Batch 4 (SSOT correction): toneOfVoice is the sole active voice field, read and returned
+  // directly under its own name — never remapped onto the legacy `style` key. The client sends
+  // the already-resolved toneOfVoice-or-legacy-style value (see lib/visual-studio.mjs
+  // brandStyle()) under brand.toneOfVoice; legacy brand.style is not read here at all for text
+  // engines. brain.tone stops competing with it once an active voice exists; with none at all
+  // (nothing migrated or entered), brain.tone is left exactly as before.
+  const brand = { toneOfVoice: clean(object(body.brand) ? body.brand.toneOfVoice : '') };
+  if (brand.toneOfVoice) delete brain.tone;
+  // V4 Batch 6: sanitize the new Commercial Context (brain.*) and Brand Preferences (brand.*)
+  // fields the same disciplined way as every existing field, then let
+  // lib/context-assembly.mjs select/organize exactly what this engine is authorized to see per
+  // lib/context-matrix.mjs. A founder who hasn't touched any of these fields sends (and the
+  // model sees) nothing extra at all — cleanShortFields/cleanListFields omit empty fields, and
+  // assembleContext omits empty groups, so no blank field is ever presented as if it were a
+  // deliberate instruction.
+  const commercialContextRaw = { ...cleanShortFields(body.brain, COMMERCIAL_CONTEXT_SHORT_FIELDS), ...cleanListFields(body.brain, COMMERCIAL_CONTEXT_LIST_FIELDS) };
+  const brandPreferencesRaw = { ...brand, ...cleanShortFields(body.brand, BRAND_PREFERENCE_SHORT_FIELDS), ...cleanListFields(body.brand, BRAND_PREFERENCE_LIST_FIELDS) };
+  // V4 Batch 8: body.product is an explicit selection the client already resolved by stable id
+  // (see lib/visual-studio.mjs productContext()) — never guessed here. A request with no
+  // product selected simply omits body.product (or sends one without an id), and
+  // assembleContext's own gate on productSource.id leaves selectedProduct empty — no
+  // Product Memory is sent, and nothing here infers one from brain.product, names, or task text.
+  const productRaw = { ...cleanShortFields(body.product, PRODUCT_SHORT_FIELDS), ...cleanListFields(body.product, PRODUCT_LIST_FIELDS) };
+  const context = assembleContext(engine, commercialContextRaw, brandPreferencesRaw, productRaw);
   const raw = object(body.inputs) ? body.inputs : {};
   const inputs = Object.fromEntries(FIELDS[engine].map(key => [key, clean(raw[key])]));
   if (engine === 'content') {
@@ -68,7 +129,7 @@ export function normalizeRequest(body) {
   }
   if (engine === 'whatsapp' && !inputs.message && !refinement) throw new Error('أدخل رسالة العميل أولًا');
   if (engine === 'campaign' && !inputs.duration && !refinement) throw new Error('أدخل مدة الحملة');
-  return { brain, engine, inputs, refinement, previous, brand };
+  return { brain, engine, inputs, refinement, previous, brand, context };
 }
 function cleanPrevious(value) { return typeof value === 'string' ? value.trim().slice(0, 60000) : ''; }
 
@@ -95,7 +156,7 @@ export default async function handler(req, res) {
   catch (err) { return res.status(400).json({ error: err.message }); }
   try {
     if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: "OPENAI_API_KEY is not configured" });
-    const { brain, engine, inputs, refinement, previous, brand } = task;
+    const { brain, engine, inputs, refinement, previous, context } = task;
     // No SDK retries and a client timeout comfortably under this function's maxDuration (60s):
     // without it, a slow call (campaign asks for by far the largest output) can run past the
     // platform's own hard timeout, which kills the function before this code can return JSON,
@@ -103,11 +164,29 @@ export default async function handler(req, res) {
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, maxRetries: 0, timeout: 55000 });
     const model = process.env.OPENAI_MODEL || "gpt-5.6-luna";
     const refinementText = refinement && REFINE[refinement] ? `\n\nREFINEMENT: ${REFINE[refinement]}\nPREVIOUS OUTPUT:\n${previous}` : "";
-    const brandText = brand?.style ? `\n\nBRAND VOICE / STYLE:\n${JSON.stringify(brand)}` : "";
+    // V4 Batch 6: two new, distinguishable sections built by lib/context-assembly.mjs per the
+    // lib/context-matrix.mjs policy for this engine — replacing the old single-field "BRAND
+    // VOICE / STYLE" block. Each is entirely omitted (not sent as an empty object) when nothing
+    // is populated, and each is explicitly labeled as context/preference rather than fact, so
+    // the model never treats a time-bound priority or a desired positioning as a verified
+    // business fact (Business Facts itself stays in the unchanged BUSINESS BRAIN block below).
+    const commercialContextText = Object.keys(context.commercialContext).length
+      ? `\n\nCOMMERCIAL CONTEXT (current, time-bound priorities — not permanent business facts):\n${JSON.stringify(context.commercialContext)}`
+      : "";
+    const brandPreferencesText = Object.keys(context.brandPreferences).length
+      ? `\n\nBRAND PREFERENCES (desired positioning, differentiators and voice guidance — creative/strategic direction, not verified product or business facts):\n${JSON.stringify(context.brandPreferences)}`
+      : "";
+    // V4 Batch 8: present only when the founder explicitly selected a product (never guessed).
+    // Explicitly stated as authoritative for THIS product's own facts, and scoped to this one
+    // product only — Business Brain's own `product` field above remains the general business
+    // offering description and is never overridden by this section.
+    const selectedProductText = Object.keys(context.selectedProduct).length
+      ? `\n\nSELECTED PRODUCT CONTEXT (the one specific product the founder explicitly selected for this task — authoritative for this product's own facts such as its category/price/specifications/features/benefits/use cases/offers; Business Brain's "product" field above remains the general business offering description and must not override these selected fields; never apply these facts to any other product):\n${JSON.stringify(context.selectedProduct)}`
+      : "";
     const response = await client.responses.create({
       model, store: false,
       instructions: `${BASE}\n\nENGINE INSTRUCTION:\n${ENGINE[engine]}`,
-      input: `BUSINESS BRAIN:\n${JSON.stringify(brain, null, 2)}${brandText}\n\nTASK INPUTS:\n${JSON.stringify(inputs || {}, null, 2)}${refinementText}\n\nReturn clean Arabic Markdown with short headings, bullets, and practical copy. Do not use tables unless essential.`
+      input: `BUSINESS BRAIN:\n${JSON.stringify(brain, null, 2)}${selectedProductText}${commercialContextText}${brandPreferencesText}\n\nTASK INPUTS:\n${JSON.stringify(inputs || {}, null, 2)}${refinementText}\n\nReturn clean Arabic Markdown with short headings, bullets, and practical copy. Do not use tables unless essential.`
     });
     res.setHeader("Cache-Control", "no-store");
     if (!response.output_text?.trim()) throw new Error("Empty model response");

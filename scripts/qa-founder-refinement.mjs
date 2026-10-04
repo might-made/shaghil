@@ -34,29 +34,31 @@ try {
   const r1 = res();
   await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'copy', inputs: { channel: 'SMS', instruction: '' } } }, r1);
   assert.equal(r1.code, 200);
-  assert.ok(!calls.at(-1).input.includes('BRAND VOICE'), 'no brand supplied must not fabricate a brand section');
+  assert.ok(!calls.at(-1).input.includes('BRAND PREFERENCES'), 'no brand supplied must not fabricate a brand section');
   assert.deepEqual(Object.keys(r1.body).sort(), ['model', 'text'], 'the {text,model} response contract must stay unchanged');
 
-  // A real Brand Brain style must reach the prompt input verbatim, for any business (not hard-coded).
+  // A real Brand Brain active voice (toneOfVoice — the Batch 4 SSOT field; the client resolves
+  // legacy brand.style into it before ever sending a request) must reach the prompt input
+  // verbatim, for any business (not hard-coded).
   const r2 = res();
-  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'copy', inputs: { channel: 'SMS', instruction: '' }, brand: { style: 'فاخر وهادئ، بدون مبالغة' } } }, r2);
+  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'copy', inputs: { channel: 'SMS', instruction: '' }, brand: { toneOfVoice: 'فاخر وهادئ، بدون مبالغة' } } }, r2);
   assert.equal(r2.code, 200);
-  assert.ok(calls.at(-1).input.includes('فاخر وهادئ، بدون مبالغة'), 'a supplied Brand Brain style must reach the generation prompt');
-  assert.ok(calls.at(-1).input.includes('BRAND VOICE / STYLE'));
+  assert.ok(calls.at(-1).input.includes('فاخر وهادئ، بدون مبالغة'), 'a supplied active voice (toneOfVoice) must reach the generation prompt');
+  assert.ok(calls.at(-1).input.includes('BRAND PREFERENCES'));
 
-  // A second, different business/style must be reflected identically — proves this is generic
+  // A second, different business/voice must be reflected identically — proves this is generic
   // plumbing, not special-cased for any one test account.
   const otherBrain = { ...brain, name: 'بيت التمر', product: 'تمر سكري فاخر' };
   const r3 = res();
-  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain: otherBrain, engine: 'offer', inputs: { constraint: '' }, brand: { style: 'دافئ وعائلي' } } }, r3);
+  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain: otherBrain, engine: 'offer', inputs: { constraint: '' }, brand: { toneOfVoice: 'دافئ وعائلي' } } }, r3);
   assert.equal(r3.code, 200);
   assert.ok(calls.at(-1).input.includes('بيت التمر') && calls.at(-1).input.includes('دافئ وعائلي'), 'brand grounding must work for any business, not a hard-coded one');
 
-  // Whitespace-only/missing style must degrade to no brand section, never inventing content.
+  // Whitespace-only/missing active voice must degrade to no brand section, never inventing content.
   const r4 = res();
-  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'reel', inputs: {}, brand: { style: '   ' } } }, r4);
+  await handler({ method: 'POST', headers:AUTH_HEADERS, body: { brain, engine: 'reel', inputs: {}, brand: { toneOfVoice: '   ' } } }, r4);
   assert.equal(r4.code, 200);
-  assert.ok(!calls.at(-1).input.includes('BRAND VOICE'), 'a blank brand style must not be sent as a fabricated section');
+  assert.ok(!calls.at(-1).input.includes('BRAND PREFERENCES'), 'a blank active voice must not be sent as a fabricated section');
 
   // The system prompt must actively instruct grounding in the specific supplied facts (root
   // cause of the "generic output" finding), and this instruction is generic across all engines.

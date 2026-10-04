@@ -95,3 +95,34 @@ await import('./qa-v13-app-icon.mjs');
 await import('./qa-v14-security.mjs');
 
 await import('./qa-v15-pilot-gate.mjs');
+
+await import('./qa-v16-batch1-business-ids.mjs');
+
+await import('./qa-v17-batch2-campaign-pack-ids.mjs');
+
+await import('./qa-v18-batch3-business-memory-schema.mjs');
+
+await import('./qa-v19-batch4-voice-ssot.mjs');
+
+await import('./qa-v20-batch5-context-matrix.mjs');
+
+await import('./qa-v21-batch6-text-context-wiring.mjs');
+
+await import('./qa-v22-batch7-product-memory-schema.mjs');
+
+// Runs in its own process (fresh IndexedDB), like qa-v07-product-persistence.mjs: its
+// zero/one/multiple-product assertions require an empty Product Library to start, which the
+// shared in-process store no longer is by this point (qa-v17/qa-v22 above both leave products in it).
+execFileSync(process.execPath,['scripts/qa-v23-batch8-product-selection.mjs'],{stdio:'inherit'});
+
+await import('./qa-v24-batch9-visual-context-wiring.mjs');
+
+// Orchestrates its own two child processes (a fresh IndexedDB for the import phase), like
+// qa-v08-workspace-transfer.mjs — it is itself the top-level entry point for both phases.
+execFileSync(process.execPath,['scripts/qa-v25-batch10-progressive-hardening.mjs'],{stdio:'inherit'});
+
+// Founder QA follow-up: real persistence -> real engine selector -> real request -> real
+// normalized-context proof for the product selector, on a brand-new product (not a pre-seeded
+// one). Runs in its own process (fresh IndexedDB), like qa-v07-product-persistence.mjs, since it
+// requires a genuinely empty Product Library to start.
+execFileSync(process.execPath,['scripts/qa-v26-product-selector-e2e.mjs'],{stdio:'inherit'});

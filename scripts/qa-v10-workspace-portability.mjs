@@ -108,7 +108,10 @@ if (phase === 'import') {
   console.log('PASS: import into empty storage restores Business Brain, Brand Brain, text History, Product Library and Saved Designs, with correct, loadable image bytes and intact product<->image / design<->image relationships');
 
   // 20: a malformed/invalid file must fail safely (a clear error, not a half-written workspace).
-  await assert.rejects(() => importWorkspace({ shaghilWorkspace: 2 }), /ملف غير صالح/, '20. a malformed workspace file must fail safely with a clear error');
+  // V4 Batch 1 bumped the valid export version to 2, so an unrecognized version number (99) is
+  // used here instead of 2 to keep testing the same thing: an unrecognized bundle version must
+  // still be rejected, not silently accepted.
+  await assert.rejects(() => importWorkspace({ shaghilWorkspace: 99 }), /ملف غير صالح/, '20. a malformed workspace file must fail safely with a clear error');
   await assert.rejects(() => importWorkspace(null), /ملف غير صالح/, '20. a null/missing bundle must fail safely');
   console.log('PASS: a malformed workspace file is rejected safely with a clear error, before any destructive write');
 

@@ -39,6 +39,13 @@
 <div><label>متوسط السعر</label><input id="price" placeholder="مثال 100–250 SAR"></div><div><label>النبرة</label><select id="tone"><option>سعودي طبيعي</option><option>احترافي</option><option>فاخر</option><option>ودود</option></select></div>
 <div class="full"><label>الهدف الحالي</label><select id="objective"><option>زيادة المبيعات</option><option>زيادة الطلبات</option><option>زيادة الوعي</option><option>رجوع العملاء</option><option>إطلاق منتج</option></select></div></div>
 </div>
+<details class="brandSection" id="businessAdvanced"><summary><h3>سياق تجاري متقدم <small class="status">اختياري — يظهر فقط في النتائج ذات الصلة</small></h3></summary><p>هذه معلومات مؤقتة أو إضافية — لا تغيّر حقائق مشروعك الأساسية أعلاه.</p><div class="form">
+<div><label for="businessModel">نموذج العمل</label><input id="businessModel" maxlength="200" placeholder="تجارة إلكترونية، اشتراك شهري..."></div><div><label for="currentPriority">الأولوية الحالية</label><input id="currentPriority" maxlength="200"></div>
+<div><label for="currentOffer">عرض حالي (مؤقت)</label><input id="currentOffer" maxlength="200"></div><div><label for="importantSeason">موسم مهم</label><input id="importantSeason" maxlength="200" placeholder="رمضان، العودة للمدارس..."></div>
+<div><label for="campaignContext">سياق حملة حالية</label><input id="campaignContext" maxlength="200"></div><div><label for="commercialConstraints">قيود تجارية</label><input id="commercialConstraints" maxlength="200"></div>
+<div><label for="temporaryAudienceEmphasis">تركيز مؤقت على جمهور معيّن</label><input id="temporaryAudienceEmphasis" maxlength="200"></div>
+<div class="full"><label for="secondaryObjectives">أهداف ثانوية <small class="status">سطر لكل هدف</small></label><textarea id="secondaryObjectives" rows="3"></textarea></div>
+</div></details>
 <div class="brandSection"><h3>استيراد مساحة عمل محفوظة <small class="status">عندك ملف نسخة مُصدّرة من رابط شغّل آخر؟</small></h3><p>يشمل هوية النشاط، الهوية، مكتبة المنتجات، التصاميم، الحزم والسجل. استورده هنا بدل تعبئة البيانات من جديد.</p><div><label for="workspaceImportFileSetup">استيراد نسخة محفوظة</label><div class="fileUpload"><input id="workspaceImportFileSetup" class="fileUploadInput" type="file" accept="application/json" onchange="Workspace.import(this.files[0])"><label for="workspaceImportFileSetup" class="fileUploadLabel"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10.5V2.5M8 2.5L5 5.5M8 2.5l3 3"/><path d="M2.5 11v1.5a1.5 1.5 0 0 0 1.5 1.5h8a1.5 1.5 0 0 0 1.5-1.5V11"/></svg>اختر ملفًا</label><span class="fileUploadName" id="workspaceImportFileSetup-name">لم يتم اختيار ملف</span></div></div><p class="workspaceStatus status" role="status"></p></div>
 <div class="actions"><button id="saveProjectBtn" class="btn primary" onclick="Visual.saveProject()">حفظ كل التفاصيل والبدء</button><button class="btn" onclick="brandBrainScreen()">هوية العلامة</button></div></section>
 
@@ -47,7 +54,22 @@
 </section>
 
 <section id="brandBrain" class="card hidden"><div class="resultTop"><h2>هوية العلامة <small class="status">هوية مشروعك البصرية — اختياري، يمكن إضافتها لاحقًا</small></h2><button class="btn" onclick="brainScreen()">هوية النشاط</button></div>
-<p>أضف هويتك مرة واحدة. تحفظ الصور على هذا المتصفح لهذا الرابط، ولا تنتقل تلقائيًا إلى جهاز أو رابط آخر.</p>
+<p>العلامة أكبر من الألوان والشعار — إستراتيجيتها ونبرتها أولًا، ثم هويتها البصرية. تحفظ الصور على هذا المتصفح لهذا الرابط، ولا تنتقل تلقائيًا إلى جهاز أو رابط آخر.</p>
+<div class="brandSection"><h3>الإستراتيجية <small class="status">اختياري — تساعد في بناء نتائج أكثر تمايزًا</small></h3><div class="form">
+<div class="full"><label for="brandPositioning">التمايز/الموضع السوقي</label><textarea id="brandPositioning" maxlength="250" placeholder="وش يميّز مشروعك عن غيره في السوق؟"></textarea></div>
+<div class="full"><label for="brandValueProposition">القيمة المقدَّمة</label><textarea id="brandValueProposition" maxlength="250" placeholder="وش يحصل عليه العميل تحديدًا؟"></textarea></div>
+<div class="full"><label for="brandDifferentiators">عوامل تميّز <small class="status">سطر لكل عامل</small></label><textarea id="brandDifferentiators" rows="3"></textarea></div>
+</div></div>
+<div class="brandSection"><h3>نبرة الصوت</h3><div class="form">
+<div class="full"><label for="brandToneOfVoice">وصف نبرة الصوت</label><textarea id="brandToneOfVoice" maxlength="800" placeholder="ودود وواثق، جمل قصيرة، بدون مبالغة"></textarea></div>
+<p id="toneSuggestion" class="status hidden"></p>
+<div class="full"><label for="brandPersonality">شخصية العلامة (اختياري)</label><input id="brandPersonality" maxlength="200" placeholder="مرح وقريب، أو فاخر وهادئ..."></div>
+</div>
+<details class="brandSection" id="voiceAdvanced"><summary><h3>قواعد الصوت — متقدم <small class="status">اختياري</small></h3></summary><div class="form">
+<div><label for="brandDoList">افعل <small class="status">سطر لكل قاعدة</small></label><textarea id="brandDoList" rows="3"></textarea></div><div><label for="brandDontList">لا تفعل <small class="status">سطر لكل قاعدة</small></label><textarea id="brandDontList" rows="3"></textarea></div>
+<div><label for="brandPreferredVocabulary">كلمات مفضّلة <small class="status">سطر لكل كلمة</small></label><textarea id="brandPreferredVocabulary" rows="3"></textarea></div><div><label for="brandProhibitedVocabulary">كلمات ممنوعة <small class="status">سطر لكل كلمة</small></label><textarea id="brandProhibitedVocabulary" rows="3"></textarea></div>
+</div></details>
+</div>
 <div class="brandSection"><h3>الشعار وصور المرجع</h3><div class="form">
 <div><label for="brandLogo">الشعار (اختياري)</label><div class="fileUpload"><input id="brandLogo" class="fileUploadInput" type="file" accept="image/png,image/jpeg,image/webp" onchange="Visual.uploadLogo(this.files[0])"><label for="brandLogo" class="fileUploadLabel"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10.5V2.5M8 2.5L5 5.5M8 2.5l3 3"/><path d="M2.5 11v1.5a1.5 1.5 0 0 0 1.5 1.5h8a1.5 1.5 0 0 0 1.5-1.5V11"/></svg>اختر ملفًا</label><span class="fileUploadName" id="brandLogo-name">لم يتم اختيار ملف</span></div><div id="brandLogoPreview" class="assetRow"></div><button class="btn" onclick="Visual.removeLogo()">إزالة الشعار</button></div>
 <div><label for="brandRefs">صور المنتج / مراجع (اختياري، صورتان كحد أقصى)</label><div class="fileUpload"><input id="brandRefs" class="fileUploadInput" type="file" accept="image/png,image/jpeg,image/webp" multiple onchange="Visual.uploadReferences(this.files)"><label for="brandRefs" class="fileUploadLabel"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10.5V2.5M8 2.5L5 5.5M8 2.5l3 3"/><path d="M2.5 11v1.5a1.5 1.5 0 0 0 1.5 1.5h8a1.5 1.5 0 0 0 1.5-1.5V11"/></svg>اختر ملفًا</label><span class="fileUploadName" id="brandRefs-name">لم يتم اختيار ملف</span></div><div id="brandRefsPreview" class="assetRow"></div><button class="btn" onclick="Visual.removeReferences()">إزالة المراجع</button></div>
@@ -59,6 +81,10 @@
 <div class="brandSection"><h3>الأسلوب البصري</h3><div class="form">
 <div class="full"><label for="brandStyle">وصف الأسلوب</label><textarea id="brandStyle" maxlength="1600" placeholder="تصوير سعودي عصري، إضاءة طبيعية، تكوين بسيط والمنتج هو البطل"></textarea></div>
 </div></div>
+<details class="brandSection" id="visualDirectionAdvanced"><summary><h3>اتجاه التصميم — متقدم <small class="status">اختياري</small></h3></summary><div class="form">
+<div class="full"><label for="brandVisualDirectionNotes">ملاحظات اتجاه التصميم</label><textarea id="brandVisualDirectionNotes" maxlength="400"></textarea></div>
+<div><label for="brandVisualDo">افعل بصريًا <small class="status">سطر لكل قاعدة</small></label><textarea id="brandVisualDo" rows="3"></textarea></div><div><label for="brandVisualDont">لا تفعل بصريًا <small class="status">سطر لكل قاعدة</small></label><textarea id="brandVisualDont" rows="3"></textarea></div>
+</div></details>
 <p id="brandStatus" role="status" class="status"></p>
 <div class="actions"><button id="brandSaveBtn" class="btn primary" onclick="Visual.saveProject()">حفظ كل التفاصيل والبدء</button><button class="btn" onclick="productLibraryScreen()">مكتبة المنتجات</button></div>
 </section>
@@ -70,7 +96,14 @@
 <div><label for="productName">اسم المنتج</label><input id="productName" maxlength="120"></div>
 <div><label for="productImage">صورة المنتج الأصلية</label><div class="fileUpload"><input id="productImage" class="fileUploadInput" type="file" accept="image/png,image/jpeg,image/webp" onchange="Products.upload(this.files[0])"><label for="productImage" class="fileUploadLabel"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10.5V2.5M8 2.5L5 5.5M8 2.5l3 3"/><path d="M2.5 11v1.5a1.5 1.5 0 0 0 1.5 1.5h8a1.5 1.5 0 0 0 1.5-1.5V11"/></svg>اختر ملفًا</label><span class="fileUploadName" id="productImage-name">لم يتم اختيار ملف</span></div></div>
 <div><label for="productDescription">وصف قصير (اختياري)</label><textarea id="productDescription" maxlength="600"></textarea></div><div><label for="productFidelity">الحفاظ على المنتج</label><select id="productFidelity"><option value="exact">المنتج الأصلي</option><option value="creative">معالجة إبداعية</option></select></div><div id="productPreviewWrap" class="full hidden assetRow"><img id="productPreview" class="assetThumb" alt="معاينة صورة المنتج الجديدة"><b>لم يُحفظ بعد — اضغط "حفظ المنتج"</b></div>
+<div><label for="productCategory">فئة المنتج (اختياري)</label><input id="productCategory" maxlength="100"></div><div><label for="productPrice">سعر هذا المنتج (اختياري)</label><input id="productPrice" maxlength="100"></div>
 </div>
+<details class="brandSection" id="productAdvanced"><summary><h3>تفاصيل المنتج — متقدم <small class="status">اختياري</small></h3></summary><div class="form">
+<div><label for="productSpecifications">مواصفات <small class="status">سطر لكل مواصفة</small></label><textarea id="productSpecifications" rows="3"></textarea></div><div><label for="productFeatures">خصائص <small class="status">سطر لكل خاصية</small></label><textarea id="productFeatures" rows="3"></textarea></div>
+<div><label for="productBenefits">فوائد <small class="status">سطر لكل فائدة</small></label><textarea id="productBenefits" rows="3"></textarea></div><div><label for="productUseCases">حالات استخدام <small class="status">سطر لكل حالة</small></label><textarea id="productUseCases" rows="3"></textarea></div>
+<div class="full"><label for="productAudienceRelevance">ملاءمة الجمهور (اختياري)</label><input id="productAudienceRelevance" maxlength="300"></div>
+<div class="full"><label for="productOffers">عروض ثابتة مرتبطة بالمنتج <small class="status">سطر لكل عرض، 5 كحد أقصى</small></label><textarea id="productOffers" rows="3"></textarea></div>
+</div></details>
 <button id="productSave" class="btn" onclick="Products.save()">حفظ المنتج</button><button id="productCancelEdit" class="btn hidden" onclick="Products.reset()">إلغاء التعديل</button><p id="productStatus" role="status"></p><div id="productList" class="grid"></div>
 </section>
 
@@ -107,7 +140,7 @@
 </section>
 </div>
 <script>
-const ids=['welcome','setup','brain','brandBrain','productLibrary','home','engine','output','history','visualStudio','visualResult']; let current=null; let lastInputs=null; let lastText=''; let busy=false; let requestId=0; let savedNow=false; let cachedBrandStyle='';
+const ids=['welcome','setup','brain','brandBrain','productLibrary','home','engine','output','history','visualStudio','visualResult']; let current=null; let lastInputs=null; let lastText=''; let busy=false; let requestId=0; let savedNow=false; let cachedBrandContext={};
 // Theme is a UI-chrome preference only — a dedicated key outside 'brain'/'shaghilHistory' so
 // Workspace.export()/import() (lib/workspace-transfer.mjs) never reads, exports or overwrites it,
 // and entirely separate from Brand Brain's own brandPrimary/brandSecondary customer colors.
@@ -164,7 +197,7 @@ globalThis.PilotAuth={headers:()=>({'X-Pilot-Key':getPilotKey()}),handleUnauthor
 // synchronously (no added await before the request fires, preserving the busy/duplicate-request
 // guard's timing). Missing/stale cache just means generation proceeds without brand context,
 // never a hard failure and never fabricated content.
-function refreshBrandCache(){globalThis.Visual?.brandStyle?.().then(s=>{if(typeof s==='string')cachedBrandStyle=s}).catch(()=>{})}
+function refreshBrandCache(){globalThis.Visual?.brandContext?.().then(c=>{if(c&&typeof c==='object')cachedBrandContext=c}).catch(()=>{})}
 const $=x=>document.getElementById(x);
 // Any previous screen can be scrolled arbitrarily far down; toggling .hidden alone never resets
 // scroll, so a leftover offset can land the next screen mid-page with the sticky header's band
@@ -172,22 +205,59 @@ const $=x=>document.getElementById(x);
 // screen). Resetting on every screen switch, here once, covers all of them consistently.
 const show=x=>{ids.forEach(i=>$(i).classList.toggle('hidden',i!==x));scrollTo(0,0)};
 function readLocal(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
-const getBrain=()=>{const b=readLocal('brain',null);return b&&typeof b==='object'&&!Array.isArray(b)?b:null};
+// V4 Batch 3: Business Facts + Commercial Context fields, storage-schema only. Safe empty
+// defaults (strings '', arrays []); no UI reads/writes these yet, no engine receives them.
+const BRAIN_V4_DEFAULTS={businessModel:'',secondaryObjectives:[],currentPriority:'',currentOffer:'',importantSeason:'',campaignContext:'',temporaryAudienceEmphasis:'',commercialConstraints:''};
+const getBrain=()=>{
+  const b=readLocal('brain',null);
+  if(!b||typeof b!=='object'||Array.isArray(b))return null;
+  // Lazy, idempotent migration: each field is checked independently (not gated on schemaVersion
+  // alone) so a record already migrated by an earlier batch still picks up fields a later batch
+  // adds, exactly once, without ever touching a field it already has. A fresh [] is created per
+  // field per call (never a reference into BRAIN_V4_DEFAULTS) so array defaults are never shared
+  // across records. No existing field is altered, renamed or removed.
+  let changed=false;
+  const migrated={...b};
+  if(!migrated.schemaVersion){migrated.schemaVersion=1;changed=true}
+  if(!migrated.businessId){migrated.businessId=crypto.randomUUID();changed=true}
+  for(const key in BRAIN_V4_DEFAULTS){
+    if(!(key in migrated)){migrated[key]=Array.isArray(BRAIN_V4_DEFAULTS[key])?[]:BRAIN_V4_DEFAULTS[key];changed=true}
+  }
+  if(changed){try{localStorage.setItem('brain',JSON.stringify(migrated))}catch{}}
+  return migrated;
+};
 function getHistory(){const h=readLocal('shaghilHistory',[]);return Array.isArray(h)?h.filter(x=>x&&typeof x.text==='string'&&x.text.trim()):[]}
 function cancelPending(){requestId++;busy=false;}
-function loadBusinessFields(){let b=getBrain();if(b){['name','category','product','customer','location','price','tone','objective'].forEach(k=>$(k).value=b[k]||'')}}
+// V4 Batch 10: the Commercial Context "Advanced" fields load/save the same generic way as the
+// 8 legacy fields, just split into a short-text group and a list group (one line per item) —
+// secondaryObjectives is the only array field among them.
+const BUSINESS_ADVANCED_TEXT_FIELDS=['businessModel','currentPriority','currentOffer','importantSeason','campaignContext','commercialConstraints','temporaryAudienceEmphasis'];
+const listToLines=arr=>Array.isArray(arr)?arr.join('\n'):'';
+const linesToList=text=>text.split('\n').map(s=>s.trim()).filter(Boolean);
+function loadBusinessFields(){let b=getBrain();if(b){['name','category','product','customer','location','price','tone','objective',...BUSINESS_ADVANCED_TEXT_FIELDS].forEach(k=>$(k).value=b[k]||'');$('secondaryObjectives').value=listToLines(b.secondaryObjectives)}}
 function setup(){cancelPending();loadBusinessFields();$('localDataNotice').classList.toggle('hidden',localStorage.getItem('localDataNoticeDismissed')==='1');show('setup');globalThis.Visual?.setupBrand()}
 function brandBrainScreen(){cancelPending();loadBusinessFields();show('brandBrain');globalThis.Visual?.setupBrand()}
 function productLibraryScreen(){cancelPending();globalThis.Products?.refresh();show('productLibrary')}
 function dismissLocalDataNotice(){try{localStorage.setItem('localDataNoticeDismissed','1')}catch{}$('localDataNotice').classList.add('hidden')}
-function saveBrain(){let b={};['name','category','product','customer','location','price','tone','objective'].forEach(k=>b[k]=$(k).value.trim());if(!b.name||!b.product||!b.customer)return toast('أكمل اسم المشروع والمنتج والعميل');try{localStorage.setItem('brain',JSON.stringify(b))}catch{return toast('تعذّر حفظ بيانات المشروع على هذا الجهاز')}home()}
+function saveBrain(){let form={};['name','category','product','customer','location','price','tone','objective',...BUSINESS_ADVANCED_TEXT_FIELDS].forEach(k=>form[k]=$(k).value.trim());form.secondaryObjectives=linesToList($('secondaryObjectives').value);if(!form.name||!form.product||!form.customer)return toast('أكمل اسم المشروع والمنتج والعميل');const existing=readLocal('brain',null);const b={...(existing||{}),...form};b.schemaVersion=1;b.businessId=(existing&&existing.businessId)||crypto.randomUUID();try{localStorage.setItem('brain',JSON.stringify(b))}catch{return toast('تعذّر حفظ بيانات المشروع على هذا الجهاز')}home()}
 const brainLabels={name:'اسم المشروع',category:'القطاع',product:'وش تبيع',customer:'مين عميلك',location:'المدينة/السوق',price:'متوسط السعر',tone:'النبرة',objective:'الهدف الحالي'};
-function brainScreen(){cancelPending();let b=getBrain();if(!b)return setup();$('brainGrid').innerHTML=Object.entries(b).map(([k,v])=>`<div><small>${esc(brainLabels[k]||k)}</small><b>${esc(v)||'—'}</b></div>`).join('');show('brain');globalThis.Visual?.brandSummary()}
+function brainScreen(){cancelPending();let b=getBrain();if(!b)return setup();$('brainGrid').innerHTML=Object.keys(brainLabels).map(k=>`<div><small>${esc(brainLabels[k])}</small><b>${esc(b[k])||'—'}</b></div>`).join('');show('brain');globalThis.Visual?.brandSummary()}
 function home(){cancelPending();let b=getBrain();if(!b)return show('welcome');refreshBrandCache();$('hello').textContent=`${b.name||'مشروعك'} — وش تبغى تنجز اليوم؟`;$('firstValueHint').classList.toggle('hidden',localStorage.getItem('firstValueHintDismissed')==='1');show('home')}
 function dismissFirstValueHint(){try{localStorage.setItem('firstValueHintDismissed','1')}catch{}$('firstValueHint').classList.add('hidden')}
-function demo(){localStorage.setItem('brain',JSON.stringify({name:'تحميص ٢٧',category:'قهوة مختصة',product:'قهوة مختصة وحلويات مع توصيل داخل جدة',customer:'موظفون وطلاب 20–35',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'رجوع العملاء'}));home()}
+function demo(){const existing=readLocal('brain',null);const b={...(existing||{}),name:'تحميص ٢٧',category:'قهوة مختصة',product:'قهوة مختصة وحلويات مع توصيل داخل جدة',customer:'موظفون وطلاب 20–35',location:'جدة',price:'50–100 SAR',tone:'سعودي طبيعي',objective:'رجوع العملاء'};b.schemaVersion=1;b.businessId=(existing&&existing.businessId)||crypto.randomUUID();localStorage.setItem('brain',JSON.stringify(b));home()}
 const titles={content:'سوّ محتوى',copy:'اكتب لي',offer:'ابنِ عرض',whatsapp:'رد على عميل',campaign:'سوّ حملة',reel:'اكتب ريل'};
-const fields={content:['period','contentObjective','contentObjectiveCustom','contentAudience','contentChannels','contentChannelsCustom','contentTone','contentCTA','contentInstructions'],copy:['channel','instruction'],offer:['constraint'],whatsapp:['message'],campaign:['occasion','duration'],reel:['duration','topic']};
+// V4 Batch 8: every engine gets 'productId' appended to its own field list — the optional
+// product selector is shared UI, never engine-specific, and its value is always the stable
+// product id (never the mutable name), read generically like every other field via fieldValue().
+const fields={content:['period','contentObjective','contentObjectiveCustom','contentAudience','contentChannels','contentChannelsCustom','contentTone','contentCTA','contentInstructions','productId'],copy:['channel','instruction','productId'],offer:['constraint','productId'],whatsapp:['message','productId'],campaign:['occasion','duration','productId'],reel:['duration','topic','productId']};
+let productOptionsCount=0;
+// Soft nudge only for offer/campaign, only when Product Memory exists and nothing is selected
+// yet — never a hard block, and never shown for the other four engines.
+function toggleProductNudge(){const nudge=$('productNudge');if(!nudge)return;const show=['offer','campaign'].includes(current)&&productOptionsCount>0&&!$('productId')?.value;nudge.classList.toggle('hidden',!show);if(show)nudge.textContent='عندك منتجات محفوظة في المكتبة — اختيار منتج معيّن يجعل هذا العرض/الحملة أكثر دقة لهذا المنتج تحديدًا (اختياري).'}
+// Populates the shared selector from Product Memory, by stable id — never guesses or infers a
+// product from task text. Exactly one product: a deterministic, visible preselection the founder
+// can still change or clear. More than one: no auto-selection, the founder must choose explicitly.
+async function populateProductSelect(){const sel=$('productId'),wrap=$('productSelectorWrap');if(!sel||!wrap)return;let products=[];try{products=await globalThis.Products?.list?.()||[]}catch{}productOptionsCount=products.length;wrap.classList.toggle('hidden',products.length===0);sel.innerHTML='<option value="">بدون منتج محدد</option>'+products.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');if(products.length===1)sel.value=products[0].id;toggleProductNudge()}
 const fieldValue=k=>{const el=$(k);if(!el)return'';return el.multiple?[...el.selectedOptions].map(o=>o.value).join('، '):el.value.trim()};
 function openEngine(e){cancelPending();if(!getBrain())return setup();if(!Object.hasOwn(titles,e))return;refreshBrandCache();current=e;lastInputs=null;lastText='';$('engineTitle').textContent=titles[e];let h='';
 if(e==='content'){const b=getBrain()||{};h=`<div><label for="period">الفترة</label><select id="period"><option>7 أيام</option><option>14 يوم</option><option>30 يوم</option></select></div>
@@ -203,7 +273,10 @@ if(e==='offer')h=`<div class="full"><label for="constraint">قيد أو مناس
 if(e==='whatsapp')h=`<div class="full"><label for="message">رسالة العميل</label><textarea id="message" required placeholder="الصق رسالة العميل هنا"></textarea></div>`;
 if(e==='campaign')h=`<div><label for="occasion">المناسبة (اختياري)</label><input id="occasion" placeholder="اتركها فارغة لحملة تخدم هدف مشروعك"></div><div><label for="duration">المدة</label><input id="duration" value="7 أيام" required></div>`;
 if(e==='reel')h=`<div><label for="duration">المدة</label><select id="duration"><option>15 ثانية</option><option>30 ثانية</option><option>45 ثانية</option></select></div><div><label for="topic">موضوع محدد (اختياري)</label><input id="topic" placeholder="اتركه فارغًا ونختار الموضوع الأنسب"></div>`;
-$('engineForm').innerHTML='<div class="form">'+h+'</div>';show('engine')}
+// V4 Batch 8: shared across all six engines — options are populated asynchronously below
+// (never blocking this screen's render), and the selection never interrupts or blocks "شغّل".
+h+=`<div class="full hidden" id="productSelectorWrap"><label for="productId">منتج محدد من مكتبة المنتجات (اختياري)</label><select id="productId" onchange="toggleProductNudge()"><option value="">بدون منتج محدد</option></select><p id="productNudge" class="status hidden"></p></div>`;
+$('engineForm').innerHTML='<div class="form">'+h+'</div>';show('engine');populateProductSelect()}
 function esc(x){return String(x||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
 function md(x){let z=esc(x);z=z.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>').replace(/^---$/gm,'<hr>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');let lines=z.split('\n'),out='',ul=false;for(let line of lines){if(/^[-•] /.test(line)){if(!ul){out+='<ul>';ul=true}out+='<li>'+line.replace(/^[-•] /,'')+'</li>'}else{if(ul){out+='</ul>';ul=false}if(line.trim()&&!/^<(h|hr)/.test(line))out+='<p>'+line+'</p>';else out+=line}}if(ul)out+='</ul>';return out}
 function updateSaveStatus(){const btn=$('saveResultBtn');if(btn)btn.disabled=savedNow;$('saveResultStatus').textContent=savedNow?'تم الحفظ في السجل ✓':'لم يُحفظ بعد — اضغط "حفظ في السجل" للاحتفاظ بهذه النتيجة'}
@@ -213,12 +286,17 @@ const rawKeyLabels={recommended_reply:'الرد المقترح',short_reply:'ر�
 function translateRawKeys(text){return text.replace(/^([#\s>*-]*)(recommended_reply|short_reply|follow_up)([\s:：*]*)$/gim,(m,pre,key)=>pre+rawKeyLabels[key.toLowerCase()])}
 function renderResult(text,saved=false){text=translateRawKeys(text);lastText=text;$('out').classList.remove('outError');$('out').innerHTML=md(text);savedNow=saved;updateSaveStatus();show('output');globalThis.Visual?.resultEntry()}
 function loading(){globalThis.Visual?.hideEntry();show('output');$('out').classList.remove('outError');$('out').innerHTML='<div class="skeleton"></div><div class="skeleton" style="width:82%"></div><div class="skeleton" style="width:68%"></div><div class="skeleton"></div>'}
-async function generate(payload){if(busy)return;busy=true;const id=++requestId;lastText='';loading();try{payload={...payload,brand:{style:cachedBrandStyle}};let r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json',...PilotAuth.headers()},body:JSON.stringify(payload)});let raw=await r.text();let j;try{j=JSON.parse(raw)}catch{console.error('SHAGHIL non-JSON response',r.status,raw.slice(0,300));throw new Error('تعذّر الاتصال بالخادم، جرّب مرة ثانية')}if(id!==requestId)return;if(r.status===401)PilotAuth.handleUnauthorized();if(!r.ok)throw new Error(j.error||'تعذّر الاتصال');if(typeof j.text!=='string'||!j.text.trim())throw new Error('لم تصل نتيجة، جرّب مرة ثانية');renderResult(j.text)}catch(e){if(id!==requestId)return;$('out').classList.add('outError');$('out').innerHTML='<h3>ما قدرنا نكمل المهمة</h3><p>'+esc(e.message)+'</p><p>جرّب نسخة ثانية، وإذا استمرت المشكلة راجع إعدادات الاتصال.</p>'}finally{if(id===requestId)busy=false}}
+async function generate(payload){if(busy)return;busy=true;const id=++requestId;lastText='';loading();try{payload={...payload,brand:cachedBrandContext};let r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json',...PilotAuth.headers()},body:JSON.stringify(payload)});let raw=await r.text();let j;try{j=JSON.parse(raw)}catch{console.error('SHAGHIL non-JSON response',r.status,raw.slice(0,300));throw new Error('تعذّر الاتصال بالخادم، جرّب مرة ثانية')}if(id!==requestId)return;if(r.status===401)PilotAuth.handleUnauthorized();if(!r.ok)throw new Error(j.error||'تعذّر الاتصال');if(typeof j.text!=='string'||!j.text.trim())throw new Error('لم تصل نتيجة، جرّب مرة ثانية');renderResult(j.text)}catch(e){if(id!==requestId)return;$('out').classList.add('outError');$('out').innerHTML='<h3>ما قدرنا نكمل المهمة</h3><p>'+esc(e.message)+'</p><p>جرّب نسخة ثانية، وإذا استمرت المشكلة راجع إعدادات الاتصال.</p>'}finally{if(id===requestId)busy=false}}
+// V4 Batch 8: resolves the explicitly selected productId (if any) to its approved Product
+// Memory allowlist via the real stable id — never by name, never guessed. No selection means no
+// lookup at all and no product key in the generate() payload.
+async function resolveSelectedProduct(inputs){const id=inputs?.productId;if(!id)return null;try{return await globalThis.Visual?.productContext?.(id)}catch{return null}}
 async function run(again=false){if(busy)return;let b=getBrain();if(!b||!['name','product','customer'].every(k=>typeof b[k]==='string'&&b[k].trim())){toast('أكمل بيانات مشروعك في هوية النشاط');return setup()}if(!Object.hasOwn(fields,current))return home();if(!again){lastInputs=Object.fromEntries(fields[current].map(k=>[k,fieldValue(k)]))}else if(!lastInputs){toast('حدّد تفاصيل المهمة لإنشاء نسخة جديدة');return openEngine(current)}
 if(current==='whatsapp'&&!lastInputs.message){toast('أدخل رسالة العميل أولًا');$('message')?.focus();return}
 if(current==='campaign'&&!lastInputs.duration){toast('أدخل مدة الحملة');$('duration')?.focus();return}
-return generate({brain:b,engine:current,inputs:lastInputs})}
-async function refine(type){if(busy||!lastText)return;return generate({brain:getBrain(),engine:current,inputs:lastInputs||{},refinement:type,previous:lastText})}
+const product=await resolveSelectedProduct(lastInputs);
+return generate({brain:b,engine:current,inputs:lastInputs,...(product?{product}:{})})}
+async function refine(type){if(busy||!lastText)return;const product=await resolveSelectedProduct(lastInputs);return generate({brain:getBrain(),engine:current,inputs:lastInputs||{},refinement:type,previous:lastText,...(product?{product}:{})})}
 async function copyOut(){if(busy||!lastText)return;try{await navigator.clipboard.writeText(lastText);toast('تم النسخ')}catch{toast('تعذّر النسخ، حدّد النص وانسخه يدويًا')}}
 function toast(t){let d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),1400)}
 function historyScreen(){cancelPending();let h=getHistory();$('historyList').innerHTML=h.length?h.map((x,i)=>`<div class="historyItem"><div onclick="openHistory(${i})"><b>${esc(x.title||titles[x.engine]||x.engine||'نتيجة')}</b>${x.project?' · <b>'+esc(x.project)+'</b>':''}<small>${new Date(x.ts).toLocaleString('ar-SA')}</small><p>${esc(x.text.slice(0,120))}...</p></div><button class="btn" onclick="deleteResult(${i})">حذف</button></div>`).join(''):'<p>ما فيه نتائج محفوظة حتى الآن.</p>';show('history');globalThis.Visual?.history()}
