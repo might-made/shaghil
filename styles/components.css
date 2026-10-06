@@ -82,7 +82,7 @@ textarea{min-height:100px}
   .full{grid-column:auto}
   h1{font-size:var(--fs-h1);line-height:var(--lh-h1-ar)}
   .brand small{display:none}
-  #home .grid{gap:var(--space-xs)}
+  #home .grid,#outcomeHome .grid{gap:var(--space-xs)}
   .card.engine{min-height:0;padding:var(--space-sm) var(--space-md)}
   .engine .engineIcon{margin-bottom:var(--space-2xs)}
 }

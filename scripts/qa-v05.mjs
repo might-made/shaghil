@@ -78,8 +78,11 @@ function app(){
 }
 let ui=app();ui.run('setup()');
 for(const [k,v]of Object.entries(brain))ui.nodes.get(k).value=v;
-ui.run('saveBrain()');assert.equal(ui.nodes.get('home').hidden,false);assert.deepEqual(withoutBusinessMeta(JSON.parse(storage.get('brain'))),brain);
-ui=app();assert.equal(ui.nodes.get('home').hidden,false);
+// V4.1: saveBrain() now lands on the new outcome-first Home (outcomeHome), not the six-engine
+// tool grid (home) — the six-engine grid remains fully intact and reachable via "كل الأدوات",
+// just no longer the default landing screen after onboarding. See the V4.1 report.
+ui.run('saveBrain()');assert.equal(ui.nodes.get('outcomeHome').hidden,false);assert.deepEqual(withoutBusinessMeta(JSON.parse(storage.get('brain'))),brain);
+ui=app();assert.equal(ui.nodes.get('outcomeHome').hidden,false);
 for(const [engine,inputs]of Object.entries(cases)){
   ui.run(`openEngine('${engine}')`);
   const expected=Object.keys(inputs);
@@ -136,7 +139,7 @@ console.log('PASS: save → reload → all six engines → generate → copy →
 const najoob={name:'نجوب',category:'سفر',product:'منظم سفر العائلة',customer:'العائلة السعودية',location:'السعودية',price:'150-300 SAR',tone:'سعودي طبيعي',objective:'زيادة المبيعات'};
 ui=app();
 for(const [k,v]of Object.entries(najoob))ui.nodes.get(k).value=v;
-ui.run('saveBrain()');assert.equal(ui.nodes.get('home').hidden,false);
+ui.run('saveBrain()');assert.equal(ui.nodes.get('outcomeHome').hidden,false);
 ui.run("openEngine('campaign')");
 ui.nodes.get('occasion').value='';ui.nodes.get('duration').value='7 أيام';
 await ui.run('run()');

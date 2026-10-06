@@ -14,13 +14,15 @@ const root = path.join(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const componentsCss = fs.readFileSync(path.join(root, 'styles/components.css'), 'utf8');
 
-// ---- 1. All five destinations are preserved on the exact same real nav element.
+// ---- 1. All five original destinations are preserved on the exact same real nav element.
+// V4.1 adds one sixth destination ("كل الأدوات", opening the pre-existing six-engine grid) since
+// "الرئيسية" itself now points at the new outcome-first Home — see the V4.1 report.
 const navDestinations = html.match(/<nav id="mainNav" class="nav">([\s\S]*?)<\/nav>/)[1];
-for (const label of ['الرئيسية', 'هوية النشاط', 'هوية العلامة', 'مكتبة المنتجات', 'السجل']) {
+for (const label of ['الرئيسية', 'كل الأدوات', 'هوية النشاط', 'هوية العلامة', 'مكتبة المنتجات', 'السجل']) {
   assert.ok(navDestinations.includes(`>${label}<`), `the ${label} destination must still be present in the nav`);
 }
-assert.equal([...navDestinations.matchAll(/<button/g)].length, 5, 'exactly the five original destinations, no more, no fewer');
-console.log('PASS: all five existing navigation destinations are preserved on the same real <nav id="mainNav">');
+assert.equal([...navDestinations.matchAll(/<button/g)].length, 6, 'exactly the five original destinations plus the one new V4.1 "كل الأدوات" entry, no more, no fewer');
+console.log('PASS: all five existing navigation destinations plus the new V4.1 "كل الأدوات" entry are preserved on the same real <nav id="mainNav">');
 
 // ---- 2. Build a harness with a *correct* classList (a real Set-backed implementation, unlike
 // the minimal `{toggle(_,hidden){...}}` stub older qa-*.mjs files use, which this feature does

@@ -379,8 +379,13 @@ console.log('PASS: Brand Strategy and Voice are presented before Visual Identity
 // way to mention them in this app's actual local-only behavior. "سحاب" (cloud) alone is
 // different: the existing, correct copy uses it exactly once, inside a negation ("does not
 // upload to cloud storage") — so every occurrence must be a negation, not merely absent.
+// V4.1 introduces one legitimate, unrelated use of "حساب": the Outcome Home mission card "أبغى
+// أنشط حساباتي" means social-media accounts the founder wants to reactivate (verbatim spec
+// copy), never a SHGHIL login/cloud account — strip that one known phrase before checking so
+// every other occurrence (the thing this check actually guards against) is still caught.
+const htmlForAccountCheck = html.replace(/أبغى أنشط حساباتي/g, '');
 for (const phrase of ['حساب', 'account', 'cloud sync', 'cloud account', 'sync across devices', 'automatically sync']) {
-  assert.ok(!html.toLowerCase().includes(phrase.toLowerCase()), `17. the UI makes no mention of "${phrase}" at all`);
+  assert.ok(!htmlForAccountCheck.toLowerCase().includes(phrase.toLowerCase()), `17. the UI makes no mention of "${phrase}" at all (outside the disclosed V4.1 social-accounts mission-card exception)`);
 }
 for (const match of html.matchAll(/(.{20})سحاب/g)) assert.match(match[1], /ل[ان]\s/, `17. every mention of "cloud" is a negation (does NOT use cloud storage), never a claim: "${match[0]}"`);
 assert.ok(html.includes('سحاب'), '17. sanity: the local-only cloud disclaimer this check relies on is still present at all');

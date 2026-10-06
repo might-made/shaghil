@@ -77,7 +77,8 @@ dom.window.close();
 
 // --- reload ---
 ({ dom, win } = mountPage());
-assert.equal(win.document.getElementById('home').classList.contains('hidden'), false, 'reload must land on Home with the restored Business Brain');
+// V4.1: a populated origin now lands on the new outcome-first Home (outcomeHome) — see the V4.1 report.
+assert.equal(win.document.getElementById('outcomeHome').classList.contains('hidden'), false, 'reload must land on the outcome Home with the restored Business Brain');
 
 // --- History screen -> all 7 visible ---
 win.historyScreen();

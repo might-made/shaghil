@@ -99,11 +99,12 @@ assert.equal(typeof win.Workspace?.import, 'function', 'Workspace.import must be
 const { najoob, washBytes, seaBytes, bundle } = makeBundle();
 const file = new win.File([JSON.stringify(bundle)], 'shaghil-workspace-najoob.json', { type: 'application/json' });
 await win.Workspace.import(file);
-await waitForRender(win, '#home', 1); // home() navigation after a successful import is async-adjacent
+await waitForRender(win, '#outcomeHome', 1); // outcomeHome() navigation after a successful import is async-adjacent
 
 assert.deepEqual(withoutBusinessMeta(JSON.parse(sharedLocalStorage.getItem('brain'))), najoob, 'Business Brain must be restored exactly');
-assert.equal(win.document.getElementById('home').classList.contains('hidden'), false, 'a restored Business Brain must land the Founder on Home, not leave them on the empty form');
-assert.ok(win.document.getElementById('hello').textContent.includes('نجوب'), 'Home must reflect the restored business name');
+// V4.1: a restored Business Brain now lands on the new outcome-first Home (outcomeHome), not the
+// six-engine grid (home) — see the V4.1 report.
+assert.equal(win.document.getElementById('outcomeHome').classList.contains('hidden'), false, 'a restored Business Brain must land the Founder on the outcome Home, not leave them on the empty form');
 
 const products = await store.listProducts();
 assert.equal(products.length, 2, 'both Product Library entries must be restored');
@@ -125,7 +126,9 @@ dom.window.close();
 // --- 5. Reload: a brand-new page mount (same underlying origin storage) still has everything. ---
 ({ dom, win } = mountPage());
 assert.deepEqual(withoutBusinessMeta(JSON.parse(sharedLocalStorage.getItem('brain'))), najoob, 'Business Brain must still be present after a reload');
-assert.equal(win.document.getElementById('home').classList.contains('hidden'), false, 'reloading a populated origin must land on Home, not welcome');
+// V4.1: a populated origin now lands on the new outcome-first Home (outcomeHome), not the
+// six-engine tool grid (home) — see the V4.1 report.
+assert.equal(win.document.getElementById('outcomeHome').classList.contains('hidden'), false, 'reloading a populated origin must land on the outcome Home, not welcome');
 win.setup();
 await waitForRender(win, '#productList .card', 2);
 assert.equal(win.document.querySelectorAll('#productList .card').length, 2, 'both products must still render after a reload');

@@ -62,14 +62,17 @@ const { najoob, bundle } = makeBundle();
 const { dom, win } = mountPage();
 const file = new win.File([JSON.stringify(bundle)], 'shaghil-workspace-najoob.json', { type: 'application/json' });
 await win.Workspace.import(file);
-await waitForRender(win, '#home', 1);
-assert.equal(win.document.getElementById('home').classList.contains('hidden'), false, 'a fresh import must land on Home');
+await waitForRender(win, '#outcomeHome', 1);
+// V4.1: a fresh import now lands on the new outcome-first Home (outcomeHome) — see the V4.1 report.
+assert.equal(win.document.getElementById('outcomeHome').classList.contains('hidden'), false, 'a fresh import must land on the outcome Home');
 
 // --- fresh Home -> the history nav button must be visible ---
 // Phase 2 expanded the persistent top nav from 3 to 5 destinations (adding Brand Brain and
-// Product Library) and moved it into a semantic <nav class="nav">.
+// Product Library) and moved it into a semantic <nav class="nav">. V4.1 adds a sixth: "كل
+// الأدوات", which opens the pre-existing six-engine grid (home) now that "الرئيسية" itself
+// points at the new outcome-first Home instead.
 const navButtons = [...win.document.querySelector('.top .nav').querySelectorAll('button')];
-assert.deepEqual(navButtons.map(b => b.textContent), ['الرئيسية', 'هوية النشاط', 'هوية العلامة', 'مكتبة المنتجات', 'السجل'], 'the persistent top nav must offer all five product areas');
+assert.deepEqual(navButtons.map(b => b.textContent), ['الرئيسية', 'كل الأدوات', 'هوية النشاط', 'هوية العلامة', 'مكتبة المنتجات', 'السجل'], 'the persistent top nav must offer the outcome Home, all existing tools, and the six product areas');
 const historyButton = navButtons.find(b => b.textContent === 'السجل');
 assert.ok(historyButton, 'السجل must be visible on a fresh Home');
 
@@ -83,7 +86,7 @@ const onclick = historyButton.getAttribute('onclick');
 assert.equal(onclick, 'historyScreen();closeNav()', 'the button must be wired to historyScreen(), and Phase 3 additionally closes the mobile nav drawer on click');
 win.historyScreen();
 assert.equal(win.document.getElementById('history').classList.contains('hidden'), false, 'clicking the button must open the History screen');
-assert.equal(win.document.getElementById('home').classList.contains('hidden'), true);
+assert.equal(win.document.getElementById('outcomeHome').classList.contains('hidden'), true, 'opening History must hide the outcome Home it was opened from');
 
 // --- imported 7 history entries render ---
 const items = win.document.querySelectorAll('#historyList .historyItem');
