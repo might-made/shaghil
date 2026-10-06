@@ -126,3 +126,8 @@ execFileSync(process.execPath,['scripts/qa-v25-batch10-progressive-hardening.mjs
 // one). Runs in its own process (fresh IndexedDB), like qa-v07-product-persistence.mjs, since it
 // requires a genuinely empty Product Library to start.
 execFileSync(process.execPath,['scripts/qa-v26-product-selector-e2e.mjs'],{stdio:'inherit'});
+
+// SHGHIL V4.1 — Outcome Experience / Sales Growth Mission (requirements A-T). Runs in its own
+// process (fresh IndexedDB), like qa-v23/qa-v26, since several of its blocks need a genuinely
+// empty Product Library to prove the zero/one/multiple-product paths deterministically.
+execFileSync(process.execPath,['scripts/qa-v27-outcome-mission-regression.mjs'],{stdio:'inherit'});

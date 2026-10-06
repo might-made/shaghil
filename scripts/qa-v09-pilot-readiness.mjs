@@ -32,7 +32,8 @@ function mountPage() {
   const quickStartBtn = win.document.getElementById('quickStartBtn');
   assert.equal(quickStartBtn.getAttribute('onclick'), 'saveBrain()', 'the quick-start button must call the existing saveBrain(), not a new/duplicate code path');
   run('saveBrain()');
-  assert.equal(win.document.getElementById('home').classList.contains('hidden'), false, 'quick start with only the 3 required fields must reach Home');
+  // V4.1: saveBrain() now lands on the new outcome-first Home (outcomeHome) — see the V4.1 report.
+  assert.equal(win.document.getElementById('outcomeHome').classList.contains('hidden'), false, 'quick start with only the 3 required fields must reach the outcome Home');
   const saved = JSON.parse(win.localStorage.getItem('brain'));
   assert.equal(saved.name, 'نجوب'); assert.equal(saved.product, 'منظم سفر العائلة'); assert.equal(saved.customer, 'العائلة السعودية');
   dom.window.close();
